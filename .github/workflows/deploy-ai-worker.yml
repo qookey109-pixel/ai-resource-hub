@@ -10,7 +10,7 @@ on:
       - ".github/workflows/deploy-ai-worker.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: deploy-ai-worker
@@ -24,9 +24,103 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Deploy Cloudflare Worker
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
           command: deploy
+
+      - name: Resolve deployment URL
+        id: worker-url
+        shell: bash
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          COMMAND_OUTPUT: ${{ steps.deploy.outputs.command-output }}
+        run: |
+          set -euo pipefail
+          url="$(printf '%s\n' "$DEPLOYMENT_URL" | head -n1 | sed 's/[[:space:]].*$//' | tr -d '\r')"
+          if [ -z "$url" ]; then
+            url="$(printf '%s\n' "$COMMAND_OUTPUT" | grep -Eo 'https?://[^[:space:]]+\.workers\.dev' | tail -n1 || true)"
+          fi
+          if [ -z "$url" ]; then
+            echo "Unable to resolve Worker deployment URL" >&2
+            exit 1
+          fi
+          case "$url" in
+            http://*|https://*) ;;
+            *) url="https://$url" ;;
+          esac
+          url="${url%/}"
+          echo "base_url=$url" >> "$GITHUB_OUTPUT"
+          echo "Worker URL resolved."
+
+      - name: Verify Worker health
+        shell: bash
+        env:
+          BASE_URL: ${{ steps.worker-url.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 5 --retry-delay 2 "$BASE_URL/health" -o /tmp/health.json
+          jq -e '.ok == true and .service == "qookey-ai-resource-recommender"' /tmp/health.json >/dev/null
+
+      - name: Verify recommendation API
+        shell: bash
+        env:
+          BASE_URL: ${{ steps.worker-url.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          success=0
+          for attempt in 1 2 3; do
+            curl --fail --silent --show-error \
+              -H 'content-type: application/json' \
+              -H 'origin: https://qookey109-pixel.github.io' \
+              --data '{"query":"我要做 AI 短影片"}' \
+              "$BASE_URL/api/recommend" -o /tmp/recommend.json || true
+            if jq -e '.ok == true and ((.recommendations | length) > 0)' /tmp/recommend.json >/dev/null 2>&1; then
+              success=1
+              break
+            fi
+            sleep 3
+          done
+          if [ "$success" -ne 1 ]; then
+            echo "Recommendation API smoke test failed" >&2
+            cat /tmp/recommend.json >&2 || true
+            exit 1
+          fi
+
+      - name: Activate frontend AI endpoint
+        shell: bash
+        env:
+          BASE_URL: ${{ steps.worker-url.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('data/ai-config.json')
+          config = {
+              'schema_version': '0.1',
+              'enabled': True,
+              'endpoint': os.environ['BASE_URL'].rstrip('/') + '/api/recommend',
+              'updated_at': '2026-08-23',
+          }
+          path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit AI activation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/ai-config.json; then
+            echo "AI endpoint already active."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ai-config.json
+          git commit -m "Activate deployed AI recommender"
+          git push origin HEAD:main
