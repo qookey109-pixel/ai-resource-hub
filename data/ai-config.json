@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "enabled": false,
-  "endpoint": "",
+  "enabled": true,
+  "endpoint": "https://qookey-ai-resource-recommender.q-oo109.workers.dev/api/recommend",
   "updated_at": "2026-08-23"
 }
