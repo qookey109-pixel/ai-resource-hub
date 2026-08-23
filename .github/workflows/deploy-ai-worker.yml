@@ -118,30 +118,45 @@ jobs:
             exit 1
           fi
 
-      - name: Verify recommendation API
+      - name: Verify recommendation semantics
         shell: bash
         env:
           BASE_URL: ${{ steps.deploy.outputs.base_url }}
         run: |
           set -euo pipefail
-          success=0
-          for attempt in 1 2 3; do
+
+          recommend() {
+            local query="$1"
+            local output="$2"
             curl --fail --silent --show-error \
               -H 'content-type: application/json' \
               -H 'origin: https://qookey109-pixel.github.io' \
-              --data '{"query":"我要做 AI 短影片"}' \
-              "$BASE_URL/api/recommend" -o /tmp/recommend.json || true
-            cat /tmp/recommend.json 2>/dev/null || true
-            if jq -e '.ok == true and ((.recommendations | length) > 0)' /tmp/recommend.json >/dev/null 2>&1; then
-              success=1
-              break
-            fi
-            sleep 3
-          done
-          if [ "$success" -ne 1 ]; then
-            echo "Recommendation API smoke test failed" >&2
-            exit 1
-          fi
+              --data "$(jq -nc --arg q "$query" '{query:$q}')" \
+              "$BASE_URL/api/recommend" -o "$output"
+            jq '{mode, version, intent_mode, intent, recommendations: [.recommendations[]? | {id, fit_score}]}' "$output"
+          }
+
+          recommend '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成' /tmp/short-video.json
+          jq -e '
+            .ok == true and
+            .intent.workflow_scope == "end-to-end" and
+            any(.recommendations[]?; .id == "money-printer-turbo")
+          ' /tmp/short-video.json >/dev/null
+
+          recommend '我要在本機做語音複製和配音，不想依賴雲端訂閱服務' /tmp/local-voice.json
+          jq -e '
+            .ok == true and
+            ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機"))) and
+            any(.recommendations[]?; .id == "voice-studio")
+          ' /tmp/local-voice.json >/dev/null
+
+          recommend '我要從文字快速生成可以拿去做遊戲原型的 3D 模型' /tmp/3d.json
+          jq -e '
+            .ok == true and
+            any(.recommendations[]?; .id == "meshy-ai")
+          ' /tmp/3d.json >/dev/null
+
+          echo "Semantic recommendation regression checks passed."
 
       - name: Activate frontend AI endpoint
         shell: bash
