@@ -7,24 +7,26 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.3 marketplace direction**
+- Current version: **V0.4 marketplace baseline**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
 
 - Repository foundation and governance files established.
-- Canonical V0.1 resource schema established.
-- Canonical category catalog established.
+- Canonical V0.1 resource schema and category catalog established.
 - First two user-supplied resource batches ingested and reviewed.
 - Catalog contains **13 resources**.
 - Account-specific / temporary URLs are sanitized before publication.
 - Search, category filter, type filter, free/open-source filters, sorting and quick-category navigation implemented.
 - GitHub Pages deployment workflow added at `.github/workflows/pages.yml`.
 - `.nojekyll` added for static-site publishing.
-- V0.3 information architecture changed from a dark dashboard presentation to a clean resource-marketplace presentation.
-- Current marketplace structure: sticky navigation, centered search hero, trending category chips, left filters, resource-card grid and supporting value section.
-- Capafy is recorded only as a structural UX reference; exact branding, content, proprietary code and assets are not copied.
-- Design direction is frozen in `docs/DESIGN_DIRECTION.md` so later visual refinements do not require rebuilding the information architecture.
+- Marketplace UX direction established from user-provided visual references.
+- V0.4 first-screen structure: lightweight brand header, centered title/subtitle, large task/resource search composer, horizontally scrollable category chips and three-column resource marketplace.
+- V0.4 scrolled structure: compact sticky search appears above the category chips while the resource marketplace continues below.
+- Previous left-side filter panel removed; secondary filters are now a lightweight horizontal row above the resource grid.
+- Resource cards were compacted to marketplace-style cards with a generated category icon, name, source/type, summary, primary use case, small category pills, pricing/open-source metadata and editorial rating.
+- Existing 13-resource data and search/filter logic were preserved rather than rebuilt.
+- Capafy remains only a structural UX reference; exact branding, content, proprietary code and assets are not copied.
 
 ## Current catalog
 
@@ -65,7 +67,7 @@ Do not claim the public site is live until the Pages deployment is verified succ
 - Resource health checks.
 - Backend database migration.
 - Per-resource detail pages.
-- Final branding details such as colors, typography, card imagery and category icon system.
+- Final branding details such as logo, exact accent palette, typography, real resource logos/card imagery and final category taxonomy.
 
 ## Current rules
 
@@ -78,8 +80,8 @@ Do not claim the public site is live until the Pages deployment is verified succ
 7. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
 8. Never publish credentials, secrets, API keys, tokens, private account IDs, temporary auth-flow URLs, or private dashboard links.
 9. Prefer canonical public URLs for resources stored in the public catalog.
-10. Preserve the V0.3 marketplace information architecture while iterating on visual details unless a later explicit design decision changes it.
+10. Preserve the V0.4 marketplace baseline while iterating on visual details unless a later explicit design decision changes it.
 
 ## Next step
 
-Verify the first GitHub Pages deployment, then continue ingesting user-supplied URLs and refine the marketplace visual details incrementally without rebuilding the established V0.3 structure.
+Verify GitHub Pages deployment and visual behavior on desktop/mobile, then continue accepting resource URLs and refine branding/card details incrementally without rebuilding the V0.4 marketplace structure.
