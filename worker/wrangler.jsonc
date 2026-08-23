@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "qookey-ai-resource-recommender",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-23",
+  "workers_dev": true,
+  "ai": {
+    "binding": "AI"
+  },
+  "vars": {
+    "ALLOWED_ORIGIN": "https://qookey109-pixel.github.io",
+    "CATALOG_URL": "https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json",
+    "MODEL": "@cf/meta/llama-3.1-8b-instruct"
+  }
+}
