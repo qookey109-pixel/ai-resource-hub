@@ -23,6 +23,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Verify Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN is missing." >&2
+            exit 1
+          fi
+
+          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "CLOUDFLARE_ACCOUNT_ID is missing." >&2
+            exit 1
+          fi
+
+          if [ "${#CLOUDFLARE_ACCOUNT_ID}" -ne 32 ]; then
+            echo "CLOUDFLARE_ACCOUNT_ID must be a 32-character Cloudflare Account ID." >&2
+            exit 1
+          fi
+
+          token_json="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)"
+
+          echo "$token_json" | jq '{success, errors, token_status: .result.status}'
+          echo "$token_json" | jq -e '.success == true and .result.status == "active"' >/dev/null
+
+          workers_json="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts")"
+
+          echo "$workers_json" | jq '{success, errors}'
+          echo "$workers_json" | jq -e '.success == true' >/dev/null
+          echo "Cloudflare token is active and can access Workers Scripts for the configured account."
+
       - name: Deploy Cloudflare Worker
         id: deploy
         shell: bash
