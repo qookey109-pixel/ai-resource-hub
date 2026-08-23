@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./css/styles.css" />
   <link rel="stylesheet" href="./css/brand.css" />
   <link rel="stylesheet" href="./css/icon-quality.css?v=20260823-1" />
+  <link rel="stylesheet" href="./css/ai.css?v=20260823-1" />
 </head>
 <body>
   <a class="skip-link" href="#resources">跳到資源列表</a>
@@ -33,12 +34,31 @@
         <h1 id="hero-title">Qookey AI — 資源市場</h1>
         <p class="subtitle">把好用的 AI、GitHub、Agent Skills、設計與開發工具整理到同一個地方。</p>
 
-        <section class="hero-search" aria-label="大型資源搜尋">
+        <section class="hero-search" aria-label="AI 任務推薦與資源搜尋">
           <div class="hero-search-box">
-            <label class="sr-only" for="search">搜尋資源</label>
+            <label class="sr-only" for="search">描述任務或搜尋資源</label>
             <input id="search" type="search" placeholder="描述你想完成的任務，或搜尋一個資源…" autocomplete="off" />
-            <button class="composer-button add" type="button" aria-label="更多搜尋方式" disabled>＋</button>
-            <button id="hero-submit" class="composer-button go" type="button" aria-label="查看搜尋結果">→</button>
+            <span class="ai-mode-badge" aria-hidden="true">✦ AI 幫我選</span>
+            <button id="hero-submit" class="composer-button go" type="button" aria-label="讓 AI 推薦資源">→</button>
+          </div>
+        </section>
+
+        <section id="ai-panel" class="ai-panel" aria-live="polite" hidden>
+          <div class="ai-panel-head">
+            <div>
+              <h2 class="ai-panel-title">AI 資源建議</h2>
+              <p id="ai-panel-status" class="ai-panel-status"></p>
+            </div>
+            <span id="ai-panel-badge" class="ai-panel-badge">AI 推薦</span>
+          </div>
+          <div id="ai-recommendations" class="ai-recommendations"></div>
+          <div id="ai-plan" class="ai-plan" hidden>
+            <strong>建議組合方式</strong>
+            <ol></ol>
+          </div>
+          <div id="ai-caveats" class="ai-caveats" hidden>
+            <strong>注意事項</strong>
+            <ul></ul>
           </div>
         </section>
       </div>
@@ -48,9 +68,9 @@
       <div class="toolbar-inner">
         <div class="compact-search-wrap" aria-hidden="true">
           <span class="compact-search-icon" aria-hidden="true">⌕</span>
-          <label class="sr-only" for="compact-search">搜尋資源</label>
+          <label class="sr-only" for="compact-search">描述任務或搜尋資源</label>
           <input id="compact-search" type="search" placeholder="描述任務或搜尋資源…" autocomplete="off" tabindex="-1" />
-          <button id="compact-submit" type="button" aria-label="查看搜尋結果">→</button>
+          <button id="compact-submit" type="button" aria-label="讓 AI 推薦資源">→</button>
         </div>
         <div id="quick-categories" class="quick-categories" aria-label="熱門分類"></div>
       </div>
@@ -106,7 +126,7 @@
 
   <footer class="footer">
     <strong>Qookey AI Resource Hub</strong>
-    <span>持續整理 · 持續更新 · V0.4 Marketplace Baseline</span>
+    <span>持續整理 · 持續更新 · V0.5 AI Recommendation Baseline</span>
   </footer>
 
   <template id="resource-template">
