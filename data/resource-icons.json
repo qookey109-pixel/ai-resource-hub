@@ -54,9 +54,13 @@
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
       "source": "domain-favicon-128"
     },
-    "animejs": {
+    "anime-js": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com",
       "source": "domain-favicon-128"
+    },
+    "world-monitor": {
+      "url": "https://www.worldmonitor.app/favico/apple-touch-icon.png",
+      "source": "official-site-apple-touch-icon"
     }
   }
 }
