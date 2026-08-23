@@ -8,6 +8,7 @@
     {"id": "game-ai-dev", "name": "Game AI / Game Dev", "icon": "🎮"},
     {"id": "ui-ux-design", "name": "UI / UX / Design", "icon": "🎨"},
     {"id": "image-video-audio", "name": "Image / Video / Audio AI", "icon": "🖼️"},
+    {"id": "audio-music-production", "name": "Audio / Music Production", "icon": "🎵"},
     {"id": "search-research", "name": "Search / Research", "icon": "🔎"},
     {"id": "automation", "name": "Automation", "icon": "⚙️"},
     {"id": "scraping-data-collection", "name": "Scraping / Data Collection", "icon": "🕷️"},
