@@ -7,7 +7,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.4.1 marketplace content + branding baseline**
+- Current version: **V0.5 AI recommendation scaffold + V0.4.1 marketplace baseline**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -37,12 +37,41 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
 - GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`.
 
+## V0.5 AI recommendation scaffold
+
+The large homepage task box now has a real AI recommendation path instead of being only decorative search UI.
+
+Implemented:
+
+- Frontend keeps instant keyword filtering while typing.
+- Arrow / Enter can call an AI recommendation backend.
+- AI response panel shows task interpretation, 3–5 recommended catalog resources, each resource's role/reason/how-to-use, stack plan and caveats.
+- Recommended resource cards are shown in the catalog in AI recommendation order.
+- Frontend validates recommendation IDs against the loaded catalog.
+- Runtime endpoint configuration lives in `data/ai-config.json`.
+- AI backend implementation lives in `worker/` and uses a Cloudflare Workers AI binding (`env.AI`).
+- Backend loads the current public `data/resources.json` authority from GitHub `main` and asks the model to choose only from that catalog.
+- Backend validates returned IDs against the catalog before responding.
+- Backend includes a deterministic keyword/content fallback if model inference or JSON parsing fails.
+- Backend accepts only the configured production origin plus localhost development origins.
+- Task input is limited to 2–500 characters.
+- No third-party AI API key is placed in frontend code or repository files.
+- Manual deployment workflow added at `.github/workflows/deploy-ai-worker.yml`.
+- Deployment / activation instructions documented in `docs/AI_BACKEND.md`.
+
+Current activation state:
+
+- `data/ai-config.json`: `enabled=false`
+- Worker code is ready but **Cloudflare deployment URL is not yet configured**.
+- Until activation, keyword search remains fully functional; explicitly requesting AI shows a clear backend-not-enabled message rather than failing silently.
+
 ## Current catalog
 
 - Total resources: 20
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
+- AI runtime config: `data/ai-config.json`
 - Multi-category classification is enabled.
 - Unknown metadata remains `unknown` / `null` instead of being guessed.
 - Technical tags may remain English for searchability, while user-facing explanatory copy is Traditional Chinese.
@@ -53,18 +82,21 @@ Status date: 2026-08-23 (Asia/Taipei)
 
 ## Deployment state
 
-The repository is ready for GitHub Pages deployment through GitHub Actions.
+The static repository is ready for GitHub Pages deployment through GitHub Actions.
 
 If the Pages workflow cannot create the site automatically, enable it once in GitHub:
 
 `Settings → Pages → Build and deployment → Source: GitHub Actions`
 
-Do not claim the public site is live until the Pages deployment is verified successfully.
+The AI Worker is separate from GitHub Pages and still needs Cloudflare deployment. The manual workflow requires repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, or it can be deployed locally with Wrangler. After deployment, put the final `/api/recommend` URL in `data/ai-config.json` and set `enabled=true`.
+
+Do not claim AI recommendations are live until the Worker endpoint is deployed, configured and verified successfully.
 
 ## Not yet completed
 
-- Semantic / vector search.
-- AI recommendation engine.
+- Cloudflare Worker deployment / live AI endpoint activation.
+- End-to-end production AI recommendation smoke test.
+- Semantic / vector search for larger catalogs.
 - Favorites / personal collections.
 - Automated metadata refresh.
 - GitHub Stars / activity synchronization.
@@ -90,7 +122,9 @@ Do not claim the public site is live until the Pages deployment is verified succ
 12. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
 13. Resource cards should prefer resource-specific official icons; category icons are fallback only.
 14. A public repository without an explicit license must not be described as freely reusable or commercially usable; preserve license as unknown until verified.
+15. AI recommendation output may only refer to resources present in the current catalog; validate IDs server-side and client-side.
+16. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
 
 ## Next step
 
-Continue ingesting verified user-supplied URLs. For each new resource, add or verify an independent high-resolution resource icon alongside the Chinese description and classification without rebuilding the current marketplace structure.
+Deploy the prepared Cloudflare Worker, capture its public `/api/recommend` endpoint, enable it in `data/ai-config.json`, then run an end-to-end production test using task prompts such as `我要做 LINE AI 客服`, `我要做 AI 短影片`, and `我要做 Three.js 3D 遊戲效果`.
