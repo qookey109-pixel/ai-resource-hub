@@ -73,6 +73,14 @@
     "reverse-skill": {
       "url": "https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png",
       "source": "official-repository-project-image"
+    },
+    "mechanical-deployables-threejs": {
+      "url": "https://github.com/trungdq88.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "voice-studio": {
+      "url": "https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png",
+      "source": "official-repository-project-logo"
     }
   }
 }
