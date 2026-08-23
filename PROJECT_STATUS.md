@@ -15,15 +15,17 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **14 verified resources**.
+- Catalog now contains **15 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
+- World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - All current user-facing resource descriptions, use cases and notes were converted to Traditional Chinese.
 - Frontend type / pricing / source-state labels were localized to Traditional Chinese.
 - Category display names are localized to Traditional Chinese while stable internal category keys remain unchanged for data compatibility.
 - Resource schema now requires Traditional Chinese for future `summary`, `use_cases` and `notes` fields by default.
 - Original Qookey mascot icon added and wired as the site brand icon / SVG favicon.
 - A dedicated per-resource icon registry now exists at `data/resource-icons.json`.
-- The current 14 resource cards now prefer their own official-site favicon or project/owner image instead of sharing category icons.
+- Resource cards prefer their own official-site favicon, project logo or project/owner image instead of sharing category icons.
+- Higher-resolution icon sources are preferred; World Monitor uses its official Apple touch icon and Anime.js icon registry key was corrected to match its resource ID.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -31,7 +33,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 
 ## Current catalog
 
-- Total resources: 14
+- Total resources: 15
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -84,4 +86,4 @@ Do not claim the public site is live until the Pages deployment is verified succ
 
 ## Next step
 
-Continue ingesting verified user-supplied URLs. For each new resource, add or verify an independent resource icon alongside the Chinese description and classification without rebuilding the current marketplace structure.
+Continue ingesting verified user-supplied URLs. For each new resource, add or verify an independent high-resolution resource icon alongside the Chinese description and classification without rebuilding the current marketplace structure.
