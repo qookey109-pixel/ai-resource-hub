@@ -267,6 +267,25 @@
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
       "notes": "目前為 Anime.js V4；GitHub 專案公開、未封存，檢查時約有 7.2 萬顆 Stars，屬成熟且常用的前端動畫工具。"
+    },
+    {
+      "id": "world-monitor",
+      "name": "World Monitor",
+      "type": "github",
+      "url": "https://github.com/koala73/worldmonitor",
+      "categories": ["Search / Research", "Data / Analytics", "Security", "AI / LLM", "Developer Tools"],
+      "tags": ["worldmonitor", "osint", "geopolitics", "situational-awareness", "news", "monitoring", "mcp", "api", "dashboard", "typescript"],
+      "summary": "即時全球情報與 OSINT 儀表板，將 AI 新聞彙整、地緣政治、軍事活動、基礎設施、災害、金融市場與跨來源訊號集中到同一個情勢感知介面。",
+      "use_cases": ["追蹤全球地緣政治、衝突與軍事情勢", "整合新聞、災害、基礎設施與金融市場訊號", "透過 MCP、REST API、CLI 或 SDK 讓 Agent 與程式存取全球情報資料", "自行部署全球情勢監控與研究儀表板"],
+      "pricing": "freemium",
+      "open_source": true,
+      "license": "AGPL-3.0-only",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "官方提供免費公開功能與 Pro 方案；原始碼採 AGPL-3.0-only。若修改後以網路服務方式提供，需特別注意 AGPL 的原始碼提供義務。檢查時 GitHub 約 8.38 萬顆 Stars，專案未封存且持續更新。"
     }
   ]
 }
