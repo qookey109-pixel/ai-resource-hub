@@ -15,7 +15,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **23 verified resources**.
+- Catalog now contains **25 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -26,6 +26,8 @@ Status date: 2026-08-23 (Asia/Taipei)
 - DSH Desktop added as an active MIT-licensed community Electron desktop distribution around the official DeepSeek Harness runtime/Web experience, with Profile Bundles, MCP, Git Worktree, attachments and controlled native capabilities. It is explicitly an independent community project rather than an official DeepSeek product.
 - AI Website Cloner Template added as an active MIT-licensed AI Coding Agent workflow for reconstructing authorized websites into Next.js through reconnaissance, design-token extraction, component specs, parallel implementation and visual QA. Legal/brand reuse limits are explicitly recorded.
 - ThreeUI Community added as an active MIT-licensed React / Three.js visual component library with 50 Community components, 111 Community routes, 164 browse results, npm distribution and a separate entitlement boundary for Pro source access.
+- ElevenLabs added as an active freemium AI audio / voice platform covering TTS, STT, voice cloning, dubbing, music, voice/chat Agents and APIs, with plan-specific commercial and cloning rights recorded.
+- Meshy AI added as an active freemium AI 3D platform covering Text-to-3D, Image-to-3D, AI texturing, rigging/animation, 3D Agent and API workflows, with current Free-plan download/licensing caveats recorded.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -36,6 +38,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Resource cards prefer their own official-site favicon, project logo or project/owner image instead of sharing category icons.
 - Higher-resolution icon sources are preferred. DSH Desktop uses its repository's official SVG app icon. AI Website Cloner Template currently falls back to the author's 256px GitHub avatar because no dedicated project logo was verified.
 - ThreeUI Community uses the repository's official `public/threeui-mark.svg` project mark rather than a generic category icon or owner avatar.
+- ElevenLabs and Meshy AI use resource-specific domain favicons rather than category icons.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -71,7 +74,7 @@ Current activation state:
 
 ## Current catalog
 
-- Total resources: 23
+- Total resources: 25
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
