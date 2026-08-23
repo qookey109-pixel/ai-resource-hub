@@ -324,6 +324,25 @@
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
       "notes": "專案本身採 MIT License，檢查時約 11.5 萬顆 Stars，未封存且持續更新。可使用本地素材，也能串接多種 LLM、TTS、素材與生成式影音服務；部分外部 API、模型或素材服務可能需要各自的帳號、額度或付費方案，商用時也需確認素材授權。"
+    },
+    {
+      "id": "reverse-skill",
+      "name": "reverse-skill",
+      "type": "github",
+      "url": "https://github.com/zhaoxuya520/reverse-skill",
+      "categories": ["Security", "Agents / MCP / Skills", "Developer Tools", "Learning / Documentation"],
+      "tags": ["reverse-engineering", "authorized-pentest", "security-research", "agent-skills", "routing", "ctf", "apk", "binary", "malware-analysis", "mcp"],
+      "summary": "面向 AI Coding Agent 的逆向工程與授權資安測試 Skill Router，會依 APK、Binary、前端 JS、PCAP、CTF、韌體、API 安全等情境，自動路由到對應方法、工具與可重複執行的工作流程。",
+      "use_cases": ["替合法授權的逆向工程與資安研究任務選擇合適工具與方法", "讓 Codex、Claude Code、Cursor 等 Agent 依任務自動路由到專用安全 Skills", "用一致的 scope、timeline、證據鏈與報告流程管理研究案件", "針對 APK、Binary、JS、CTF、韌體與 API 安全等情境建立可重複驗證流程"],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "advanced",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "專案核心採 MIT License，檢查時約 2.75 萬顆 Stars，未封存且仍有更新。README 明確定位於逆向工程、授權滲透測試與安全研究，並要求 scope gate 後再執行目標操作。部分子模組與外部工具採其他授權，例如 CTF-Sandbox-Orchestrator 為 GPLv3，另有外部 AGPL-3.0 工具透過 CLI／MCP 呼叫；實際使用或再散布時需分別確認授權與合法授權範圍。"
     }
   ]
 }
