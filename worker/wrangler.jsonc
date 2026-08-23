@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "qookey-ai-resource-recommender",
-  "main": "src/index.js",
+  "main": "src/router.js",
   "compatibility_date": "2026-08-23",
   "workers_dev": true,
   "ai": {
