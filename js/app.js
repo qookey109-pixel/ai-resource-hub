@@ -5,6 +5,9 @@ const state = {
 
 const els = {
   search: document.querySelector('#search'),
+  compactSearch: document.querySelector('#compact-search'),
+  heroSubmit: document.querySelector('#hero-submit'),
+  compactSubmit: document.querySelector('#compact-submit'),
   category: document.querySelector('#category-filter'),
   type: document.querySelector('#type-filter'),
   free: document.querySelector('#free-filter'),
@@ -75,11 +78,16 @@ function filteredResources() {
   return resources;
 }
 
-function makePill(text, className) {
+function makePill(text) {
   const span = document.createElement('span');
-  span.className = className;
+  span.className = 'pill';
   span.textContent = text;
   return span;
+}
+
+function categoryIcon(resource) {
+  const firstCategory = resource.categories?.[0];
+  return state.categories.find((category) => category.name === firstCategory)?.icon || String(resource.name || '?').slice(0, 1).toUpperCase();
 }
 
 function render() {
@@ -88,12 +96,17 @@ function render() {
   els.count.textContent = String(resources.length);
   els.empty.hidden = resources.length !== 0;
 
-  for (const resource of resources) {
+  resources.forEach((resource, index) => {
     const fragment = els.template.content.cloneNode(true);
-    fragment.querySelector('.type').textContent = resource.type ?? 'other';
-    fragment.querySelector('.rating').textContent = resource.rating ? `★ ${resource.rating}/5` : '待評估';
+    const card = fragment.querySelector('.card');
+    if (index === 0 && (resource.rating ?? 0) >= 5) card.classList.add('featured');
+
+    fragment.querySelector('.resource-icon').textContent = categoryIcon(resource);
     fragment.querySelector('.name').textContent = resource.name;
+    fragment.querySelector('.type').textContent = resource.type ?? 'other';
+    fragment.querySelector('.primary-category').textContent = resource.categories?.[0] ?? 'Resource';
     fragment.querySelector('.description').textContent = resource.summary ?? '';
+    fragment.querySelector('.rating').textContent = resource.rating ? `★ ${resource.rating}` : '待評估';
 
     const useCase = fragment.querySelector('.use-case');
     const primaryUseCase = resource.use_cases?.[0];
@@ -104,13 +117,8 @@ function render() {
     }
 
     const categories = fragment.querySelector('.categories');
-    for (const category of (resource.categories ?? []).slice(0, 3)) {
-      categories.append(makePill(category, 'pill'));
-    }
-
-    const tags = fragment.querySelector('.tags');
-    for (const tag of (resource.tags ?? []).slice(0, 5)) {
-      tags.append(makePill(`#${tag}`, 'tag'));
+    for (const category of (resource.categories ?? []).slice(0, 2)) {
+      categories.append(makePill(category));
     }
 
     fragment.querySelector('.meta').textContent = [
@@ -123,7 +131,7 @@ function render() {
     link.setAttribute('aria-label', `開啟 ${resource.name}`);
 
     els.grid.append(fragment);
-  }
+  });
 
   syncQuickCategoryState();
 }
@@ -154,7 +162,24 @@ function renderStats() {
   els.openStat.textContent = String(state.resources.filter((resource) => resource.open_source === true).length);
 }
 
+function createQuickCategory(label, category = '') {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'quick-category';
+  button.dataset.category = category;
+  button.textContent = label;
+  button.addEventListener('click', () => {
+    els.category.value = category;
+    render();
+    document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  return button;
+}
+
 function renderQuickCategories() {
+  els.quickCategories.replaceChildren();
+  els.quickCategories.append(createQuickCategory('趨勢', ''));
+
   const counts = new Map();
   for (const resource of state.resources) {
     for (const category of resource.categories ?? []) {
@@ -162,22 +187,14 @@ function renderQuickCategories() {
     }
   }
 
-  const topCategories = [...counts.entries()]
+  const ranked = [...counts.entries()]
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 7);
+    .slice(0, 16);
 
-  for (const [category, count] of topCategories) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'quick-category';
-    button.dataset.category = category;
-    button.textContent = `${category} · ${count}`;
-    button.addEventListener('click', () => {
-      els.category.value = els.category.value === category ? '' : category;
-      render();
-      document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    els.quickCategories.append(button);
+  for (const [category] of ranked) {
+    const categoryInfo = state.categories.find((item) => item.name === category);
+    const label = `${categoryInfo?.icon ? `${categoryInfo.icon} ` : ''}${category}`;
+    els.quickCategories.append(createQuickCategory(label, category));
   }
 }
 
@@ -187,34 +204,62 @@ function syncQuickCategoryState() {
   }
 }
 
+function setSearchValue(value, source) {
+  els.search.value = value;
+  els.compactSearch.value = value;
+  render();
+  if (source === 'hero') els.compactSearch.value = value;
+  if (source === 'compact') els.search.value = value;
+}
+
+function goToResults() {
+  document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function resetFilters() {
-  els.search.value = '';
+  setSearchValue('', 'hero');
   els.category.value = '';
   els.type.value = '';
   els.free.checked = false;
   els.openSource.checked = false;
   els.sort.value = 'rating';
   render();
-  els.search.focus();
+  (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
+}
+
+function updateCompactMode() {
+  const compact = window.scrollY > 250;
+  document.body.classList.toggle('compact-mode', compact);
+  els.compactSearch.tabIndex = compact ? 0 : -1;
+  document.querySelector('.compact-search-wrap')?.setAttribute('aria-hidden', compact ? 'false' : 'true');
 }
 
 function bindEvents() {
-  for (const el of [els.search, els.category, els.type, els.free, els.openSource, els.sort]) {
+  els.search.addEventListener('input', () => setSearchValue(els.search.value, 'hero'));
+  els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value, 'compact'));
+
+  for (const el of [els.category, els.type, els.free, els.openSource, els.sort]) {
     el.addEventListener('input', render);
     el.addEventListener('change', render);
   }
 
   els.reset.addEventListener('click', resetFilters);
+  els.heroSubmit.addEventListener('click', goToResults);
+  els.compactSubmit.addEventListener('click', goToResults);
+  window.addEventListener('scroll', updateCompactMode, { passive: true });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === '/' && document.activeElement !== els.search && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+    const activeTag = document.activeElement?.tagName;
+    if (event.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) {
       event.preventDefault();
-      els.search.focus();
+      (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
     }
-    if (event.key === 'Escape' && document.activeElement === els.search) {
-      els.search.value = '';
-      render();
-      els.search.blur();
+    if (event.key === 'Escape' && [els.search, els.compactSearch].includes(document.activeElement)) {
+      setSearchValue('', 'hero');
+      document.activeElement.blur();
+    }
+    if (event.key === 'Enter' && [els.search, els.compactSearch].includes(document.activeElement)) {
+      goToResults();
     }
   });
 }
@@ -234,6 +279,7 @@ async function init() {
     renderStats();
     renderQuickCategories();
     bindEvents();
+    updateCompactMode();
     render();
   } catch (error) {
     console.error(error);
