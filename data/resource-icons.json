@@ -1,62 +1,62 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "updated_at": "2026-08-23",
   "icons": {
     "emil-kowalski-skills": {
-      "url": "https://github.com/emilkowalski.png?size=128",
-      "source": "github-owner-avatar"
+      "url": "https://github.com/emilkowalski.png?size=256",
+      "source": "github-owner-avatar-256"
     },
     "refero-styles": {
-      "url": "https://styles.refero.design/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design",
+      "source": "domain-favicon-128"
     },
     "soundshockaudio": {
-      "url": "https://soundshockaudio.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://soundshockaudio.com",
+      "source": "domain-favicon-128"
     },
     "hallmark": {
-      "url": "https://github.com/Nutlope.png?size=128",
-      "source": "github-owner-avatar"
+      "url": "https://github.com/Nutlope.png?size=256",
+      "source": "github-owner-avatar-256"
     },
     "ip-as-logo-skill": {
-      "url": "https://github.com/s1dashu.png?size=128",
-      "source": "github-owner-avatar"
+      "url": "https://github.com/s1dashu.png?size=256",
+      "source": "github-owner-avatar-256"
     },
     "react-bits-shape-grid": {
-      "url": "https://reactbits.dev/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://reactbits.dev",
+      "source": "domain-favicon-128"
     },
     "ui-skills": {
-      "url": "https://www.ui-skills.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.ui-skills.com",
+      "source": "domain-favicon-128"
     },
     "cloudflare-dashboard": {
-      "url": "https://www.cloudflare.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.cloudflare.com",
+      "source": "domain-favicon-128"
     },
     "xorxor-hu-codepen": {
-      "url": "https://codepen.io/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io",
+      "source": "domain-favicon-128"
     },
     "oracle-cloud-free-tier": {
-      "url": "https://www.oracle.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.oracle.com",
+      "source": "domain-favicon-128"
     },
     "supabase-dashboard": {
-      "url": "https://supabase.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://supabase.com",
+      "source": "domain-favicon-128"
     },
     "mistral-studio": {
-      "url": "https://mistral.ai/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mistral.ai",
+      "source": "domain-favicon-128"
     },
     "capafy-ai": {
-      "url": "https://capafy.ai/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
+      "source": "domain-favicon-128"
     },
     "animejs": {
-      "url": "https://animejs.com/favicon.ico",
-      "source": "official-site-favicon"
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com",
+      "source": "domain-favicon-128"
     }
   }
 }
