@@ -69,6 +69,10 @@
     "money-printer-turbo": {
       "url": "https://github.com/harry0703.png?size=256",
       "source": "github-owner-avatar-256"
+    },
+    "reverse-skill": {
+      "url": "https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png",
+      "source": "official-repository-project-image"
     }
   }
 }
