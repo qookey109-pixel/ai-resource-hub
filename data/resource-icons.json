@@ -24,6 +24,8 @@
     "voice-studio": {"url": "https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png", "source": "official-repository-project-logo"},
     "dsh-desktop": {"url": "https://raw.githubusercontent.com/vibeinging/dsh-desktop/dev/electron/icons/icon.svg", "source": "official-repository-app-icon-svg"},
     "ai-website-cloner-template": {"url": "https://github.com/JCodesMore.png?size=256", "source": "github-owner-avatar-256-fallback-no-project-logo"},
-    "threeui-community": {"url": "https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg", "source": "official-repository-project-mark-svg"}
+    "threeui-community": {"url": "https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg", "source": "official-repository-project-mark-svg"},
+    "elevenlabs": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://elevenlabs.io", "source": "domain-favicon-128"},
+    "meshy-ai": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.meshy.ai", "source": "domain-favicon-128"}
   }
 }
