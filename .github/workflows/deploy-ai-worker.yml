@@ -2,9 +2,19 @@ name: Deploy AI Worker
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "worker/**"
+      - ".github/workflows/deploy-ai-worker.yml"
 
 permissions:
   contents: read
+
+concurrency:
+  group: deploy-ai-worker
+  cancel-in-progress: false
 
 jobs:
   deploy:
