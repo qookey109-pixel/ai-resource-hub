@@ -1,7 +1,17 @@
 const state = {
   resources: [],
   categories: [],
-  icons: {}
+  icons: {},
+  aiConfig: { enabled: false, endpoint: '' },
+  ai: {
+    active: false,
+    loading: false,
+    mode: '',
+    intentSummary: '',
+    recommendations: [],
+    stackPlan: [],
+    caveats: []
+  }
 };
 
 const els = {
@@ -22,7 +32,13 @@ const els = {
   totalStat: document.querySelector('#total-stat'),
   categoryStat: document.querySelector('#category-stat'),
   openStat: document.querySelector('#open-stat'),
-  template: document.querySelector('#resource-template')
+  template: document.querySelector('#resource-template'),
+  aiPanel: document.querySelector('#ai-panel'),
+  aiPanelStatus: document.querySelector('#ai-panel-status'),
+  aiPanelBadge: document.querySelector('#ai-panel-badge'),
+  aiRecommendations: document.querySelector('#ai-recommendations'),
+  aiPlan: document.querySelector('#ai-plan'),
+  aiCaveats: document.querySelector('#ai-caveats')
 };
 
 const typeLabels = {
@@ -85,18 +101,29 @@ function isFree(resource) {
   return ['free', 'freemium', 'open-source'].includes(resource.pricing) || resource.open_source === true;
 }
 
-function filteredResources() {
-  const query = normalise(els.search.value);
+function matchesSecondaryFilters(resource) {
   const category = els.category.value;
   const type = els.type.value;
+  if (category && !(resource.categories ?? []).includes(category)) return false;
+  if (type && resource.type !== type) return false;
+  if (els.free.checked && !isFree(resource)) return false;
+  if (els.openSource.checked && resource.open_source !== true) return false;
+  return true;
+}
 
+function filteredResources() {
+  if (state.ai.active && state.ai.recommendations.length) {
+    const byId = new Map(state.resources.map((resource) => [resource.id, resource]));
+    return state.ai.recommendations
+      .map((recommendation) => byId.get(recommendation.id))
+      .filter(Boolean)
+      .filter(matchesSecondaryFilters);
+  }
+
+  const query = normalise(els.search.value);
   const resources = state.resources.filter((resource) => {
     if (query && !searchableText(resource).includes(query)) return false;
-    if (category && !(resource.categories ?? []).includes(category)) return false;
-    if (type && resource.type !== type) return false;
-    if (els.free.checked && !isFree(resource)) return false;
-    if (els.openSource.checked && resource.open_source !== true) return false;
-    return true;
+    return matchesSecondaryFilters(resource);
   });
 
   const sort = els.sort.value;
@@ -240,6 +267,7 @@ function createQuickCategory(label, category = '') {
   button.dataset.category = category;
   button.textContent = label;
   button.addEventListener('click', () => {
+    clearAiState(true);
     els.category.value = category;
     render();
     document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -276,20 +304,170 @@ function syncQuickCategoryState() {
   }
 }
 
-function setSearchValue(value, source) {
+function setSearchValue(value, { clearAi = false } = {}) {
   els.search.value = value;
   els.compactSearch.value = value;
+  if (clearAi) clearAiState(true);
   render();
-  if (source === 'hero') els.compactSearch.value = value;
-  if (source === 'compact') els.search.value = value;
 }
 
 function goToResults() {
   document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function clearAiState(hidePanel = false) {
+  state.ai.active = false;
+  state.ai.mode = '';
+  state.ai.intentSummary = '';
+  state.ai.recommendations = [];
+  state.ai.stackPlan = [];
+  state.ai.caveats = [];
+  if (hidePanel) {
+    els.aiPanel.hidden = true;
+    els.aiPanel.classList.remove('error');
+  }
+}
+
+function setAiLoading(loading) {
+  state.ai.loading = loading;
+  for (const button of [els.heroSubmit, els.compactSubmit]) {
+    button.disabled = loading;
+    button.classList.toggle('is-loading', loading);
+    button.textContent = loading ? '…' : '→';
+  }
+}
+
+function renderList(container, items) {
+  const list = container.querySelector('ol, ul');
+  list.replaceChildren();
+  for (const item of items) {
+    const li = document.createElement('li');
+    li.textContent = item;
+    list.append(li);
+  }
+  container.hidden = items.length === 0;
+}
+
+function renderAiPanel() {
+  els.aiPanel.hidden = false;
+  els.aiPanel.classList.remove('error');
+  els.aiRecommendations.replaceChildren();
+  els.aiPanelBadge.textContent = state.ai.mode === 'fallback' ? '備援建議' : 'AI 推薦';
+  els.aiPanelStatus.textContent = state.ai.intentSummary || '已依你的任務從目前資源庫挑選候選。';
+
+  const byId = new Map(state.resources.map((resource) => [resource.id, resource]));
+  for (const recommendation of state.ai.recommendations) {
+    const resource = byId.get(recommendation.id);
+    if (!resource) continue;
+
+    const item = document.createElement('article');
+    item.className = 'ai-recommendation-item';
+
+    const top = document.createElement('div');
+    top.className = 'ai-recommendation-top';
+
+    const name = document.createElement('h3');
+    name.className = 'ai-recommendation-name';
+    name.textContent = resource.name;
+
+    const role = document.createElement('span');
+    role.className = 'ai-recommendation-role';
+    role.textContent = recommendation.role || '推薦資源';
+
+    top.append(name, role);
+    item.append(top);
+
+    if (recommendation.reason) {
+      const reason = document.createElement('p');
+      reason.className = 'ai-recommendation-reason';
+      reason.textContent = recommendation.reason;
+      item.append(reason);
+    }
+
+    if (recommendation.how_to_use) {
+      const how = document.createElement('p');
+      how.className = 'ai-recommendation-how';
+      how.textContent = `怎麼用：${recommendation.how_to_use}`;
+      item.append(how);
+    }
+
+    els.aiRecommendations.append(item);
+  }
+
+  renderList(els.aiPlan, state.ai.stackPlan);
+  renderList(els.aiCaveats, state.ai.caveats);
+}
+
+function renderAiUnavailable(message) {
+  clearAiState(false);
+  els.aiPanel.hidden = false;
+  els.aiPanel.classList.add('error');
+  els.aiPanelBadge.textContent = '尚未啟用';
+  els.aiPanelStatus.textContent = message;
+  els.aiRecommendations.replaceChildren();
+  els.aiPlan.hidden = true;
+  els.aiCaveats.hidden = true;
+}
+
+async function requestAiRecommendations() {
+  const query = String(els.search.value || '').trim();
+  if (query.length < 2) {
+    goToResults();
+    return;
+  }
+
+  if (!state.aiConfig.enabled || !state.aiConfig.endpoint) {
+    renderAiUnavailable('AI 後端程式已準備完成，但目前還沒有部署啟用；現在先保留關鍵字搜尋結果。');
+    goToResults();
+    return;
+  }
+
+  setAiLoading(true);
+  els.aiPanel.hidden = false;
+  els.aiPanel.classList.remove('error');
+  els.aiPanelBadge.textContent = '分析中';
+  els.aiPanelStatus.textContent = '正在理解任務，並從目前資源庫挑選最適合的組合…';
+  els.aiRecommendations.replaceChildren();
+  els.aiPlan.hidden = true;
+  els.aiCaveats.hidden = true;
+
+  try {
+    const response = await fetch(state.aiConfig.endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+
+    if (!response.ok) throw new Error(`AI backend ${response.status}`);
+    const data = await response.json();
+    const recommendations = Array.isArray(data.recommendations)
+      ? data.recommendations.filter((item) => state.resources.some((resource) => resource.id === item.id)).slice(0, 5)
+      : [];
+
+    if (!recommendations.length) throw new Error('AI backend returned no valid catalog resources');
+
+    state.ai.active = true;
+    state.ai.mode = data.mode === 'fallback' ? 'fallback' : 'ai';
+    state.ai.intentSummary = String(data.intent_summary || '');
+    state.ai.recommendations = recommendations;
+    state.ai.stackPlan = Array.isArray(data.stack_plan) ? data.stack_plan : [];
+    state.ai.caveats = Array.isArray(data.caveats) ? data.caveats : [];
+
+    renderAiPanel();
+    render();
+    els.aiPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (error) {
+    console.error(error);
+    renderAiUnavailable('AI 推薦暫時連線失敗；原本的關鍵字搜尋仍可正常使用。');
+  } finally {
+    setAiLoading(false);
+  }
+}
+
 function resetFilters() {
-  setSearchValue('', 'hero');
+  clearAiState(true);
+  els.search.value = '';
+  els.compactSearch.value = '';
   els.category.value = '';
   els.type.value = '';
   els.free.checked = false;
@@ -307,8 +485,8 @@ function updateCompactMode() {
 }
 
 function bindEvents() {
-  els.search.addEventListener('input', () => setSearchValue(els.search.value, 'hero'));
-  els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value, 'compact'));
+  els.search.addEventListener('input', () => setSearchValue(els.search.value, { clearAi: true }));
+  els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value, { clearAi: true }));
 
   for (const el of [els.category, els.type, els.free, els.openSource, els.sort]) {
     el.addEventListener('input', render);
@@ -316,8 +494,8 @@ function bindEvents() {
   }
 
   els.reset.addEventListener('click', resetFilters);
-  els.heroSubmit.addEventListener('click', goToResults);
-  els.compactSubmit.addEventListener('click', goToResults);
+  els.heroSubmit.addEventListener('click', requestAiRecommendations);
+  els.compactSubmit.addEventListener('click', requestAiRecommendations);
   window.addEventListener('scroll', updateCompactMode, { passive: true });
 
   document.addEventListener('keydown', (event) => {
@@ -327,26 +505,33 @@ function bindEvents() {
       (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
     }
     if (event.key === 'Escape' && [els.search, els.compactSearch].includes(document.activeElement)) {
-      setSearchValue('', 'hero');
+      clearAiState(true);
+      setSearchValue('');
       document.activeElement.blur();
     }
     if (event.key === 'Enter' && [els.search, els.compactSearch].includes(document.activeElement)) {
-      goToResults();
+      event.preventDefault();
+      requestAiRecommendations();
     }
   });
 }
 
 async function init() {
   try {
-    const [resourceDoc, categoryDoc, iconDoc] = await Promise.all([
+    const [resourceDoc, categoryDoc, iconDoc, aiConfigDoc] = await Promise.all([
       loadJson('./data/resources.json'),
       loadJson('./data/categories.json'),
-      loadJson('./data/resource-icons.json')
+      loadJson('./data/resource-icons.json'),
+      loadJson('./data/ai-config.json')
     ]);
 
     state.resources = Array.isArray(resourceDoc.resources) ? resourceDoc.resources : [];
     state.categories = Array.isArray(categoryDoc.categories) ? categoryDoc.categories : [];
     state.icons = iconDoc && typeof iconDoc.icons === 'object' ? iconDoc.icons : {};
+    state.aiConfig = {
+      enabled: aiConfigDoc?.enabled === true,
+      endpoint: String(aiConfigDoc?.endpoint || '').trim()
+    };
 
     populateCategories();
     populateTypes();
