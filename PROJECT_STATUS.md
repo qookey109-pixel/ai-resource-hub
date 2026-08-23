@@ -15,20 +15,23 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **18 verified resources**.
+- Catalog now contains **20 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
 - MoneyPrinterTurbo added as an active MIT-licensed AI short-video automation toolkit with WebUI, API, CLI and AI Agent usage modes.
 - reverse-skill added as an active MIT-licensed reverse-engineering / authorized-security-research Skill Router with scope gates, routing rules, regression tests and cross-platform workflows; bundled or external components may use other licenses.
-- All current user-facing resource descriptions, use cases and notes were converted to Traditional Chinese.
-- Frontend type / pricing / source-state labels were localized to Traditional Chinese.
+- Mechanical Deployables for Three.js added as a 3D/WebGL mechanical deployment animation reference with 11 interactive models and a reusable model contract; no repository license is currently declared, so reuse rights remain unconfirmed.
+- VoiceStudio added as an active-beta AGPL-3.0 local-first voice AI workstation covering voice cloning, voice design, dubbing, dictation, transcription, audiobooks, REST/OpenAI-compatible audio APIs and MCP.
+- Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
+- All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
+- Frontend type / pricing / source-state labels are localized to Traditional Chinese.
 - Category display names are localized to Traditional Chinese while stable internal category keys remain unchanged for data compatibility.
-- Resource schema now requires Traditional Chinese for future `summary`, `use_cases` and `notes` fields by default.
-- Original Qookey mascot icon added and wired as the site brand icon / SVG favicon.
-- A dedicated per-resource icon registry now exists at `data/resource-icons.json`.
+- Resource schema requires Traditional Chinese for future `summary`, `use_cases` and `notes` fields by default.
+- Original Qookey mascot icon is wired as the site brand icon / SVG favicon.
+- A dedicated per-resource icon registry exists at `data/resource-icons.json`.
 - Resource cards prefer their own official-site favicon, project logo or project/owner image instead of sharing category icons.
-- Higher-resolution icon sources are preferred; World Monitor uses its official Apple touch icon, Pi uses the official `pi.dev` SVG logo, reverse-skill uses its repository project image, and GitHub owner avatars use 256px sources when a better project-specific icon is not verified.
+- Higher-resolution icon sources are preferred; VoiceStudio uses its repository project logo. Mechanical Deployables currently falls back to the author's 256px GitHub avatar because no project-specific logo was found.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -36,7 +39,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 
 ## Current catalog
 
-- Total resources: 18
+- Total resources: 20
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -86,6 +89,7 @@ Do not claim the public site is live until the Pages deployment is verified succ
 11. User-facing `summary`, `use_cases` and `notes` must be Traditional Chinese by default.
 12. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
 13. Resource cards should prefer resource-specific official icons; category icons are fallback only.
+14. A public repository without an explicit license must not be described as freely reusable or commercially usable; preserve license as unknown until verified.
 
 ## Next step
 
