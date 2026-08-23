@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-08-23",
+  "categories": [
+    {"id": "ai-llm", "name": "AI / LLM", "icon": "🤖"},
+    {"id": "ai-coding", "name": "AI Coding", "icon": "💻"},
+    {"id": "agents-mcp-skills", "name": "Agents / MCP / Skills", "icon": "🧩"},
+    {"id": "game-ai-dev", "name": "Game AI / Game Dev", "icon": "🎮"},
+    {"id": "ui-ux-design", "name": "UI / UX / Design", "icon": "🎨"},
+    {"id": "image-video-audio", "name": "Image / Video / Audio AI", "icon": "🖼️"},
+    {"id": "search-research", "name": "Search / Research", "icon": "🔎"},
+    {"id": "automation", "name": "Automation", "icon": "⚙️"},
+    {"id": "scraping-data-collection", "name": "Scraping / Data Collection", "icon": "🕷️"},
+    {"id": "data-analytics", "name": "Data / Analytics", "icon": "📊"},
+    {"id": "database", "name": "Database", "icon": "🗄️"},
+    {"id": "cloud-deployment", "name": "Cloud / Deployment", "icon": "☁️"},
+    {"id": "security", "name": "Security", "icon": "🔐"},
+    {"id": "github-libraries", "name": "GitHub Libraries", "icon": "📦"},
+    {"id": "developer-tools", "name": "Developer Tools", "icon": "🛠️"},
+    {"id": "finance-crypto", "name": "Finance / Crypto", "icon": "💰"},
+    {"id": "app-development", "name": "App Development", "icon": "📱"},
+    {"id": "testing-qa", "name": "Testing / QA", "icon": "🧪"},
+    {"id": "learning-documentation", "name": "Learning / Documentation", "icon": "📚"},
+    {"id": "other", "name": "Other", "icon": "🧰"}
+  ]
+}
