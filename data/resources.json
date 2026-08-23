@@ -9,8 +9,8 @@
       "url": "https://github.com/emilkowalski/skills",
       "categories": ["Agents / MCP / Skills", "UI / UX / Design", "AI Coding", "Developer Tools"],
       "tags": ["agent-skills", "ui", "animation", "design-review", "react-native", "swift", "frontend"],
-      "summary": "A collection of Agent Skills for designers and engineers focused on better UI, animation, design decisions, Swift, and interface tooling.",
-      "use_cases": ["Guide coding agents toward stronger UI and motion decisions", "Review and improve animations", "Prototype UI variants", "Help agents choose trusted UI libraries"],
+      "summary": "一套給設計師與工程師使用的 Agent Skills，重點涵蓋 UI、動畫、設計判斷、Swift 與介面開發，讓 AI Coding Agent 在視覺與互動細節上做出更好的決策。",
+      "use_cases": ["協助 AI Coding Agent 做出更好的 UI 與動態效果", "審查並改善介面動畫", "快速製作多種 UI 原型", "協助 Agent 選擇可靠的 UI 函式庫"],
       "pricing": "open-source",
       "open_source": true,
       "license": "MIT",
@@ -19,7 +19,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Especially useful with AI coding agents when visual quality and motion taste matter."
+      "notes": "特別適合搭配 Codex、Claude Code、Cursor 等 Coding Agent；當技術功能已完成，但視覺品質與動態細節不足時很有價值。"
     },
     {
       "id": "refero-styles",
@@ -28,8 +28,8 @@
       "url": "https://styles.refero.design",
       "categories": ["UI / UX / Design", "AI Coding", "Agents / MCP / Skills", "Learning / Documentation"],
       "tags": ["design-md", "design-system", "design-reference", "frontend", "cursor", "claude-code", "codex", "tailwind"],
-      "summary": "A searchable library of 2,000+ AI-readable design-system references derived from real product websites, including DESIGN.md, typography, spacing, colors, components, and tokens.",
-      "use_cases": ["Give coding agents concrete visual references before building UI", "Copy DESIGN.md-style context for AI-assisted frontend work", "Study design tokens and component patterns", "Find visual directions by brand or style"],
+      "summary": "可搜尋的 AI 友善設計系統參考庫，整理真實產品網站的 DESIGN.md、字體、間距、配色、元件與設計 Token，適合直接提供給 AI Coding Agent 當視覺參考。",
+      "use_cases": ["在做前端前先提供具體設計方向給 Coding Agent", "取得可供 AI 使用的 DESIGN.md 類設計脈絡", "研究設計 Token 與元件規則", "依品牌或風格尋找網站設計參考"],
       "pricing": "free",
       "open_source": null,
       "license": null,
@@ -38,7 +38,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "The Styles library was freely browsable when checked; Refero MCP and the main Refero product may have separate plans."
+      "notes": "Styles 資料庫目前可免費瀏覽；Refero 的其他產品或 MCP 服務可能有不同方案，使用前仍需確認。"
     },
     {
       "id": "soundshockaudio",
@@ -47,8 +47,8 @@
       "url": "https://soundshockaudio.com",
       "categories": ["Audio / Music Production"],
       "tags": ["audio", "music-production", "vst", "samples", "sample-packs", "presets", "daw", "kontakt", "midi"],
-      "summary": "A curated library of free music-production resources including VST plugins, sample packs, synth presets, DAW templates, Kontakt instruments, MIDI files, and apps.",
-      "use_cases": ["Find free audio tools for games, video, music, and media production", "Browse VST plugins and effects", "Find sample packs and sound effects", "Locate DAW templates, presets, and Kontakt instruments"],
+      "summary": "免費音樂製作資源整理站，收錄 VST 外掛、Sample Pack、合成器 Preset、DAW Template、Kontakt 樂器、MIDI 與其他音訊工具。",
+      "use_cases": ["替遊戲、影片、音樂或媒體專案尋找免費音訊工具", "尋找 VST 樂器與效果器", "尋找 Sample Pack 與音效資源", "尋找 DAW 範本、Preset 與 Kontakt 樂器"],
       "pricing": "free",
       "open_source": null,
       "license": null,
@@ -57,7 +57,7 @@
       "rating": 4,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Individual third-party downloads have their own licenses; verify each tool or sample pack before commercial reuse."
+      "notes": "站內多數內容來自不同第三方來源，各資源授權可能不同；商用前需個別確認 License。"
     },
     {
       "id": "hallmark",
@@ -66,8 +66,8 @@
       "url": "https://github.com/Nutlope/hallmark",
       "categories": ["Agents / MCP / Skills", "UI / UX / Design", "AI Coding", "Developer Tools"],
       "tags": ["design-skill", "claude-code", "cursor", "codex", "frontend", "ui-audit", "redesign", "design-study"],
-      "summary": "An MIT-licensed design skill for Claude Code, Cursor, and Codex that builds, audits, redesigns, and studies interfaces while actively avoiding common AI-generated design patterns.",
-      "use_cases": ["Generate more distinctive frontend designs", "Audit existing UI for generic AI-design patterns", "Redesign a site while preserving content and information architecture", "Extract design DNA from screenshots or URLs into reusable design context"],
+      "summary": "MIT 授權的設計 Skill，可搭配 Claude Code、Cursor 與 Codex 建立、審查、重新設計或研究介面，重點是避免常見的「AI 生成感」與制式化版型。",
+      "use_cases": ["產生更有辨識度的前端設計", "檢查既有 UI 是否有常見 AI 設計套路", "保留內容與資訊架構後重新設計網站", "從截圖或網址萃取可重複使用的設計 DNA"],
       "pricing": "open-source",
       "open_source": true,
       "license": "MIT",
@@ -76,7 +76,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Strong fit when an AI coding agent produces technically correct but visually generic pages."
+      "notes": "當 AI Coding Agent 做出的網站功能正確、但視覺過於普通或很有 AI 模板感時特別實用。"
     },
     {
       "id": "ip-as-logo-skill",
@@ -85,8 +85,8 @@
       "url": "https://github.com/s1dashu/ip-as-logo-skill",
       "categories": ["Agents / MCP / Skills", "Image / Video / Audio AI", "UI / UX / Design"],
       "tags": ["agent-skill", "image-generation", "mascot", "branding", "logo", "character-design", "codex"],
-      "summary": "A compact MIT-licensed Agent Skill for generating simple, cute, company-ready IP mascots with strict silhouette, color, composition, and complexity guidance.",
-      "use_cases": ["Create brand mascots and simple character IP", "Generate consistent square mascot concepts with image-capable agents", "Explore multiple controlled mascot directions for a product or company"],
+      "summary": "MIT 授權的 Agent Skill，用極簡、圓潤、少色彩與清楚輪廓等規則，協助 AI 產生適合品牌使用的可愛 IP 吉祥物與方形角色圖。",
+      "use_cases": ["建立品牌吉祥物或簡單角色 IP", "讓具備圖片生成能力的 Agent 產生一致的角色概念", "替產品或公司探索多個受控的吉祥物設計方向"],
       "pricing": "open-source",
       "open_source": true,
       "license": "MIT",
@@ -95,7 +95,7 @@
       "rating": 4,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Requires a compatible agent with a capable image-generation model for the intended workflow."
+      "notes": "需要搭配支援高品質圖片生成的 Agent 或模型；Qookey 品牌圖標借用其設計原則，但不直接複製任何現成角色。"
     },
     {
       "id": "react-bits-shape-grid",
@@ -104,8 +104,8 @@
       "url": "https://reactbits.dev/backgrounds/shape-grid",
       "categories": ["UI / UX / Design", "Developer Tools", "App Development"],
       "tags": ["react", "shape-grid", "animated-background", "frontend", "ui-component", "creative-ui"],
-      "summary": "A React Bits animated background resource for building a shape-grid visual effect in React interfaces.",
-      "use_cases": ["Add a distinctive animated background to landing pages", "Prototype visual hero sections", "Use as frontend interaction inspiration"],
+      "summary": "React Bits 的動態背景元件，可在 React 介面中製作 Shape Grid 幾何網格動畫效果，適合首頁 Hero 或視覺型 Landing Page。",
+      "use_cases": ["替 Landing Page 加入有辨識度的動態背景", "快速製作視覺型首頁 Hero", "作為前端互動與動態設計的靈感來源"],
       "pricing": "freemium",
       "open_source": null,
       "license": null,
@@ -114,7 +114,7 @@
       "rating": 4,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "React Bits currently offers both free resources and Pro content; verify the specific component license before redistribution."
+      "notes": "React Bits 同時有免費與 Pro 內容；若要重新散布或商用特定元件，仍應確認該元件當下的授權條款。"
     },
     {
       "id": "ui-skills",
@@ -123,8 +123,8 @@
       "url": "https://www.ui-skills.com/skills",
       "categories": ["Agents / MCP / Skills", "UI / UX / Design", "AI Coding", "Testing / QA", "Developer Tools"],
       "tags": ["agent-skills", "ui", "accessibility", "motion", "performance", "frontend", "codex", "cursor", "claude-code"],
-      "summary": "A large design-engineering skill registry for AI coding agents covering accessibility, motion, frameworks, testing, performance, craft, and visual quality.",
-      "use_cases": ["Route AI agents to task-specific UI guidance", "Audit accessibility and motion performance", "Improve frontend design quality", "Browse reusable design-engineering skills"],
+      "summary": "大型 UI／設計工程 Skill 資源庫，內容涵蓋無障礙、動畫、框架、測試、效能、視覺品質與前端工程，可讓 AI Coding Agent 依任務選擇專用規則。",
+      "use_cases": ["依 UI 任務替 AI Agent 導入專門指引", "審查無障礙與動畫效能", "改善前端設計品質", "瀏覽並挑選可重複使用的設計工程 Skills"],
       "pricing": "open-source",
       "open_source": true,
       "license": "MIT",
@@ -133,7 +133,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "The site listed 221 skills when checked; the associated ibelick/ui-skills project is MIT-licensed."
+      "notes": "檢查時網站列出 221 個 Skills；其關聯的 ibelick/ui-skills 專案採 MIT License。"
     },
     {
       "id": "cloudflare-dashboard",
@@ -142,8 +142,8 @@
       "url": "https://dash.cloudflare.com/",
       "categories": ["Cloud / Deployment", "Database", "Developer Tools", "Automation"],
       "tags": ["cloudflare", "workers", "pages", "r2", "d1", "edge", "serverless", "deployment"],
-      "summary": "Cloudflare's control panel for Workers, Pages, R2, D1 and other edge, storage, networking, security, and developer services.",
-      "use_cases": ["Deploy web applications and Workers", "Manage R2 object storage", "Create and operate D1 databases", "Manage domains and Cloudflare developer services"],
+      "summary": "Cloudflare 的管理後台，可操作 Workers、Pages、R2、D1，以及其他邊緣運算、儲存、網路、安全與開發者服務。",
+      "use_cases": ["部署網站與 Cloudflare Workers", "管理 R2 物件儲存", "建立與操作 D1 資料庫", "管理網域與其他 Cloudflare 開發服務"],
       "pricing": "freemium",
       "open_source": false,
       "license": null,
@@ -152,7 +152,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Stored as the generic dashboard URL; never store account tokens, API keys, or secret-bearing URLs in the public catalog."
+      "notes": "資源庫只保存通用 Dashboard 入口；API Key、Token、帳號專屬網址或含 Secret 的連結一律不得公開收藏。"
     },
     {
       "id": "xorxor-hu-codepen",
@@ -161,8 +161,8 @@
       "url": "https://codepen.io/xorxor_hu",
       "categories": ["UI / UX / Design", "Developer Tools", "Learning / Documentation"],
       "tags": ["codepen", "frontend", "css", "javascript", "design-reference", "code-examples"],
-      "summary": "A public CodePen creator profile saved as a frontend visual and code-reference source.",
-      "use_cases": ["Browse frontend experiments", "Collect UI and animation inspiration", "Study individual public Pens before adapting ideas"],
+      "summary": "CodePen 上的公開創作者頁面，可作為前端視覺效果、CSS／JavaScript 實驗與互動設計的參考來源。",
+      "use_cases": ["瀏覽前端互動與視覺實驗", "收藏 UI 與動畫靈感", "研究個別公開 Pen 的程式寫法後再自行改作"],
       "pricing": "freemium",
       "open_source": null,
       "license": null,
@@ -171,7 +171,7 @@
       "rating": null,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "The profile page could not be reliably inspected during ingestion, so content quality and individual Pen licensing remain unverified."
+      "notes": "目前無法穩定讀取完整個人頁內容，因此作者所有作品的品質與個別 Pen 授權仍標記為待確認。"
     },
     {
       "id": "oracle-cloud-free-tier",
@@ -180,8 +180,8 @@
       "url": "https://www.oracle.com/tw/cloud/free/",
       "categories": ["Cloud / Deployment", "Database", "Developer Tools"],
       "tags": ["oracle-cloud", "oci", "free-tier", "vm", "arm", "compute", "object-storage", "database"],
-      "summary": "Oracle Cloud Infrastructure free tier with Always Free resources plus a time-limited free trial for eligible OCI services.",
-      "use_cases": ["Run small cloud VMs and proof-of-concept workloads", "Use Always Free compute and storage within limits", "Test OCI databases and infrastructure services"],
+      "summary": "Oracle Cloud Infrastructure 的免費方案入口，提供 Always Free 資源與符合資格使用者的限時試用額度，可用來測試 VM、儲存與資料庫等 OCI 服務。",
+      "use_cases": ["執行小型雲端 VM 或概念驗證工作負載", "在限制內使用 Always Free Compute 與 Storage", "測試 OCI 資料庫與基礎設施服務"],
       "pricing": "freemium",
       "open_source": false,
       "license": null,
@@ -190,7 +190,7 @@
       "rating": 4,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Oracle currently documents Always Free resources and a US$300/30-day trial; capacity, region and eligibility limits apply."
+      "notes": "免費資源會受到地區、容量、帳戶資格與方案條款限制，實際建立資源前需再確認當下可用額度。"
     },
     {
       "id": "supabase-dashboard",
@@ -199,8 +199,8 @@
       "url": "https://supabase.com/dashboard",
       "categories": ["Database", "Cloud / Deployment", "Developer Tools", "App Development"],
       "tags": ["supabase", "postgres", "auth", "storage", "realtime", "edge-functions", "backend", "baas"],
-      "summary": "Supabase's hosted developer platform and dashboard for Postgres databases, auto-generated APIs, Auth, Edge Functions, Realtime and Storage.",
-      "use_cases": ["Build application backends quickly", "Manage Postgres data and SQL", "Add authentication and storage", "Deploy Edge Functions and realtime features"],
+      "summary": "Supabase 的開發平台與管理後台，整合 Postgres、API、Auth、Storage、Realtime 與 Edge Functions，適合快速建立網站或 App 後端。",
+      "use_cases": ["快速建立應用程式後端", "管理 Postgres 資料與 SQL", "加入登入驗證與檔案儲存", "部署 Edge Functions 與即時功能"],
       "pricing": "freemium",
       "open_source": null,
       "license": null,
@@ -209,7 +209,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "The user-supplied organization-specific dashboard URL was intentionally replaced with the generic public dashboard URL before publishing to this public repository."
+      "notes": "原始提供的網址包含特定 Organization 路徑，因此公開資源庫改存通用 Dashboard，避免公開帳號專屬識別資訊。"
     },
     {
       "id": "mistral-studio",
@@ -218,8 +218,8 @@
       "url": "https://console.mistral.ai/",
       "categories": ["AI / LLM", "Developer Tools", "AI Coding"],
       "tags": ["mistral", "llm", "api", "playground", "agents", "rag", "ocr", "audio", "api-keys"],
-      "summary": "Mistral AI's developer console for API keys, model playgrounds, agents, evaluations, usage monitoring, text, audio, OCR and RAG workflows.",
-      "use_cases": ["Create and manage Mistral API keys", "Prototype prompts in a model playground", "Build AI applications and agents", "Use Mistral text, audio, OCR and RAG APIs"],
+      "summary": "Mistral AI 的開發者控制台，可管理 API Key、模型 Playground、Agents、評估與使用量，也可使用文字、音訊、OCR 與 RAG 等能力。",
+      "use_cases": ["建立與管理 Mistral API Key", "在 Playground 測試 Prompt 與模型", "建立 AI 應用與 Agent", "使用 Mistral 的文字、音訊、OCR 與 RAG API"],
       "pricing": "freemium",
       "open_source": false,
       "license": null,
@@ -228,7 +228,7 @@
       "rating": 5,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "The supplied authentication-flow URL was not stored because login flow parameters are temporary. Mistral currently documents a Free mode with limits and no card required for initial API access."
+      "notes": "使用者提供的是一次性登入 Flow 網址，因此沒有保存該參數，公開資源庫只保留正式 Console 入口。"
     },
     {
       "id": "capafy-ai",
@@ -237,8 +237,8 @@
       "url": "https://capafy.ai/zh-hant/",
       "categories": ["Agents / MCP / Skills", "AI / LLM", "Developer Tools"],
       "tags": ["agent-skills", "marketplace", "codex", "claude-code", "agents", "skill-selling", "monetization"],
-      "summary": "A Skill-based AI Agent marketplace where users can discover and run specialist agents and creators can package and sell reusable Skills.",
-      "use_cases": ["Discover specialist Agent Skills", "Run Skills in the browser", "Use skills with supported agent clients such as Codex and Claude Code", "Publish and monetize reusable AI Skills"],
+      "summary": "以 Skills 為核心的 AI Agent 市場，使用者可以尋找與執行專門 Agent，創作者則可封裝並上架可重複使用的 Skills。",
+      "use_cases": ["尋找特定用途的 Agent Skills", "直接在平台中執行 Skills", "搭配 Codex、Claude Code 等支援的 Agent 客戶端使用", "發布並販售自己的 AI Skills"],
       "pricing": "freemium",
       "open_source": false,
       "license": null,
@@ -247,7 +247,26 @@
       "rating": 4,
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
-      "notes": "Marketplace listings can use different pricing models; review each Skill's price and privacy details before use."
+      "notes": "不同 Marketplace 項目可能採不同計價方式；使用前需個別查看價格、隱私與資料處理說明。"
+    },
+    {
+      "id": "anime-js",
+      "name": "Anime.js",
+      "type": "github",
+      "url": "https://github.com/juliangarnier/anime",
+      "categories": ["GitHub Libraries", "UI / UX / Design", "Developer Tools", "App Development"],
+      "tags": ["animejs", "javascript", "animation", "svg", "canvas", "css", "web-animation"],
+      "summary": "輕量且用途廣泛的 JavaScript 動畫函式庫，可操作 CSS、SVG、DOM 屬性與 JavaScript 物件，適合製作網頁互動、轉場與複雜動態效果。",
+      "use_cases": ["製作網頁 UI 動畫與轉場", "控制 SVG 與 DOM 元素動態", "建立時間軸、交錯與循環動畫", "替 Landing Page 或互動網站加入高品質動態效果"],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "目前為 Anime.js V4；GitHub 專案公開、未封存，檢查時約有 7.2 萬顆 Stars，屬成熟且常用的前端動畫工具。"
     }
   ]
 }
