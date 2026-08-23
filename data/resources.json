@@ -343,6 +343,44 @@
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
       "notes": "專案核心採 MIT License，檢查時約 2.75 萬顆 Stars，未封存且仍有更新。README 明確定位於逆向工程、授權滲透測試與安全研究，並要求 scope gate 後再執行目標操作。部分子模組與外部工具採其他授權，例如 CTF-Sandbox-Orchestrator 為 GPLv3，另有外部 AGPL-3.0 工具透過 CLI／MCP 呼叫；實際使用或再散布時需分別確認授權與合法授權範圍。"
+    },
+    {
+      "id": "mechanical-deployables-threejs",
+      "name": "Mechanical Deployables for Three.js",
+      "type": "github",
+      "url": "https://github.com/trungdq88/mechanical-deployables-treejs",
+      "categories": ["3D / WebGL / Graphics", "Developer Tools", "Game AI / Game Dev", "Learning / Documentation"],
+      "tags": ["threejs", "webgl", "3d", "mechanical-animation", "deployable-structures", "procedural-animation", "javascript", "game-dev"],
+      "summary": "一套用 Three.js 製作機械式展開結構的 3D 範例與規格，模型可透過伸縮、旋轉與鉸接逐步組裝，也能收回或在被摧毀後依重力坍塌；內含 11 個可互動模型與可供新增模型遵循的契約。",
+      "use_cases": ["替 Three.js 網站或遊戲製作機械展開與收納動畫", "研究模組化 3D 結構、程序化動畫與破壞效果", "依既有模型契約快速建立新的 deployable 3D 模型", "作為 WebGL／Three.js 互動機械視覺的實作參考"],
+      "pricing": "free",
+      "open_source": null,
+      "license": null,
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 4,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "專案程式碼公開且提供 GitHub Pages Demo，檢查時約 92 顆 Stars、未封存。GitHub Repository 沒有偵測到 License，README 也未宣告授權，因此不可直接假設可自由修改、再散布或商用；需要重用程式碼或模型前應先向作者確認授權。"
+    },
+    {
+      "id": "voice-studio",
+      "name": "VoiceStudio",
+      "type": "github",
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "categories": ["Image / Video / Audio AI", "Audio / Music Production", "Agents / MCP / Skills", "Developer Tools"],
+      "tags": ["voice-cloning", "tts", "speech-to-text", "dubbing", "transcription", "audiobook", "local-first", "mcp", "tauri", "python"],
+      "summary": "本機優先的開源語音 AI 工作站，整合語音複製、Voice Design、影片配音、聽寫、語音轉文字、有聲書與批次音訊生成，核心流程預設在本機執行，並支援多種 TTS／ASR 引擎與 MCP、REST、OpenAI-compatible Audio API。",
+      "use_cases": ["在本機複製或設計語音並產生 TTS", "替影片進行轉錄、翻譯、保留說話者與重新配音", "製作多角色故事、有聲書與長篇音訊", "透過 MCP、REST 或 OpenAI-compatible Audio API 把語音能力接到 Agent 或其他應用"],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "AGPL-3.0",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "VoiceStudio 核心軟體採 AGPL-3.0，檢查時約 1.13 萬顆 Stars、未封存且持續更新，目前官方標示為 Active Beta。核心工作流不要求帳號、API Key 或訂閱，但不同可選 TTS／ASR 模型仍有各自授權、硬體需求與可能的遠端服務條件；使用 Voice Cloning 時也應確保已取得聲音本人授權。"
     }
   ]
 }
