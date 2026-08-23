@@ -3,43 +3,99 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Qookey AI Resource Hub — AI 資源整合、搜尋與推薦入口。" />
+  <meta name="description" content="Qookey AI Resource Hub — 收藏、分類、搜尋並推薦 AI、Agent、設計、開發與雲端資源。" />
+  <meta name="theme-color" content="#070a12" />
   <title>Qookey AI Resource Hub</title>
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
+  <a class="skip-link" href="#resources">跳到資源列表</a>
+  <div class="ambient-grid" aria-hidden="true"></div>
+
   <main class="shell">
+    <nav class="topbar" aria-label="主要導覽">
+      <a class="brand" href="./" aria-label="Qookey AI Resource Hub 首頁">
+        <span class="brand-mark">Q</span>
+        <span>
+          <strong>Qookey</strong>
+          <small>AI Resource Hub</small>
+        </span>
+      </a>
+      <a class="repo-link" href="https://github.com/qookey109-pixel/ai-resource-hub" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+
     <header class="hero">
-      <p class="eyebrow">Qookey AI Resource Hub</p>
-      <h1>找到適合你的 AI 資源</h1>
-      <p class="subtitle">整理 AI 網站、GitHub 專案、Agent、MCP、開發工具與自動化資源。</p>
-
-      <div class="search-wrap">
-        <label class="sr-only" for="search">搜尋資源</label>
-        <input id="search" type="search" placeholder="搜尋工具、用途、分類或標籤…" autocomplete="off" />
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> CURATED RESOURCE INDEX</p>
+        <h1>需要什麼資源，<br><span>直接在這裡找。</span></h1>
+        <p class="subtitle">整理 AI、Agent Skills、GitHub、UI/UX、開發工具、資料庫、雲端部署與創作資源。先收藏，再逐步進化成你的 AI 推薦入口。</p>
       </div>
 
-      <div class="filters">
-        <label>
-          分類
-          <select id="category-filter">
-            <option value="">全部分類</option>
-          </select>
-        </label>
-        <label class="check"><input id="free-filter" type="checkbox" /> 免費 / 開源</label>
-        <label class="check"><input id="open-source-filter" type="checkbox" /> 僅開源</label>
+      <div class="stats" aria-label="資源統計">
+        <div class="stat"><strong id="total-stat">0</strong><span>資源</span></div>
+        <div class="stat"><strong id="category-stat">0</strong><span>分類</span></div>
+        <div class="stat"><strong id="open-stat">0</strong><span>開源</span></div>
       </div>
+
+      <section class="finder" aria-label="資源搜尋與篩選">
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <label class="sr-only" for="search">搜尋資源</label>
+          <input id="search" type="search" placeholder="例如：Codex UI、免費雲端、Postgres、Agent Skill…" autocomplete="off" />
+          <kbd>/</kbd>
+        </div>
+
+        <div class="filters">
+          <label>
+            <span>分類</span>
+            <select id="category-filter">
+              <option value="">全部分類</option>
+            </select>
+          </label>
+          <label>
+            <span>類型</span>
+            <select id="type-filter">
+              <option value="">全部類型</option>
+            </select>
+          </label>
+          <label class="check"><input id="free-filter" type="checkbox" /> <span>免費 / 開源</span></label>
+          <label class="check"><input id="open-source-filter" type="checkbox" /> <span>僅開源</span></label>
+          <button id="reset-filters" class="reset" type="button">清除</button>
+        </div>
+      </section>
+
+      <div id="quick-categories" class="quick-categories" aria-label="熱門分類"></div>
     </header>
 
-    <section class="summary" aria-live="polite">
-      <strong id="result-count">0</strong> 個資源
+    <section id="resources" class="catalog-head">
+      <div>
+        <p class="section-kicker">RESOURCE LIBRARY</p>
+        <h2>資源庫</h2>
+      </div>
+      <div class="catalog-actions">
+        <span><strong id="result-count">0</strong> 個結果</span>
+        <label class="sort-label">
+          <span class="sr-only">排序方式</span>
+          <select id="sort-filter">
+            <option value="rating">推薦優先</option>
+            <option value="newest">最新加入</option>
+            <option value="name">名稱 A–Z</option>
+          </select>
+        </label>
+      </div>
     </section>
 
     <section id="resource-grid" class="grid" aria-label="資源列表"></section>
     <section id="empty-state" class="empty" hidden>
-      <h2>目前沒有符合的資源</h2>
-      <p>可以調整搜尋或篩選條件。</p>
+      <div class="empty-icon">⌕</div>
+      <h2>找不到符合的資源</h2>
+      <p>換個關鍵字，或清除部分篩選條件。</p>
     </section>
+
+    <footer class="footer">
+      <p>資料 authority：<code>data/resources.json</code></p>
+      <p>Qookey AI Resource Hub · V0.2</p>
+    </footer>
   </main>
 
   <template id="resource-template">
@@ -48,12 +104,15 @@
         <span class="type"></span>
         <span class="rating"></span>
       </div>
-      <h2 class="name"></h2>
+      <h3 class="name"></h3>
       <p class="description"></p>
+      <p class="use-case"></p>
       <div class="categories"></div>
       <div class="tags"></div>
-      <div class="meta"></div>
-      <a class="visit" target="_blank" rel="noopener noreferrer">前往資源 ↗</a>
+      <div class="card-footer">
+        <span class="meta"></span>
+        <a class="visit" target="_blank" rel="noopener noreferrer">開啟 ↗</a>
+      </div>
     </article>
   </template>
 
