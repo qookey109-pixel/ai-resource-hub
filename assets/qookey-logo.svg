@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Qookey 圖標</title>
+  <desc id="desc">橘色圓潤 Qookey 小角色，米白色臉部與深色五官。</desc>
+  <rect width="128" height="128" rx="30" fill="#FFF4EC"/>
+  <path d="M28 60c0-22 15-39 36-39s36 17 36 39v13c0 22-15 38-36 38S28 95 28 73V60Z" fill="#FF6A35"/>
+  <circle cx="48" cy="35" r="10" fill="#FF6A35"/>
+  <circle cx="82" cy="35" r="10" fill="#FF6A35"/>
+  <ellipse cx="64" cy="67" rx="25" ry="22" fill="#FFF4EC"/>
+  <path d="M53 63a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm22 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" fill="#232323"/>
+  <path d="M56 72c3 4 13 4 16 0" fill="none" stroke="#232323" stroke-width="4" stroke-linecap="round"/>
+  <path d="M83 93c8 0 13 5 13 12" fill="none" stroke="#232323" stroke-width="7" stroke-linecap="round"/>
+</svg>
