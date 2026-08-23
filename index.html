@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Qookey AI Resource Hub — AI 資源整合、搜尋與推薦入口。" />
+  <title>Qookey AI Resource Hub</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Qookey AI Resource Hub</p>
+      <h1>找到適合你的 AI 資源</h1>
+      <p class="subtitle">整理 AI 網站、GitHub 專案、Agent、MCP、開發工具與自動化資源。</p>
+
+      <div class="search-wrap">
+        <label class="sr-only" for="search">搜尋資源</label>
+        <input id="search" type="search" placeholder="搜尋工具、用途、分類或標籤…" autocomplete="off" />
+      </div>
+
+      <div class="filters">
+        <label>
+          分類
+          <select id="category-filter">
+            <option value="">全部分類</option>
+          </select>
+        </label>
+        <label class="check"><input id="free-filter" type="checkbox" /> 免費 / 開源</label>
+        <label class="check"><input id="open-source-filter" type="checkbox" /> 僅開源</label>
+      </div>
+    </header>
+
+    <section class="summary" aria-live="polite">
+      <strong id="result-count">0</strong> 個資源
+    </section>
+
+    <section id="resource-grid" class="grid" aria-label="資源列表"></section>
+    <section id="empty-state" class="empty" hidden>
+      <h2>目前沒有符合的資源</h2>
+      <p>可以調整搜尋或篩選條件。</p>
+    </section>
+  </main>
+
+  <template id="resource-template">
+    <article class="card">
+      <div class="card-top">
+        <span class="type"></span>
+        <span class="rating"></span>
+      </div>
+      <h2 class="name"></h2>
+      <p class="description"></p>
+      <div class="categories"></div>
+      <div class="tags"></div>
+      <div class="meta"></div>
+      <a class="visit" target="_blank" rel="noopener noreferrer">前往資源 ↗</a>
+    </article>
+  </template>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
