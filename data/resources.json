@@ -286,6 +286,44 @@
       "added_at": "2026-08-23",
       "last_checked": "2026-08-23",
       "notes": "官方提供免費公開功能與 Pro 方案；原始碼採 AGPL-3.0-only。若修改後以網路服務方式提供，需特別注意 AGPL 的原始碼提供義務。檢查時 GitHub 約 8.38 萬顆 Stars，專案未封存且持續更新。"
+    },
+    {
+      "id": "pi-agent-harness",
+      "name": "Pi Agent Harness",
+      "type": "github",
+      "url": "https://github.com/earendil-works/pi",
+      "categories": ["Agents / MCP / Skills", "AI Coding", "Developer Tools", "GitHub Libraries"],
+      "tags": ["pi", "agent", "coding-agent", "llm", "tool-calling", "tui", "typescript", "openai", "anthropic", "google"],
+      "summary": "一套可自我擴充的 AI Agent 開發工具組，包含多模型 LLM 統一 API、具 Tool Calling 與狀態管理的 Agent Runtime、終端介面函式庫，以及互動式 Coding Agent CLI。",
+      "use_cases": ["建立或客製自己的 AI Coding Agent", "用統一介面串接 OpenAI、Anthropic、Google 等模型供應商", "開發具工具呼叫與狀態管理的 Agent Runtime", "在終端機中使用或擴充互動式 Coding Agent"],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "advanced",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "Pi 本身採 MIT License，檢查時約 9.57 萬顆 Stars，專案未封存且持續更新。README 明確指出預設不內建檔案系統、程序、網路或憑證存取的權限隔離；需要更強安全邊界時應搭配 Container、微型 VM 或 Sandbox。模型供應商的 API 費用另計。"
+    },
+    {
+      "id": "money-printer-turbo",
+      "name": "MoneyPrinterTurbo",
+      "type": "github",
+      "url": "https://github.com/harry0703/MoneyPrinterTurbo",
+      "categories": ["Image / Video / Audio AI", "Automation", "AI / LLM", "Developer Tools"],
+      "tags": ["ai-video-generator", "short-video", "video-automation", "content-creation", "text-to-speech", "subtitles", "ffmpeg", "python", "youtube-shorts", "tiktok"],
+      "summary": "一站式 AI 短影片自動生成工具，只要提供主題或關鍵字，就能自動產生影片腳本、搜尋或生成素材、加入配音、字幕與背景音樂，最後合成高畫質直式或橫式短影片。",
+      "use_cases": ["快速製作 YouTube Shorts、TikTok、Reels 等短影片", "把主題或關鍵字自動轉成腳本與完整影片", "批次產生多個影片版本再挑選成品", "透過 WebUI、API、CLI 或 AI Agent 建立影片自動化工作流"],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "專案本身採 MIT License，檢查時約 11.5 萬顆 Stars，未封存且持續更新。可使用本地素材，也能串接多種 LLM、TTS、素材與生成式影音服務；部分外部 API、模型或素材服務可能需要各自的帳號、額度或付費方案，商用時也需確認素材授權。"
     }
   ]
 }
