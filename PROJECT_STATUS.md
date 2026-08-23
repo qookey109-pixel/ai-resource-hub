@@ -19,9 +19,12 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - All current user-facing resource descriptions, use cases and notes were converted to Traditional Chinese.
 - Frontend type / pricing / source-state labels were localized to Traditional Chinese.
+- Category display names are localized to Traditional Chinese while stable internal category keys remain unchanged for data compatibility.
 - Resource schema now requires Traditional Chinese for future `summary`, `use_cases` and `notes` fields by default.
-- Original Qookey mascot icon added at `assets/qookey-mascot.svg` and wired as the site brand icon / SVG favicon.
-- Qookey mascot follows a simple rounded, low-complexity, limited-color brand-IP direction inspired by the design principles of `s1dashu/ip-as-logo-skill`, while remaining an original Qookey asset and not copying existing characters or artwork.
+- Original Qookey mascot icon added and wired as the site brand icon / SVG favicon.
+- A dedicated per-resource icon registry now exists at `data/resource-icons.json`.
+- The current 14 resource cards now prefer their own official-site favicon or project/owner image instead of sharing category icons.
+- If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
 - GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`.
@@ -31,6 +34,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Total resources: 14
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
+- Resource icon authority: `data/resource-icons.json`
 - Multi-category classification is enabled.
 - Unknown metadata remains `unknown` / `null` instead of being guessed.
 - Technical tags may remain English for searchability, while user-facing explanatory copy is Traditional Chinese.
@@ -59,7 +63,7 @@ Do not claim the public site is live until the Pages deployment is verified succ
 - Resource health checks.
 - Backend database migration.
 - Per-resource detail pages.
-- Final per-category / per-resource icon system.
+- Local cached copies of every third-party resource icon.
 - Final typography and exact accent palette.
 
 ## Current rules
@@ -76,7 +80,8 @@ Do not claim the public site is live until the Pages deployment is verified succ
 10. Preserve the V0.4 marketplace structure while iterating on visual details unless a later explicit design decision changes it.
 11. User-facing `summary`, `use_cases` and `notes` must be Traditional Chinese by default.
 12. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
+13. Resource cards should prefer resource-specific official icons; category icons are fallback only.
 
 ## Next step
 
-Continue ingesting verified user-supplied URLs. Refine the new Qookey brand icon and later extend the same visual language into a consistent category/resource icon family without rebuilding the current marketplace structure.
+Continue ingesting verified user-supplied URLs. For each new resource, add or verify an independent resource icon alongside the Chinese description and classification without rebuilding the current marketplace structure.
