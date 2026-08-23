@@ -28,9 +28,62 @@
   display: none !important;
 }
 
+.ai-clarify {
+  margin: 12px auto 0;
+  text-align: left;
+}
+
+.ai-clarify[hidden] {
+  display: none;
+}
+
+.ai-clarify-question {
+  margin: 0 0 9px;
+  color: #5d5d58;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.ai-clarify-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-clarify-choice {
+  appearance: none;
+  border: 1px solid #ebe7e3;
+  border-radius: 999px;
+  background: #fff;
+  color: #575752;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+
+.ai-clarify-choice:hover,
+.ai-clarify-choice:focus-visible {
+  border-color: #ffb89c;
+  background: #fff7f3;
+  color: #e95622;
+  outline: none;
+}
+
 @media (max-width: 720px) {
   .ai-mode-badge {
     bottom: 13px;
     left: 13px;
+  }
+
+  .ai-clarify-question {
+    font-size: 11px;
+  }
+
+  .ai-clarify-choice {
+    padding: 7px 10px;
+    font-size: 10px;
   }
 }
