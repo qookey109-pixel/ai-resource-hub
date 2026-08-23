@@ -25,12 +25,13 @@ jobs:
 
       - name: Deploy Cloudflare Worker
         id: deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
-          command: deploy
+          wranglerVersion: "4"
+          command: deploy --config wrangler.jsonc
 
       - name: Resolve deployment URL
         id: worker-url
