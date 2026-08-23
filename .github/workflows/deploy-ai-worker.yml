@@ -67,17 +67,30 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_NAME: qookey-ai-resource-recommender
         run: |
           set -euo pipefail
-          npx --yes wrangler@4.125.0 deploy --config worker/wrangler.jsonc 2>&1 | tee /tmp/wrangler-deploy.log
-          url="$(grep -Eo 'https?://[^[:space:]]+\.workers\.dev' /tmp/wrangler-deploy.log | tail -n1 || true)"
-          if [ -z "$url" ]; then
-            echo "Deployment completed but no workers.dev URL was found in Wrangler output." >&2
+          npx --yes wrangler@4.125.0 deploy --config worker/wrangler.jsonc
+
+          account_subdomain_json="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain")"
+          account_subdomain="$(echo "$account_subdomain_json" | jq -r '.result.subdomain // empty')"
+          if [ -z "$account_subdomain" ]; then
+            echo "Unable to resolve Cloudflare Workers account subdomain." >&2
+            echo "$account_subdomain_json" | jq '{success, errors}' >&2
             exit 1
           fi
-          url="${url%/}"
-          echo "base_url=$url" >> "$GITHUB_OUTPUT"
-          echo "Worker URL resolved: $url"
+
+          worker_subdomain_json="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$WORKER_NAME/subdomain")"
+          echo "$worker_subdomain_json" | jq '{success, errors, enabled: .result.enabled, previews_enabled: .result.previews_enabled}'
+          echo "$worker_subdomain_json" | jq -e '.success == true and .result.enabled == true' >/dev/null
+
+          base_url="https://$WORKER_NAME.$account_subdomain.workers.dev"
+          echo "base_url=$base_url" >> "$GITHUB_OUTPUT"
+          echo "Worker URL resolved via Cloudflare API: $base_url"
 
       - name: Verify Worker health
         shell: bash
@@ -85,9 +98,25 @@ jobs:
           BASE_URL: ${{ steps.deploy.outputs.base_url }}
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --retry 5 --retry-delay 2 "$BASE_URL/health" -o /tmp/health.json
-          cat /tmp/health.json
-          jq -e '.ok == true and .service == "qookey-ai-resource-recommender"' /tmp/health.json >/dev/null
+          ok=0
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            status="$(curl --silent --show-error \
+              --output /tmp/health.json \
+              --write-out '%{http_code}' \
+              "$BASE_URL/health" || true)"
+            echo "Health attempt $attempt: HTTP $status"
+            cat /tmp/health.json 2>/dev/null || true
+            echo
+            if [ "$status" = "200" ] && jq -e '.ok == true and .service == "qookey-ai-resource-recommender"' /tmp/health.json >/dev/null 2>&1; then
+              ok=1
+              break
+            fi
+            sleep 3
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "Worker health verification failed at $BASE_URL/health" >&2
+            exit 1
+          fi
 
       - name: Verify recommendation API
         shell: bash
