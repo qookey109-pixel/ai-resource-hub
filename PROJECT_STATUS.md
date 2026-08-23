@@ -15,7 +15,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **20 verified resources**.
+- Catalog now contains **22 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -23,6 +23,8 @@ Status date: 2026-08-23 (Asia/Taipei)
 - reverse-skill added as an active MIT-licensed reverse-engineering / authorized-security-research Skill Router with scope gates, routing rules, regression tests and cross-platform workflows; bundled or external components may use other licenses.
 - Mechanical Deployables for Three.js added as a 3D/WebGL mechanical deployment animation reference with 11 interactive models and a reusable model contract; no repository license is currently declared, so reuse rights remain unconfirmed.
 - VoiceStudio added as an active-beta AGPL-3.0 local-first voice AI workstation covering voice cloning, voice design, dubbing, dictation, transcription, audiobooks, REST/OpenAI-compatible audio APIs and MCP.
+- DSH Desktop added as an active MIT-licensed community Electron desktop distribution around the official DeepSeek Harness runtime/Web experience, with Profile Bundles, MCP, Git Worktree, attachments and controlled native capabilities. It is explicitly an independent community project rather than an official DeepSeek product.
+- AI Website Cloner Template added as an active MIT-licensed AI Coding Agent workflow for reconstructing authorized websites into Next.js through reconnaissance, design-token extraction, component specs, parallel implementation and visual QA. Legal/brand reuse limits are explicitly recorded.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -31,7 +33,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Original Qookey mascot icon is wired as the site brand icon / SVG favicon.
 - A dedicated per-resource icon registry exists at `data/resource-icons.json`.
 - Resource cards prefer their own official-site favicon, project logo or project/owner image instead of sharing category icons.
-- Higher-resolution icon sources are preferred; VoiceStudio uses its repository project logo. Mechanical Deployables currently falls back to the author's 256px GitHub avatar because no project-specific logo was found.
+- Higher-resolution icon sources are preferred. DSH Desktop uses its repository's official SVG app icon. AI Website Cloner Template currently falls back to the author's 256px GitHub avatar because no dedicated project logo was verified.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -67,7 +69,7 @@ Current activation state:
 
 ## Current catalog
 
-- Total resources: 20
+- Total resources: 22
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -124,7 +126,8 @@ Do not claim AI recommendations are live until the Worker endpoint is deployed, 
 14. A public repository without an explicit license must not be described as freely reusable or commercially usable; preserve license as unknown until verified.
 15. AI recommendation output may only refer to resources present in the current catalog; validate IDs server-side and client-side.
 16. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
+17. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
 
 ## Next step
 
-Deploy the prepared Cloudflare Worker, capture its public `/api/recommend` endpoint, enable it in `data/ai-config.json`, then run an end-to-end production test using task prompts such as `我要做 LINE AI 客服`, `我要做 AI 短影片`, and `我要做 Three.js 3D 遊戲效果`.
+Deploy the prepared Cloudflare Worker, capture its public `/api/recommend` endpoint, enable it in `data/ai-config.json`, then run an end-to-end production test using task prompts such as `我要做 LINE AI 客服`, `我要做 AI 短影片`, and `我要做 Three.js 3D 遊戲效果`. Continue ingesting verified user-supplied resources in parallel.
