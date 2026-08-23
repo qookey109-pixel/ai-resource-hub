@@ -6,6 +6,7 @@
     {"id": "ai-coding", "name": "AI Coding", "display_name": "AI 程式開發", "icon": "💻"},
     {"id": "agents-mcp-skills", "name": "Agents / MCP / Skills", "display_name": "Agent / MCP / Skills", "icon": "🧩"},
     {"id": "game-ai-dev", "name": "Game AI / Game Dev", "display_name": "遊戲 AI / 遊戲開發", "icon": "🎮"},
+    {"id": "three-d-webgl-graphics", "name": "3D / WebGL / Graphics", "display_name": "3D / WebGL / 圖形", "icon": "🧊"},
     {"id": "ui-ux-design", "name": "UI / UX / Design", "display_name": "UI / UX / 設計", "icon": "🎨"},
     {"id": "image-video-audio", "name": "Image / Video / Audio AI", "display_name": "圖像 / 影片 / 音訊 AI", "icon": "🖼️"},
     {"id": "audio-music-production", "name": "Audio / Music Production", "display_name": "音訊 / 音樂製作", "icon": "🎵"},
