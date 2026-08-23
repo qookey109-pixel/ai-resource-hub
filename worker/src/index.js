@@ -62,7 +62,10 @@ async function loadCatalog(env) {
 function extractText(result) {
   if (typeof result === 'string') return result;
   if (typeof result?.response === 'string') return result.response;
+  if (typeof result?.choices?.[0]?.message?.content === 'string') return result.choices[0].message.content;
+  if (typeof result?.choices?.[0]?.text === 'string') return result.choices[0].text;
   if (typeof result?.result?.response === 'string') return result.result.response;
+  if (typeof result?.result?.choices?.[0]?.message?.content === 'string') return result.result.choices[0].message.content;
   return JSON.stringify(result ?? '');
 }
 
