@@ -1,0 +1,25 @@
+.resource-icon.has-brand-icon {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #ecece8;
+}
+
+.resource-icon.has-brand-icon img {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px;
+  max-height: 32px;
+  object-fit: contain !important;
+  border-radius: 7px !important;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  transform: translateZ(0);
+}
+
+@media (min-resolution: 2dppx) {
+  .resource-icon.has-brand-icon img {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px;
+    max-height: 30px;
+  }
+}
