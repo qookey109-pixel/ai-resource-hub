@@ -24,6 +24,26 @@ const els = {
   template: document.querySelector('#resource-template')
 };
 
+const typeLabels = {
+  website: '網站',
+  github: 'GitHub',
+  documentation: '文件',
+  service: '服務',
+  library: '函式庫',
+  model: '模型',
+  dataset: '資料集',
+  platform: '平台',
+  other: '其他'
+};
+
+const pricingLabels = {
+  free: '免費',
+  freemium: '免費增值',
+  paid: '付費',
+  'open-source': '開源',
+  unknown: '價格未知'
+};
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
@@ -103,8 +123,8 @@ function render() {
 
     fragment.querySelector('.resource-icon').textContent = categoryIcon(resource);
     fragment.querySelector('.name').textContent = resource.name;
-    fragment.querySelector('.type').textContent = resource.type ?? 'other';
-    fragment.querySelector('.primary-category').textContent = resource.categories?.[0] ?? 'Resource';
+    fragment.querySelector('.type').textContent = typeLabels[resource.type] ?? '其他';
+    fragment.querySelector('.primary-category').textContent = resource.categories?.[0] ?? '資源';
     fragment.querySelector('.description').textContent = resource.summary ?? '';
     fragment.querySelector('.rating').textContent = resource.rating ? `★ ${resource.rating}` : '待評估';
 
@@ -121,9 +141,15 @@ function render() {
       categories.append(makePill(category));
     }
 
+    const sourceLabel = resource.open_source === true
+      ? '開源'
+      : resource.open_source === false
+        ? '非開源'
+        : '來源未確認';
+
     fragment.querySelector('.meta').textContent = [
-      resource.pricing ?? 'unknown',
-      resource.open_source === true ? 'open source' : resource.open_source === false ? 'closed source' : 'source n/a'
+      pricingLabels[resource.pricing] ?? '價格未知',
+      sourceLabel
     ].join(' · ');
 
     const link = fragment.querySelector('.visit');
@@ -150,7 +176,7 @@ function populateTypes() {
   for (const type of types) {
     const option = document.createElement('option');
     option.value = type;
-    option.textContent = type;
+    option.textContent = typeLabels[type] ?? type;
     els.type.append(option);
   }
 }
