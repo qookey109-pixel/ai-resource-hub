@@ -13,13 +13,22 @@ Status date: 2026-08-23 (Asia/Taipei)
 
 - Repository created and available on GitHub.
 - Initial information architecture defined.
-- Resource data model planned around JSON authority.
+- Resource data model established around JSON authority.
 - Static searchable frontend foundation initialized.
+- First verified resource batch added: 5 resources.
+- Real-world category validation started; `Audio / Music Production` added to avoid misclassifying non-AI audio resources.
+
+## Current catalog
+
+- Total resources: 5
+- GitHub resources: 3
+- Website resources: 2
+- Current catalog authority: `data/resources.json`
 
 ## In progress
 
-- Populate the first real resources supplied by the user.
-- Validate categories and tags against real-world entries.
+- Continue ingesting user-supplied resources with source verification and duplicate checks.
+- Validate categories and tags against additional real-world entries.
 - Prepare GitHub Pages deployment after the first content pass.
 
 ## Not yet completed
@@ -39,7 +48,8 @@ Status date: 2026-08-23 (Asia/Taipei)
 4. Unknown values must remain `unknown`; do not guess.
 5. `data/resources.json` is the V0.1 resource authority.
 6. Repository `main` is the project authority unless a later versioned governance rule changes this.
+7. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
 
 ## Next step
 
-Add and verify the first batch of user-supplied URLs, then deploy the static V0.1 site.
+Continue the verified ingestion workflow for user-supplied URLs, then deploy the static V0.1 site with GitHub Pages.
