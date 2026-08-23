@@ -2,85 +2,27 @@
   "schema_version": "0.2",
   "updated_at": "2026-08-23",
   "icons": {
-    "emil-kowalski-skills": {
-      "url": "https://github.com/emilkowalski.png?size=256",
-      "source": "github-owner-avatar-256"
-    },
-    "refero-styles": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design",
-      "source": "domain-favicon-128"
-    },
-    "soundshockaudio": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://soundshockaudio.com",
-      "source": "domain-favicon-128"
-    },
-    "hallmark": {
-      "url": "https://github.com/Nutlope.png?size=256",
-      "source": "github-owner-avatar-256"
-    },
-    "ip-as-logo-skill": {
-      "url": "https://github.com/s1dashu.png?size=256",
-      "source": "github-owner-avatar-256"
-    },
-    "react-bits-shape-grid": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://reactbits.dev",
-      "source": "domain-favicon-128"
-    },
-    "ui-skills": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.ui-skills.com",
-      "source": "domain-favicon-128"
-    },
-    "cloudflare-dashboard": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.cloudflare.com",
-      "source": "domain-favicon-128"
-    },
-    "xorxor-hu-codepen": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io",
-      "source": "domain-favicon-128"
-    },
-    "oracle-cloud-free-tier": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.oracle.com",
-      "source": "domain-favicon-128"
-    },
-    "supabase-dashboard": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://supabase.com",
-      "source": "domain-favicon-128"
-    },
-    "mistral-studio": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mistral.ai",
-      "source": "domain-favicon-128"
-    },
-    "capafy-ai": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
-      "source": "domain-favicon-128"
-    },
-    "anime-js": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com",
-      "source": "domain-favicon-128"
-    },
-    "world-monitor": {
-      "url": "https://www.worldmonitor.app/favico/apple-touch-icon.png",
-      "source": "official-site-apple-touch-icon"
-    },
-    "pi-agent-harness": {
-      "url": "https://pi.dev/logo-auto.svg",
-      "source": "official-site-svg"
-    },
-    "money-printer-turbo": {
-      "url": "https://github.com/harry0703.png?size=256",
-      "source": "github-owner-avatar-256"
-    },
-    "reverse-skill": {
-      "url": "https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png",
-      "source": "official-repository-project-image"
-    },
-    "mechanical-deployables-threejs": {
-      "url": "https://github.com/trungdq88.png?size=256",
-      "source": "github-owner-avatar-256-fallback-no-project-logo"
-    },
-    "voice-studio": {
-      "url": "https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png",
-      "source": "official-repository-project-logo"
-    }
+    "emil-kowalski-skills": {"url": "https://github.com/emilkowalski.png?size=256", "source": "github-owner-avatar-256"},
+    "refero-styles": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design", "source": "domain-favicon-128"},
+    "soundshockaudio": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://soundshockaudio.com", "source": "domain-favicon-128"},
+    "hallmark": {"url": "https://github.com/Nutlope.png?size=256", "source": "github-owner-avatar-256"},
+    "ip-as-logo-skill": {"url": "https://github.com/s1dashu.png?size=256", "source": "github-owner-avatar-256"},
+    "react-bits-shape-grid": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://reactbits.dev", "source": "domain-favicon-128"},
+    "ui-skills": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.ui-skills.com", "source": "domain-favicon-128"},
+    "cloudflare-dashboard": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.cloudflare.com", "source": "domain-favicon-128"},
+    "xorxor-hu-codepen": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io", "source": "domain-favicon-128"},
+    "oracle-cloud-free-tier": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.oracle.com", "source": "domain-favicon-128"},
+    "supabase-dashboard": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://supabase.com", "source": "domain-favicon-128"},
+    "mistral-studio": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mistral.ai", "source": "domain-favicon-128"},
+    "capafy-ai": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai", "source": "domain-favicon-128"},
+    "anime-js": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com", "source": "domain-favicon-128"},
+    "world-monitor": {"url": "https://www.worldmonitor.app/favico/apple-touch-icon.png", "source": "official-site-apple-touch-icon"},
+    "pi-agent-harness": {"url": "https://pi.dev/logo-auto.svg", "source": "official-site-svg"},
+    "money-printer-turbo": {"url": "https://github.com/harry0703.png?size=256", "source": "github-owner-avatar-256"},
+    "reverse-skill": {"url": "https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png", "source": "official-repository-project-image"},
+    "mechanical-deployables-threejs": {"url": "https://github.com/trungdq88.png?size=256", "source": "github-owner-avatar-256-fallback-no-project-logo"},
+    "voice-studio": {"url": "https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png", "source": "official-repository-project-logo"},
+    "dsh-desktop": {"url": "https://raw.githubusercontent.com/vibeinging/dsh-desktop/dev/electron/icons/icon.svg", "source": "official-repository-app-icon-svg"},
+    "ai-website-cloner-template": {"url": "https://github.com/JCodesMore.png?size=256", "source": "github-owner-avatar-256-fallback-no-project-logo"}
   }
 }
