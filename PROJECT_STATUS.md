@@ -7,7 +7,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.2 searchable website**
+- Current version: **V0.3 marketplace direction**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -16,12 +16,15 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Canonical V0.1 resource schema established.
 - Canonical category catalog established.
 - First two user-supplied resource batches ingested and reviewed.
-- Catalog now contains **13 resources**.
+- Catalog contains **13 resources**.
 - Account-specific / temporary URLs are sanitized before publication.
 - Search, category filter, type filter, free/open-source filters, sorting and quick-category navigation implemented.
-- Responsive desktop/mobile visual redesign completed.
 - GitHub Pages deployment workflow added at `.github/workflows/pages.yml`.
 - `.nojekyll` added for static-site publishing.
+- V0.3 information architecture changed from a dark dashboard presentation to a clean resource-marketplace presentation.
+- Current marketplace structure: sticky navigation, centered search hero, trending category chips, left filters, resource-card grid and supporting value section.
+- Capafy is recorded only as a structural UX reference; exact branding, content, proprietary code and assets are not copied.
+- Design direction is frozen in `docs/DESIGN_DIRECTION.md` so later visual refinements do not require rebuilding the information architecture.
 
 ## Current catalog
 
@@ -62,6 +65,7 @@ Do not claim the public site is live until the Pages deployment is verified succ
 - Resource health checks.
 - Backend database migration.
 - Per-resource detail pages.
+- Final branding details such as colors, typography, card imagery and category icon system.
 
 ## Current rules
 
@@ -74,7 +78,8 @@ Do not claim the public site is live until the Pages deployment is verified succ
 7. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
 8. Never publish credentials, secrets, API keys, tokens, private account IDs, temporary auth-flow URLs, or private dashboard links.
 9. Prefer canonical public URLs for resources stored in the public catalog.
+10. Preserve the V0.3 marketplace information architecture while iterating on visual details unless a later explicit design decision changes it.
 
 ## Next step
 
-Verify the first GitHub Pages deployment. After deployment is healthy, continue accepting user URLs and add the next batch without redesigning the established V0.2 architecture.
+Verify the first GitHub Pages deployment, then continue ingesting user-supplied URLs and refine the marketplace visual details incrementally without rebuilding the established V0.3 structure.
