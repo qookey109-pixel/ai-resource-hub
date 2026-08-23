@@ -54,14 +54,27 @@ function normalise(value) {
   return String(value ?? '').trim().toLowerCase();
 }
 
+function categoryInfo(name) {
+  return state.categories.find((category) => category.name === name);
+}
+
+function categoryDisplayName(name) {
+  const info = categoryInfo(name);
+  return info?.display_name ?? info?.name ?? name ?? '其他';
+}
+
 function searchableText(resource) {
+  const translatedCategories = (resource.categories ?? []).map(categoryDisplayName);
   return [
     resource.name,
     resource.summary,
     resource.type,
+    typeLabels[resource.type],
     resource.pricing,
+    pricingLabels[resource.pricing],
     resource.notes,
     ...(resource.categories ?? []),
+    ...translatedCategories,
     ...(resource.tags ?? []),
     ...(resource.use_cases ?? [])
   ].join(' ').toLowerCase();
@@ -101,13 +114,13 @@ function filteredResources() {
 function makePill(text) {
   const span = document.createElement('span');
   span.className = 'pill';
-  span.textContent = text;
+  span.textContent = categoryDisplayName(text);
   return span;
 }
 
 function categoryIcon(resource) {
   const firstCategory = resource.categories?.[0];
-  return state.categories.find((category) => category.name === firstCategory)?.icon || String(resource.name || '?').slice(0, 1).toUpperCase();
+  return categoryInfo(firstCategory)?.icon || String(resource.name || '?').slice(0, 1).toUpperCase();
 }
 
 function render() {
@@ -124,7 +137,7 @@ function render() {
     fragment.querySelector('.resource-icon').textContent = categoryIcon(resource);
     fragment.querySelector('.name').textContent = resource.name;
     fragment.querySelector('.type').textContent = typeLabels[resource.type] ?? '其他';
-    fragment.querySelector('.primary-category').textContent = resource.categories?.[0] ?? '資源';
+    fragment.querySelector('.primary-category').textContent = categoryDisplayName(resource.categories?.[0]);
     fragment.querySelector('.description').textContent = resource.summary ?? '';
     fragment.querySelector('.rating').textContent = resource.rating ? `★ ${resource.rating}` : '待評估';
 
@@ -166,7 +179,7 @@ function populateCategories() {
   for (const category of state.categories) {
     const option = document.createElement('option');
     option.value = category.name;
-    option.textContent = `${category.icon ?? ''} ${category.name}`.trim();
+    option.textContent = `${category.icon ?? ''} ${category.display_name ?? category.name}`.trim();
     els.category.append(option);
   }
 }
@@ -218,8 +231,9 @@ function renderQuickCategories() {
     .slice(0, 16);
 
   for (const [category] of ranked) {
-    const categoryInfo = state.categories.find((item) => item.name === category);
-    const label = `${categoryInfo?.icon ? `${categoryInfo.icon} ` : ''}${category}`;
+    const info = categoryInfo(category);
+    const displayName = info?.display_name ?? category;
+    const label = `${info?.icon ? `${info.icon} ` : ''}${displayName}`;
     els.quickCategories.append(createQuickCategory(label, category));
   }
 }
