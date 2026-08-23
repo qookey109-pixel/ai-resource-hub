@@ -1,5 +1,190 @@
 {
   "schema_version": "0.1",
   "updated_at": "2026-08-23",
-  "resources": []
+  "resources": [
+    {
+      "id": "emil-kowalski-skills",
+      "name": "Skills For Designers and Engineers",
+      "type": "github",
+      "url": "https://github.com/emilkowalski/skills",
+      "categories": [
+        "Agents / MCP / Skills",
+        "UI / UX / Design",
+        "AI Coding",
+        "Developer Tools"
+      ],
+      "tags": [
+        "agent-skills",
+        "ui",
+        "animation",
+        "design-review",
+        "react-native",
+        "swift",
+        "frontend"
+      ],
+      "summary": "A collection of Agent Skills for designers and engineers focused on better UI, animation, design decisions, Swift, and interface tooling.",
+      "use_cases": [
+        "Guide coding agents toward stronger UI and motion decisions",
+        "Review and improve animations",
+        "Prototype UI variants",
+        "Help agents choose trusted UI libraries"
+      ],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "Especially useful with AI coding agents when visual quality and motion taste matter."
+    },
+    {
+      "id": "refero-styles",
+      "name": "Refero Styles",
+      "type": "website",
+      "url": "https://styles.refero.design",
+      "categories": [
+        "UI / UX / Design",
+        "AI Coding",
+        "Agents / MCP / Skills",
+        "Learning / Documentation"
+      ],
+      "tags": [
+        "design-md",
+        "design-system",
+        "design-reference",
+        "frontend",
+        "cursor",
+        "claude-code",
+        "codex",
+        "tailwind"
+      ],
+      "summary": "A searchable library of 2,000+ AI-readable design-system references derived from real product websites, including DESIGN.md, typography, spacing, colors, components, and tokens.",
+      "use_cases": [
+        "Give coding agents concrete visual references before building UI",
+        "Copy DESIGN.md-style context for AI-assisted frontend work",
+        "Study design tokens and component patterns",
+        "Find visual directions by brand or style"
+      ],
+      "pricing": "free",
+      "open_source": null,
+      "license": null,
+      "difficulty": "beginner",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "The Styles library was freely browsable when checked; Refero MCP and the main Refero product may have separate plans."
+    },
+    {
+      "id": "soundshockaudio",
+      "name": "SoundShockAudio",
+      "type": "website",
+      "url": "https://soundshockaudio.com",
+      "categories": [
+        "Audio / Music Production"
+      ],
+      "tags": [
+        "audio",
+        "music-production",
+        "vst",
+        "samples",
+        "sample-packs",
+        "presets",
+        "daw",
+        "kontakt",
+        "midi"
+      ],
+      "summary": "A curated library of free music-production resources including VST plugins, sample packs, synth presets, DAW templates, Kontakt instruments, MIDI files, and apps.",
+      "use_cases": [
+        "Find free audio tools for games, video, music, and media production",
+        "Browse VST plugins and effects",
+        "Find sample packs and sound effects",
+        "Locate DAW templates, presets, and Kontakt instruments"
+      ],
+      "pricing": "free",
+      "open_source": null,
+      "license": null,
+      "difficulty": "beginner",
+      "status": "active",
+      "rating": 4,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "Individual third-party downloads have their own licenses; verify each tool or sample pack before commercial reuse."
+    },
+    {
+      "id": "hallmark",
+      "name": "Hallmark",
+      "type": "github",
+      "url": "https://github.com/Nutlope/hallmark",
+      "categories": [
+        "Agents / MCP / Skills",
+        "UI / UX / Design",
+        "AI Coding",
+        "Developer Tools"
+      ],
+      "tags": [
+        "design-skill",
+        "claude-code",
+        "cursor",
+        "codex",
+        "frontend",
+        "ui-audit",
+        "redesign",
+        "design-study"
+      ],
+      "summary": "An MIT-licensed design skill for Claude Code, Cursor, and Codex that builds, audits, redesigns, and studies interfaces while actively avoiding common AI-generated design patterns.",
+      "use_cases": [
+        "Generate more distinctive frontend designs",
+        "Audit existing UI for generic AI-design patterns",
+        "Redesign a site while preserving content and information architecture",
+        "Extract design DNA from screenshots or URLs into reusable design context"
+      ],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 5,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "Strong fit when an AI coding agent produces technically correct but visually generic pages."
+    },
+    {
+      "id": "ip-as-logo-skill",
+      "name": "IP as Logo",
+      "type": "github",
+      "url": "https://github.com/s1dashu/ip-as-logo-skill",
+      "categories": [
+        "Agents / MCP / Skills",
+        "Image / Video / Audio AI",
+        "UI / UX / Design"
+      ],
+      "tags": [
+        "agent-skill",
+        "image-generation",
+        "mascot",
+        "branding",
+        "logo",
+        "character-design",
+        "codex"
+      ],
+      "summary": "A compact MIT-licensed Agent Skill for generating simple, cute, company-ready IP mascots with strict silhouette, color, composition, and complexity guidance.",
+      "use_cases": [
+        "Create brand mascots and simple character IP",
+        "Generate consistent square mascot concepts with image-capable agents",
+        "Explore multiple controlled mascot directions for a product or company"
+      ],
+      "pricing": "open-source",
+      "open_source": true,
+      "license": "MIT",
+      "difficulty": "intermediate",
+      "status": "active",
+      "rating": 4,
+      "added_at": "2026-08-23",
+      "last_checked": "2026-08-23",
+      "notes": "Requires a compatible agent with a capable image-generation model for the intended workflow."
+    }
+  ]
 }
