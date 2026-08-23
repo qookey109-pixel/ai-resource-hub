@@ -1,55 +1,76 @@
 # Qookey AI Resource Hub
 
-AI 資源整合網：集中整理 AI 網站、GitHub 專案、開發工具、Agent、MCP、Skills、自動化服務與相關資源，並提供搜尋、分類、篩選與後續 AI 推薦能力。
+A curated AI and developer resource library for collecting, classifying, searching, and later recommending useful websites, GitHub projects, Agent Skills, design references, cloud tools, databases, audio resources, and developer platforms.
 
-## V0.1 目標
+## Website
 
-- 將資源以固定 schema 儲存在 `data/resources.json`
-- 支援一個資源多分類、多標籤
-- 提供名稱、描述、分類與標籤搜尋
-- 提供分類、免費、開源等基本篩選
-- GitHub Repository `main` 作為 V0.1 正式資料 authority
-- 保留未來 AI recommendation engine 的擴充空間
+GitHub Pages target:
 
-## 專案結構
+`https://qookey109-pixel.github.io/ai-resource-hub/`
+
+The repository includes a GitHub Actions Pages workflow at `.github/workflows/pages.yml`. GitHub Pages must be enabled with **Settings → Pages → Build and deployment → Source: GitHub Actions** before the first deployment can succeed.
+
+## Current version
+
+**V0.2 — searchable resource website**
+
+Current capabilities:
+
+- Static GitHub Pages-ready website
+- Search across names, descriptions, tags, use cases, notes, pricing, and categories
+- Category and resource-type filters
+- Free/open-source filters
+- Recommendation, newest, and name sorting
+- Popular-category shortcuts
+- Resource/category/open-source statistics
+- Responsive desktop/mobile layout
+- JSON-based catalog authority
+- Public-link sanitization for account-specific or temporary dashboard/login URLs
+
+## Data authority
+
+`data/resources.json` is the canonical V0.x resource catalog.
+
+`data/categories.json` is the canonical category list.
+
+Repository `main` is the project authority unless a later versioned governance rule changes this.
+
+## Ingestion rule
+
+Before adding a resource:
+
+1. Verify what the resource actually does.
+2. Check for duplicate URLs, aliases, and duplicate projects.
+3. Verify factual metadata where practical.
+4. Never publish credentials, API keys, tokens, account IDs, temporary login flows, or private dashboard URLs.
+5. Prefer a public canonical URL when the supplied URL contains account-specific navigation state.
+6. Use `unknown` / `null` instead of guessing.
+7. Keep existing verified resource metadata unless newer source evidence justifies an update.
+
+## Project structure
 
 ```text
-ai-resource-hub/
-├── README.md
-├── PROJECT_STATUS.md
+.
+├── .github/workflows/pages.yml
+├── .nojekyll
 ├── AGENTS.md
+├── PROJECT_STATUS.md
+├── README.md
 ├── index.html
 ├── css/
 │   └── styles.css
 ├── js/
 │   └── app.js
 ├── data/
-│   ├── resources.json
-│   └── categories.json
+│   ├── categories.json
+│   └── resources.json
 └── docs/
     └── RESOURCE_SCHEMA.md
 ```
 
-## 新增資源流程
+## Roadmap
 
-1. 檢查網址與資源身份。
-2. 判斷主要用途與適用情境。
-3. 檢查是否與現有資源重複。
-4. 套用 `docs/RESOURCE_SCHEMA.md`。
-5. 分配分類與標籤。
-6. 更新 `data/resources.json`。
-7. 驗證 JSON 與前端顯示。
-
-## 本機預覽
-
-這是純靜態網站。可直接用任何 static server 在 repository 根目錄預覽，例如：
-
-```bash
-python3 -m http.server 8000
-```
-
-然後開啟 `http://localhost:8000`。
-
-## 狀態
-
-目前為 **V0.1 foundation**。詳細進度請看 `PROJECT_STATUS.md`。
+- V0.3: resource detail views and stronger discovery UX
+- V0.4: favorites / collections
+- V0.5: automated health and metadata checks
+- Later: semantic search and AI recommendations based on the curated catalog
