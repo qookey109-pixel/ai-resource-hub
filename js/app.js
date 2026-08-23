@@ -1,6 +1,7 @@
 const state = {
   resources: [],
-  categories: []
+  categories: [],
+  icons: {}
 };
 
 const els = {
@@ -123,6 +124,37 @@ function categoryIcon(resource) {
   return categoryInfo(firstCategory)?.icon || String(resource.name || '?').slice(0, 1).toUpperCase();
 }
 
+function showFallbackIcon(iconEl, resource) {
+  iconEl.replaceChildren();
+  iconEl.textContent = categoryIcon(resource);
+  iconEl.classList.remove('has-brand-icon');
+}
+
+function renderResourceIcon(iconEl, resource) {
+  const icon = state.icons?.[resource.id];
+  if (!icon?.url) {
+    showFallbackIcon(iconEl, resource);
+    return;
+  }
+
+  const img = document.createElement('img');
+  img.src = icon.url;
+  img.alt = '';
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.referrerPolicy = 'no-referrer';
+  img.width = 40;
+  img.height = 40;
+  img.style.width = '40px';
+  img.style.height = '40px';
+  img.style.objectFit = 'contain';
+  img.style.borderRadius = '9px';
+  img.addEventListener('error', () => showFallbackIcon(iconEl, resource), { once: true });
+
+  iconEl.replaceChildren(img);
+  iconEl.classList.add('has-brand-icon');
+}
+
 function render() {
   const resources = filteredResources();
   els.grid.replaceChildren();
@@ -134,7 +166,7 @@ function render() {
     const card = fragment.querySelector('.card');
     if (index === 0 && (resource.rating ?? 0) >= 5) card.classList.add('featured');
 
-    fragment.querySelector('.resource-icon').textContent = categoryIcon(resource);
+    renderResourceIcon(fragment.querySelector('.resource-icon'), resource);
     fragment.querySelector('.name').textContent = resource.name;
     fragment.querySelector('.type').textContent = typeLabels[resource.type] ?? '其他';
     fragment.querySelector('.primary-category').textContent = categoryDisplayName(resource.categories?.[0]);
@@ -306,13 +338,15 @@ function bindEvents() {
 
 async function init() {
   try {
-    const [resourceDoc, categoryDoc] = await Promise.all([
+    const [resourceDoc, categoryDoc, iconDoc] = await Promise.all([
       loadJson('./data/resources.json'),
-      loadJson('./data/categories.json')
+      loadJson('./data/categories.json'),
+      loadJson('./data/resource-icons.json')
     ]);
 
     state.resources = Array.isArray(resourceDoc.resources) ? resourceDoc.resources : [];
     state.categories = Array.isArray(categoryDoc.categories) ? categoryDoc.categories : [];
+    state.icons = iconDoc && typeof iconDoc.icons === 'object' ? iconDoc.icons : {};
 
     populateCategories();
     populateTypes();
