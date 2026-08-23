@@ -7,45 +7,37 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.4 marketplace baseline**
+- Current version: **V0.4.1 marketplace content + branding baseline**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
 
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
-- First two user-supplied resource batches ingested and reviewed.
-- Catalog contains **13 resources**.
-- Account-specific / temporary URLs are sanitized before publication.
-- Search, category filter, type filter, free/open-source filters, sorting and quick-category navigation implemented.
-- GitHub Pages deployment workflow added at `.github/workflows/pages.yml`.
-- `.nojekyll` added for static-site publishing.
-- Marketplace UX direction established from user-provided visual references.
-- V0.4 first-screen structure: lightweight brand header, centered title/subtitle, large task/resource search composer, horizontally scrollable category chips and three-column resource marketplace.
-- V0.4 scrolled structure: compact sticky search appears above the category chips while the resource marketplace continues below.
-- Previous left-side filter panel removed; secondary filters are now a lightweight horizontal row above the resource grid.
-- Resource cards were compacted to marketplace-style cards with a generated category icon, name, source/type, summary, primary use case, small category pills, pricing/open-source metadata and editorial rating.
-- Existing 13-resource data and search/filter logic were preserved rather than rebuilt.
-- Capafy remains only a structural UX reference; exact branding, content, proprietary code and assets are not copied.
+- Marketplace UX baseline established and preserved.
+- Catalog now contains **14 verified resources**.
+- Anime.js added as an active MIT-licensed JavaScript animation library resource.
+- All current user-facing resource descriptions, use cases and notes were converted to Traditional Chinese.
+- Frontend type / pricing / source-state labels were localized to Traditional Chinese.
+- Resource schema now requires Traditional Chinese for future `summary`, `use_cases` and `notes` fields by default.
+- Original Qookey mascot icon added at `assets/qookey-mascot.svg` and wired as the site brand icon / SVG favicon.
+- Qookey mascot follows a simple rounded, low-complexity, limited-color brand-IP direction inspired by the design principles of `s1dashu/ip-as-logo-skill`, while remaining an original Qookey asset and not copying existing characters or artwork.
+- Account-specific / temporary URLs continue to be sanitized before publication.
+- Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`.
 
 ## Current catalog
 
-- Total resources: 13
+- Total resources: 14
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Multi-category classification is enabled.
 - Unknown metadata remains `unknown` / `null` instead of being guessed.
+- Technical tags may remain English for searchability, while user-facing explanatory copy is Traditional Chinese.
 
-## Current resource groups represented
+## Pending ingestion
 
-- Agent Skills / AI Coding
-- UI / UX / frontend references
-- Image / mascot generation workflows
-- Audio / music production resources
-- Cloud deployment and infrastructure
-- Databases / backend platforms
-- AI / LLM developer platforms
-- Skill marketplaces
+- Threads post `@cyesuta.lee / DcWAmV-iScT`: content could not be reliably fetched or verified from the supplied media URL, so it has **not** been added to the catalog. A screenshot, post text, or the underlying resource URL is required before classification.
 
 ## Deployment state
 
@@ -67,7 +59,8 @@ Do not claim the public site is live until the Pages deployment is verified succ
 - Resource health checks.
 - Backend database migration.
 - Per-resource detail pages.
-- Final branding details such as logo, exact accent palette, typography, real resource logos/card imagery and final category taxonomy.
+- Final per-category / per-resource icon system.
+- Final typography and exact accent palette.
 
 ## Current rules
 
@@ -80,8 +73,10 @@ Do not claim the public site is live until the Pages deployment is verified succ
 7. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
 8. Never publish credentials, secrets, API keys, tokens, private account IDs, temporary auth-flow URLs, or private dashboard links.
 9. Prefer canonical public URLs for resources stored in the public catalog.
-10. Preserve the V0.4 marketplace baseline while iterating on visual details unless a later explicit design decision changes it.
+10. Preserve the V0.4 marketplace structure while iterating on visual details unless a later explicit design decision changes it.
+11. User-facing `summary`, `use_cases` and `notes` must be Traditional Chinese by default.
+12. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
 
 ## Next step
 
-Verify GitHub Pages deployment and visual behavior on desktop/mobile, then continue accepting resource URLs and refine branding/card details incrementally without rebuilding the V0.4 marketplace structure.
+Continue ingesting verified user-supplied URLs. Refine the new Qookey brand icon and later extend the same visual language into a consistent category/resource icon family without rebuilding the current marketplace structure.
