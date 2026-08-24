@@ -67,6 +67,35 @@
     box.hidden = false;
   }
 
+  function renderNoMatch(data) {
+    hideClarifier();
+
+    const grid = document.querySelector('#resource-grid');
+    const empty = document.querySelector('#empty-state');
+    const count = document.querySelector('#result-count');
+    if (!grid || !empty) return;
+
+    grid.replaceChildren();
+    if (count) count.textContent = '0';
+    empty.hidden = false;
+
+    const title = empty.querySelector('h2');
+    const message = empty.querySelector('p');
+    if (title) title.textContent = '目前沒有合適的資源';
+    if (message) {
+      message.textContent = String(data?.missing_capability || '目前資源庫還沒有足夠符合這個需求的工具。');
+    }
+
+    document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function interceptedResponse(code) {
+    return new Response(JSON.stringify({ error: code }), {
+      status: 409,
+      headers: { 'content-type': 'application/json; charset=utf-8' }
+    });
+  }
+
   window.fetch = async (...args) => {
     const response = await nativeFetch(...args);
 
@@ -78,17 +107,21 @@
 
       if (method === 'POST' && /\/api\/recommend(?:$|[?#])/.test(url)) {
         const data = await response.clone().json();
+
         if (data?.mode === 'clarify') {
           renderClarifier(data);
-          return new Response(JSON.stringify({ error: 'needs_clarification' }), {
-            status: 409,
-            headers: { 'content-type': 'application/json; charset=utf-8' }
-          });
+          return interceptedResponse('needs_clarification');
         }
+
+        if (data?.mode === 'no_match' || data?.no_match === true) {
+          renderNoMatch(data);
+          return interceptedResponse('no_matching_resource');
+        }
+
         hideClarifier();
       }
     } catch (error) {
-      console.debug('clarification interceptor skipped', error);
+      console.debug('AI response interceptor skipped', error);
     }
 
     return response;
