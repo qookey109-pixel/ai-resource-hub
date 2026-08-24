@@ -28,6 +28,16 @@
   display: none !important;
 }
 
+/* The category chips already provide the primary browsing control.
+   Hide the secondary summary/filter toolbar to keep the marketplace lightweight. */
+.catalog-head {
+  display: none !important;
+}
+
+.catalog-shell {
+  padding-top: 16px;
+}
+
 .ai-clarify {
   margin: 12px auto 0;
   text-align: left;
