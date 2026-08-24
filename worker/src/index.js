@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.2.0';
+const RECOMMENDER_VERSION = '0.3.0';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -99,6 +99,18 @@ function cleanList(value, limit = 8, itemMax = 120) {
     .slice(0, limit);
 }
 
+function cleanChoices(value, query) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((item) => {
+      const label = cleanString(item?.label, 60);
+      const refinement = cleanString(item?.refinement || `${query}；${label}`, 320);
+      return { label, refinement };
+    })
+    .filter((item) => item.label && item.refinement)
+    .slice(0, 4);
+}
+
 function normaliseIntent(raw, query) {
   return {
     original_query: query,
@@ -116,7 +128,10 @@ function normaliseIntent(raw, query) {
     workflow_scope: cleanString(raw?.workflow_scope, 100),
     implied_needs: cleanList(raw?.implied_needs),
     search_concepts: cleanList(raw?.search_concepts, 12, 80),
-    ambiguities: cleanList(raw?.ambiguities, 6, 120)
+    ambiguities: cleanList(raw?.ambiguities, 6, 120),
+    needs_clarification: raw?.needs_clarification === true,
+    clarifying_question: cleanString(raw?.clarifying_question, 180),
+    clarification_choices: cleanChoices(raw?.clarification_choices, query)
   };
 }
 
@@ -128,9 +143,16 @@ function buildIntentPrompt(query) {
     '特別注意否定詞、偏好詞、價格限制、本機/雲端、開源/閉源、平台、API/CLI/Web/App、技術程度與是否要求端到端完成。',
     'workflow_scope 只能填 end-to-end、component、either 或 unknown。',
     '如果使用者只是說「我要做 X」，desired_output 應該描述最終產出，而不是某個工具名稱。',
+    '只有當缺少的資訊會「實質改變要推薦的工具種類或核心能力」時，needs_clarification 才能設為 true。',
+    '不要為了次要偏好而追問。沒有指定預算、開源與否、部署方式或技術程度，通常不需要先問。',
+    '如果需求本身已明確指出工作類型，例如「AI 短影片」「Three.js 3D 遊戲效果」「LINE AI 客服」，即使實作細節尚未指定，也應 needs_clarification=false，先做合理推薦。',
+    '如果需求過度寬泛而存在明顯不同方向，例如只說「做客服」「做網站」「做 AI 工具」，而不同方向會用到完全不同資源，才應先問一個澄清問題。',
+    'needs_clarification=true 時，clarifying_question 只問一個最關鍵問題；clarification_choices 提供 2 到 4 個互斥且實用的選項。',
+    '每個 clarification_choices.refinement 必須保留使用者原本要求，並只加入該選項代表的澄清內容，形成可直接再次送入分析器的完整需求。',
+    'needs_clarification=false 時，clarifying_question 必須是空字串，clarification_choices 必須是空陣列。',
     '輸出繁體中文 JSON，不要 Markdown、不要 code fence、不要額外文字。',
     'JSON schema:',
-    '{"primary_goal":"核心目標","desired_output":"最後要得到什麼","must_have":["明確必須條件"],"preferences":["偏好但非必要"],"avoid":["明確不要"],"platform":["macOS/web/mobile/Windows/不限等"],"execution":["local/cloud/self-hosted/不限等"],"budget":"免費/低成本/可付費/未指定","openness":"開源優先/必須開源/不限/未指定","interface":["API/CLI/WebUI/App/MCP 等"],"skill_level":"beginner/intermediate/advanced/未指定","workflow_scope":"end-to-end/component/either/unknown","implied_needs":["合理隱含需求"],"search_concepts":["用來找工具的核心概念，不要放停用詞"],"ambiguities":["真的會影響推薦但使用者沒說清楚的地方"]}',
+    '{"primary_goal":"核心目標","desired_output":"最後要得到什麼","must_have":["明確必須條件"],"preferences":["偏好但非必要"],"avoid":["明確不要"],"platform":["macOS/web/mobile/Windows/不限等"],"execution":["local/cloud/self-hosted/不限等"],"budget":"免費/低成本/可付費/未指定","openness":"開源優先/必須開源/不限/未指定","interface":["API/CLI/WebUI/App/MCP 等"],"skill_level":"beginner/intermediate/advanced/未指定","workflow_scope":"end-to-end/component/either/unknown","implied_needs":["合理隱含需求"],"search_concepts":["用來找工具的核心概念，不要放停用詞"],"ambiguities":["真的會影響推薦但使用者沒說清楚的地方"],"needs_clarification":false,"clarifying_question":"","clarification_choices":[{"label":"選項名稱","refinement":"保留原要求後加入此選項的完整需求"}]}',
     '',
     `使用者原話：${query}`
   ].join('\n');
@@ -140,7 +162,7 @@ async function understandIntent(query, env) {
   const result = await env.AI.run(env.MODEL || DEFAULT_MODEL, {
     prompt: buildIntentPrompt(query),
     temperature: 0.05,
-    max_tokens: 700
+    max_tokens: 900
   });
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
@@ -154,8 +176,16 @@ function fallbackIntent(query) {
       .toLowerCase()
       .split(/[^\p{L}\p{N}+#.-]+/u)
       .filter((term) => term.length >= 2)
-      .slice(0, 10)
+      .slice(0, 10),
+    needs_clarification: false
   }, query);
+}
+
+function hasUsableClarification(intent) {
+  return intent?.needs_clarification === true
+    && Boolean(intent.clarifying_question)
+    && Array.isArray(intent.clarification_choices)
+    && intent.clarification_choices.length >= 2;
 }
 
 function buildRankingPrompt(intent, resources) {
@@ -324,6 +354,20 @@ export default {
       console.error('intent understanding failed', error);
       intent = fallbackIntent(query);
       intentMode = 'fallback';
+    }
+
+    if (intentMode === 'ai' && hasUsableClarification(intent)) {
+      return json({
+        ok: true,
+        mode: 'clarify',
+        version: RECOMMENDER_VERSION,
+        query,
+        intent_mode: intentMode,
+        intent,
+        clarifying_question: intent.clarifying_question,
+        choices: intent.clarification_choices,
+        recommendations: []
+      }, 200, cors);
     }
 
     try {
