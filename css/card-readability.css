@@ -1,0 +1,104 @@
+/* Resource card readability pass — larger, clearer typography without changing layout structure. */
+.card {
+  min-height: 286px;
+}
+
+.name {
+  color: #1f1f1d;
+  font-size: 21px;
+  font-weight: 820;
+  line-height: 1.24;
+  letter-spacing: -0.02em;
+}
+
+.byline {
+  margin-top: 7px;
+  color: #777772;
+  font-size: 11.5px;
+  font-weight: 550;
+  line-height: 1.45;
+}
+
+.description {
+  min-height: 67px;
+  margin-top: 18px;
+  color: #555550;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.62;
+  -webkit-line-clamp: 3;
+}
+
+.use-case {
+  margin-top: 11px;
+  color: #70706a;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.categories {
+  gap: 6px;
+  margin-top: 13px;
+}
+
+.pill {
+  padding: 5px 8px;
+  color: #666661;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.resource-facts {
+  gap: 11px;
+  color: #73736d;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.rating {
+  color: #62625d;
+}
+
+.visit {
+  font-size: 12.5px;
+  font-weight: 820;
+}
+
+@media (max-width: 720px) {
+  .card {
+    min-height: 0;
+  }
+
+  .name {
+    font-size: 19px;
+  }
+
+  .byline {
+    font-size: 11px;
+  }
+
+  .description {
+    min-height: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .use-case {
+    font-size: 11.5px;
+  }
+
+  .pill {
+    font-size: 10px;
+  }
+
+  .resource-facts {
+    font-size: 10.5px;
+  }
+
+  .visit {
+    font-size: 12px;
+  }
+}
