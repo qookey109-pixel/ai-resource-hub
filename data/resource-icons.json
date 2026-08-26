@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-23",
+  "updated_at": "2026-08-26",
   "icons": {
     "emil-kowalski-skills": {"url": "https://github.com/emilkowalski.png?size=256", "source": "github-owner-avatar-256"},
     "refero-styles": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design", "source": "domain-favicon-128"},
@@ -26,6 +26,7 @@
     "ai-website-cloner-template": {"url": "https://github.com/JCodesMore.png?size=256", "source": "github-owner-avatar-256-fallback-no-project-logo"},
     "threeui-community": {"url": "https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg", "source": "official-repository-project-mark-svg"},
     "elevenlabs": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://elevenlabs.io", "source": "domain-favicon-128"},
-    "meshy-ai": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.meshy.ai", "source": "domain-favicon-128"}
+    "meshy-ai": {"url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.meshy.ai", "source": "domain-favicon-128"},
+    "mattpocock-skills": {"url": "https://github.com/mattpocock.png?size=256", "source": "github-owner-avatar-256-fallback-no-project-logo"}
   }
 }
