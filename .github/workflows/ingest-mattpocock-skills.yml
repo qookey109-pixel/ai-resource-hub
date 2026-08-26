@@ -1,0 +1,74 @@
+name: Ingest Matt Pocock Skills
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ingest-mattpocock-skills.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Add verified resource
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('data/resources.json')
+          doc = json.loads(path.read_text(encoding='utf-8'))
+          resources = doc.setdefault('resources', [])
+
+          resource = {
+              'id': 'mattpocock-skills',
+              'name': 'Skills For Real Engineers',
+              'type': 'github',
+              'url': 'https://github.com/mattpocock/skills',
+              'categories': ['Agents / MCP / Skills', 'AI Coding', 'Developer Tools', 'Testing / QA', 'Learning / Documentation'],
+              'tags': ['agent-skills', 'software-engineering', 'tdd', 'debugging', 'code-review', 'architecture', 'specs', 'codex', 'claude-code', 'productivity'],
+              'summary': 'Matt Pocock 日常使用的一組工程導向 Agent Skills，強調先對齊需求，再用 TDD、除錯、架構設計、Code Review、規格與交接等可組合流程完成真實軟體工程工作。',
+              'use_cases': [
+                  '讓 Codex、Claude Code 等 Coding Agent 在動手寫程式前先釐清需求與工程邊界',
+                  '用 TDD、除錯與 Code Review 流程提高 AI 產生程式碼的可靠度',
+                  '建立規格、Tickets、架構決策與大型工程工作的可追蹤執行流程',
+                  '把 Handoff、研究、教學與其他日常工程工作封裝成可重複使用的 Agent Skills'
+              ],
+              'pricing': 'open-source',
+              'open_source': True,
+              'license': 'MIT',
+              'difficulty': 'intermediate',
+              'status': 'active',
+              'rating': 5,
+              'added_at': '2026-08-26',
+              'last_checked': '2026-08-26',
+              'notes': 'README 將這套 Skills 定位為「real engineering, not vibe coding」，設計原則是小型、可調整、可組合且不綁特定模型。Claude Code 可透過官方 marketplace plugin 安裝；Codex 與其他 Agent 可用 skills.sh / npx skills@latest add mattpocock/skills 選擇性安裝。Repository 採 MIT License。'
+          }
+
+          duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') == resource['url']), None)
+          if duplicate:
+              raise SystemExit(f"Resource already exists: {duplicate.get('id')}")
+
+          resources.append(resource)
+          doc['updated_at'] = '2026-08-26'
+          path.write_text(json.dumps(doc, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json
+          git commit -m "Add Matt Pocock engineering skills"
+          git push origin HEAD:main
