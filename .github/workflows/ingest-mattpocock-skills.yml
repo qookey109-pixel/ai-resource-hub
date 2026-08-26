@@ -2,21 +2,21 @@
 name: Ingest Matt Pocock Skills
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/ingest-mattpocock-skills.yml"
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
 
 jobs:
   ingest:
+    if: github.event.issue.title == 'TRIGGER: ingest mattpocock skills'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: main
 
       - name: Add verified resource
         shell: bash
