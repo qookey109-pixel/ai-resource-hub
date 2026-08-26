@@ -1,3 +1,4 @@
+# One-time ingestion trigger for verified Matt Pocock skills resource.
 name: Ingest Matt Pocock Skills
 
 on:
@@ -56,7 +57,8 @@ jobs:
 
           duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') == resource['url']), None)
           if duplicate:
-              raise SystemExit(f"Resource already exists: {duplicate.get('id')}")
+              print(f"Resource already exists: {duplicate.get('id')}")
+              raise SystemExit(0)
 
           resources.append(resource)
           doc['updated_at'] = '2026-08-26'
@@ -67,6 +69,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if git diff --quiet -- data/resources.json; then
+            echo "Catalog already contains mattpocock-skills."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/resources.json
