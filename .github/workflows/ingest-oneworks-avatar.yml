@@ -1,0 +1,89 @@
+name: Ingest OneWorks Avatar
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    if: github.event.issue.title == 'TRIGGER: ingest oneworks avatar'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Add verified resource and icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resources_path = Path('data/resources.json')
+          resources_doc = json.loads(resources_path.read_text(encoding='utf-8'))
+          resources = resources_doc.setdefault('resources', [])
+
+          resource = {
+              'id': 'oneworks-avatar',
+              'name': 'OneWorks Avatar',
+              'type': 'github',
+              'url': 'https://github.com/oneworks-ai/avatar',
+              'categories': ['3D / WebGL / Graphics', 'Agents / MCP / Skills', 'UI / UX / Design', 'Developer Tools', 'App Development'],
+              'tags': ['3d-avatar', 'avatar-editor', 'agent-skill', 'svg', 'png', 'gif', 'typescript', 'vite', 'react', 'vue'],
+              'summary': '可直接在瀏覽器建立、調整姿勢、材質、臉部、鏡頭與動畫的幾何 3D Avatar 編輯器，並可匯出 SVG、PNG 或動畫 GIF；同時提供 Agent Skill，讓 AI Agent 操作真實編輯器與 3D 場景模型。',
+              'use_cases': [
+                  '快速製作網站、App、Agent 或產品頁使用的幾何 3D Avatar',
+                  '在瀏覽器中調整 Avatar 的姿勢、材質、臉部、鏡頭與動畫後匯出 SVG、PNG 或 GIF',
+                  '透過 oneWorks Avatar Agent Skill 讓 AI Agent 參與 Avatar 編輯與 3D 場景工作流',
+                  '研究 TypeScript / Vite 與 React、Vue framework adapters 的 3D Avatar 整合方式'
+              ],
+              'pricing': 'open-source',
+              'open_source': True,
+              'license': 'MIT',
+              'difficulty': 'intermediate',
+              'status': 'active',
+              'rating': 5,
+              'added_at': '2026-08-27',
+              'last_checked': '2026-08-27',
+              'notes': 'Repository 採 MIT License，檢查時約 161 Stars、未封存且近期仍有更新。README 提供線上編輯器 oneWorks.cloud/avatar 與 npx skills@latest add oneworks-ai/avatar 的 Agent Skill 安裝方式；package.json 顯示專案以 TypeScript/Vite 為核心，並包含 React、Vue 與 Web 相關 adapter/runtime。'
+          }
+
+          duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') == resource['url']), None)
+          if not duplicate:
+              resources.append(resource)
+              resources_doc['updated_at'] = '2026-08-27'
+              resources_path.write_text(json.dumps(resources_doc, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          else:
+              print(f"Resource already exists: {duplicate.get('id')}")
+
+          icons_path = Path('data/resource-icons.json')
+          icons_doc = json.loads(icons_path.read_text(encoding='utf-8'))
+          icons = icons_doc.setdefault('icons', {})
+          if 'oneworks-avatar' not in icons:
+              icons['oneworks-avatar'] = {
+                  'url': 'https://github.com/oneworks-ai.png?size=256',
+                  'source': 'github-organization-avatar-256-fallback-no-project-logo'
+              }
+              icons_doc['updated_at'] = '2026-08-27'
+              icons_path.write_text(json.dumps(icons_doc, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/resources.json data/resource-icons.json; then
+            echo "Catalog already contains OneWorks Avatar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json
+          git commit -m "Add OneWorks Avatar resource"
+          git push origin HEAD:main
