@@ -1,0 +1,62 @@
+/* Personal favorites — local browser state, visually pinned to the card corner. */
+.card {
+  position: relative;
+}
+
+.card-heading {
+  padding-right: 38px;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(113, 106, 95, .18);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .9);
+  color: #aaa39b;
+  box-shadow: 0 3px 10px rgba(31, 27, 24, .055);
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1;
+  transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease;
+  z-index: 2;
+}
+
+.favorite-button:hover {
+  transform: translateY(-1px) scale(1.04);
+  border-color: rgba(255, 153, 72, .45);
+  background: #fffaf4;
+  color: #e59a2f;
+}
+
+.favorite-button.is-favorite {
+  border-color: rgba(242, 177, 63, .5);
+  background: #fff8df;
+  color: #e6a323;
+  box-shadow: 0 4px 12px rgba(218, 157, 38, .13);
+}
+
+.card.is-favorite {
+  border-color: rgba(235, 178, 73, .48);
+  box-shadow: 0 6px 20px rgba(64, 48, 24, .075);
+}
+
+@media (max-width: 720px) {
+  .card-heading {
+    padding-right: 32px;
+  }
+
+  .favorite-button {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    font-size: 18px;
+  }
+}
