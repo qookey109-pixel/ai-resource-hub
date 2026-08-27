@@ -109,6 +109,10 @@
     "oneworks-avatar": {
       "url": "https://github.com/oneworks-ai.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "legal-skills-open": {
+      "url": "https://github.com/ThomasMoreAI.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
     }
   }
 }
