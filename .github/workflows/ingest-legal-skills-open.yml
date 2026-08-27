@@ -1,0 +1,89 @@
+name: Ingest Legal Skills Open
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ingest-legal-skills-open.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Add verified resource and icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resources_path = Path('data/resources.json')
+          resources_doc = json.loads(resources_path.read_text(encoding='utf-8'))
+          resources = resources_doc.setdefault('resources', [])
+
+          resource = {
+              'id': 'legal-skills-open',
+              'name': 'Legal Skills (Open)',
+              'type': 'github',
+              'url': 'https://github.com/ThomasMoreAI/legal-skills-open',
+              'categories': ['Agents / MCP / Skills', 'Search / Research', 'AI / LLM', 'Learning / Documentation', 'Developer Tools'],
+              'tags': ['legal-ai', 'legal-skills', 'law', 'compliance', 'legal-research', 'contract-analysis', 'gdpr', 'mcp', 'anthropic-skills', 'claude-code'],
+              'summary': '大型開源法律 AI Skills 資料庫，採 Anthropic SKILL.md 格式，收錄 3,500+ Skills、39 個司法管轄區與 200+ practice plugins，涵蓋法律研究、合約審查、訴訟、法遵、GDPR、公司法、稅務、智財等工作。',
+              'use_cases': [
+                  '讓 MCP 相容的 AI Agent 依司法管轄區與法律領域執行結構化法律研究與分析流程',
+                  '進行合約條款審查、法遵檢查、GDPR DPA review、案件與法規分析等輔助工作',
+                  '為 Claude Code、Cursor、ChatGPT 等支援 MCP 或 Skills 的工具提供可版本化、可追蹤的法律工作流程',
+                  '查找美國、歐盟、德國、中國、台灣、日本、韓國等多地區的法律 Skills 與 practice plugins'
+              ],
+              'pricing': 'open-source',
+              'open_source': True,
+              'license': 'Apache-2.0',
+              'difficulty': 'intermediate',
+              'status': 'active',
+              'rating': 5,
+              'added_at': '2026-08-27',
+              'last_checked': '2026-08-27',
+              'notes': 'Repository 採 Apache-2.0 License。README 標示 3,500+ Skills、39 jurisdictions、200+ practice plugins，並列出台灣等司法管轄區。內容為 community-curated，官方也提醒應視為法律工作的第二雙眼睛，而非取代具資格律師；實務使用仍應核對最新法規、判例、版本與適用地。檢查時約 48 Stars、未封存，GitHub 顯示最近一次程式碼 push 為 2026-07-01。'
+          }
+
+          duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') == resource['url']), None)
+          if not duplicate:
+              resources.append(resource)
+              resources_doc['updated_at'] = '2026-08-27'
+              resources_path.write_text(json.dumps(resources_doc, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          else:
+              print(f"Resource already exists: {duplicate.get('id')}")
+
+          icons_path = Path('data/resource-icons.json')
+          icons_doc = json.loads(icons_path.read_text(encoding='utf-8'))
+          icons = icons_doc.setdefault('icons', {})
+          if 'legal-skills-open' not in icons:
+              icons['legal-skills-open'] = {
+                  'url': 'https://github.com/ThomasMoreAI.png?size=256',
+                  'source': 'github-organization-avatar-256-fallback-no-project-logo'
+              }
+              icons_doc['updated_at'] = '2026-08-27'
+              icons_path.write_text(json.dumps(icons_doc, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/resources.json data/resource-icons.json; then
+            echo "Catalog already contains Legal Skills (Open)."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json
+          git commit -m "Add Legal Skills Open resource"
+          git push origin HEAD:main
