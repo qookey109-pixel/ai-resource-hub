@@ -136,6 +136,9 @@ function decorateAndSort() {
     return a.originalIndex - b.originalIndex;
   });
 
+  const orderChanged = entries.some((entry, index) => entry.card !== cards[index]);
+  if (!orderChanged) return;
+
   applying = true;
   try {
     for (const entry of entries) grid.append(entry.card);
