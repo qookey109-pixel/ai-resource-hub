@@ -1,0 +1,4 @@
+/* Keep filtered resource cards visible below the sticky header + category toolbar. */
+#resources {
+  scroll-margin-top: var(--resource-sticky-offset, 190px);
+}
