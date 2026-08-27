@@ -113,6 +113,10 @@
     "legal-skills-open": {
       "url": "https://github.com/ThomasMoreAI.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "pixelartbase-free-com-tw": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://free.com.tw",
+      "source": "domain-favicon-128"
     }
   }
 }
