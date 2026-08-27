@@ -1,28 +1,186 @@
 {
-  "schema_version": "0.1",
-  "updated_at": "2026-08-23",
+  "schema_version": "0.2",
+  "updated_at": "2026-08-27",
   "categories": [
-    {"id": "ai-llm", "name": "AI / LLM", "display_name": "AI / 大型語言模型", "icon": "🤖"},
-    {"id": "ai-coding", "name": "AI Coding", "display_name": "AI 程式開發", "icon": "💻"},
-    {"id": "agents-mcp-skills", "name": "Agents / MCP / Skills", "display_name": "Agent / MCP / Skills", "icon": "🧩"},
-    {"id": "game-ai-dev", "name": "Game AI / Game Dev", "display_name": "遊戲 AI / 遊戲開發", "icon": "🎮"},
-    {"id": "three-d-webgl-graphics", "name": "3D / WebGL / Graphics", "display_name": "3D / WebGL / 圖形", "icon": "🧊"},
-    {"id": "ui-ux-design", "name": "UI / UX / Design", "display_name": "UI / UX / 設計", "icon": "🎨"},
-    {"id": "image-video-audio", "name": "Image / Video / Audio AI", "display_name": "圖像 / 影片 / 音訊 AI", "icon": "🖼️"},
-    {"id": "audio-music-production", "name": "Audio / Music Production", "display_name": "音訊 / 音樂製作", "icon": "🎵"},
-    {"id": "search-research", "name": "Search / Research", "display_name": "搜尋 / 研究", "icon": "🔎"},
-    {"id": "automation", "name": "Automation", "display_name": "自動化", "icon": "⚙️"},
-    {"id": "scraping-data-collection", "name": "Scraping / Data Collection", "display_name": "網頁擷取 / 資料蒐集", "icon": "🕷️"},
-    {"id": "data-analytics", "name": "Data / Analytics", "display_name": "資料 / 分析", "icon": "📊"},
-    {"id": "database", "name": "Database", "display_name": "資料庫", "icon": "🗄️"},
-    {"id": "cloud-deployment", "name": "Cloud / Deployment", "display_name": "雲端 / 部署", "icon": "☁️"},
-    {"id": "security", "name": "Security", "display_name": "資安 / 安全", "icon": "🔐"},
-    {"id": "github-libraries", "name": "GitHub Libraries", "display_name": "GitHub 函式庫", "icon": "📦"},
-    {"id": "developer-tools", "name": "Developer Tools", "display_name": "開發者工具", "icon": "🛠️"},
-    {"id": "finance-crypto", "name": "Finance / Crypto", "display_name": "金融 / 加密貨幣", "icon": "💰"},
-    {"id": "app-development", "name": "App Development", "display_name": "App 開發", "icon": "📱"},
-    {"id": "testing-qa", "name": "Testing / QA", "display_name": "測試 / QA", "icon": "🧪"},
-    {"id": "learning-documentation", "name": "Learning / Documentation", "display_name": "學習 / 文件", "icon": "📚"},
-    {"id": "other", "name": "Other", "display_name": "其他", "icon": "🧰"}
+    {
+      "id": "ai-llm",
+      "name": "AI / LLM",
+      "display_name": "AI 模型 / LLM",
+      "icon": "🤖"
+    },
+    {
+      "id": "ai-coding",
+      "name": "AI Coding",
+      "display_name": "AI 程式開發",
+      "icon": "💻"
+    },
+    {
+      "id": "agent-skills",
+      "name": "Agent Skills",
+      "display_name": "Agent Skills",
+      "icon": "🧩"
+    },
+    {
+      "id": "mcp-agent-frameworks",
+      "name": "MCP / Agent Frameworks",
+      "display_name": "MCP / Agent 框架",
+      "icon": "🔗"
+    },
+    {
+      "id": "legal-compliance",
+      "name": "Legal / Compliance",
+      "display_name": "法律 / 法遵",
+      "icon": "⚖️"
+    },
+    {
+      "id": "search-research",
+      "name": "Search / Research",
+      "display_name": "搜尋 / 研究",
+      "icon": "🔎"
+    },
+    {
+      "id": "osint-intelligence",
+      "name": "OSINT / Intelligence",
+      "display_name": "OSINT / 情報",
+      "icon": "🌐"
+    },
+    {
+      "id": "automation-workflow",
+      "name": "Automation / Workflow",
+      "display_name": "自動化 / 工作流",
+      "icon": "⚙️"
+    },
+    {
+      "id": "scraping-data-collection",
+      "name": "Scraping / Data Collection",
+      "display_name": "網頁擷取 / 資料蒐集",
+      "icon": "🕷️"
+    },
+    {
+      "id": "data-analytics",
+      "name": "Data / Analytics",
+      "display_name": "資料分析 / 視覺化",
+      "icon": "📊"
+    },
+    {
+      "id": "cloud-deployment",
+      "name": "Cloud / Deployment",
+      "display_name": "雲端 / 部署",
+      "icon": "☁️"
+    },
+    {
+      "id": "database-backend",
+      "name": "Database / Backend",
+      "display_name": "資料庫 / Backend",
+      "icon": "🗄️"
+    },
+    {
+      "id": "app-fullstack",
+      "name": "App / Full-stack Development",
+      "display_name": "App / 全端開發",
+      "icon": "📱"
+    },
+    {
+      "id": "developer-tools",
+      "name": "Developer Tools",
+      "display_name": "開發者工具",
+      "icon": "🛠️"
+    },
+    {
+      "id": "testing-qa",
+      "name": "Testing / QA",
+      "display_name": "測試 / QA",
+      "icon": "🧪"
+    },
+    {
+      "id": "security-reverse",
+      "name": "Security / Reverse Engineering",
+      "display_name": "資安 / 逆向工程",
+      "icon": "🔐"
+    },
+    {
+      "id": "ui-ux-design",
+      "name": "UI / UX Design",
+      "display_name": "UI / UX 設計",
+      "icon": "🎨"
+    },
+    {
+      "id": "frontend-components-animation",
+      "name": "Frontend Components / Animation",
+      "display_name": "前端元件 / 動畫",
+      "icon": "✨"
+    },
+    {
+      "id": "three-d-webgl",
+      "name": "3D / WebGL",
+      "display_name": "3D / WebGL",
+      "icon": "🧊"
+    },
+    {
+      "id": "three-d-generation-avatar",
+      "name": "3D Generation / Avatar",
+      "display_name": "3D 生成 / Avatar",
+      "icon": "🧍"
+    },
+    {
+      "id": "image-generation-design-ai",
+      "name": "Image Generation / Design AI",
+      "display_name": "圖片生成 / 設計 AI",
+      "icon": "🖼️"
+    },
+    {
+      "id": "video-generation-editing",
+      "name": "Video Generation / Editing",
+      "display_name": "影片生成 / 剪輯",
+      "icon": "🎬"
+    },
+    {
+      "id": "voice-speech-ai",
+      "name": "Voice / TTS / Speech AI",
+      "display_name": "語音 / TTS / Speech",
+      "icon": "🎙️"
+    },
+    {
+      "id": "audio-music-production",
+      "name": "Audio / Music Production",
+      "display_name": "音訊 / 音樂製作",
+      "icon": "🎵"
+    },
+    {
+      "id": "game-development",
+      "name": "Game Development",
+      "display_name": "遊戲開發",
+      "icon": "🎮"
+    },
+    {
+      "id": "game-assets-pixel-art",
+      "name": "Game Assets / Pixel Art",
+      "display_name": "遊戲素材 / Pixel Art",
+      "icon": "👾"
+    },
+    {
+      "id": "finance-crypto",
+      "name": "Finance / Crypto",
+      "display_name": "金融 / 加密貨幣",
+      "icon": "💰"
+    },
+    {
+      "id": "github-libraries",
+      "name": "GitHub Libraries",
+      "display_name": "GitHub 函式庫",
+      "icon": "📦"
+    },
+    {
+      "id": "learning-documentation",
+      "name": "Learning / Documentation",
+      "display_name": "學習 / 文件",
+      "icon": "📚"
+    },
+    {
+      "id": "other",
+      "name": "Other",
+      "display_name": "其他",
+      "icon": "🧰"
+    }
   ]
 }

@@ -223,7 +223,6 @@ body.compact-mode .compact-search-wrap { display: block; }
   background: var(--accent-soft);
   color: var(--accent);
 }
-.quick-category:first-child::before { content: "🔥 "; }
 
 .catalog-shell {
   width: min(1420px, calc(100% - 52px));

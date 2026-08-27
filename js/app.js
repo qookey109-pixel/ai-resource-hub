@@ -277,24 +277,17 @@ function createQuickCategory(label, category = '') {
 
 function renderQuickCategories() {
   els.quickCategories.replaceChildren();
-  els.quickCategories.append(createQuickCategory('趨勢', ''));
+  els.quickCategories.append(createQuickCategory('全部資源', ''));
 
-  const counts = new Map();
-  for (const resource of state.resources) {
-    for (const category of resource.categories ?? []) {
-      counts.set(category, (counts.get(category) ?? 0) + 1);
-    }
-  }
+  const usedCategories = new Set(
+    state.resources.flatMap((resource) => resource.categories ?? [])
+  );
 
-  const ranked = [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 16);
-
-  for (const [category] of ranked) {
-    const info = categoryInfo(category);
-    const displayName = info?.display_name ?? category;
-    const label = `${info?.icon ? `${info.icon} ` : ''}${displayName}`;
-    els.quickCategories.append(createQuickCategory(label, category));
+  for (const info of state.categories) {
+    if (!usedCategories.has(info.name)) continue;
+    const displayName = info.display_name ?? info.name;
+    const label = `${info.icon ? `${info.icon} ` : ''}${displayName}`;
+    els.quickCategories.append(createQuickCategory(label, info.name));
   }
 }
 
