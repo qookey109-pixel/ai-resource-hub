@@ -156,6 +156,29 @@ function scheduleDecorateAndSort() {
   });
 }
 
+function updateResourceScrollOffset() {
+  const resources = document.querySelector('#resources');
+  if (!resources) return;
+
+  const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0;
+  const toolbarHeight = document.querySelector('#market-toolbar')?.getBoundingClientRect().height ?? 0;
+  resources.style.scrollMarginTop = `${Math.ceil(headerHeight + toolbarHeight + 12)}px`;
+}
+
+function initResourceScrollOffset() {
+  const header = document.querySelector('.site-header');
+  const toolbar = document.querySelector('#market-toolbar');
+
+  updateResourceScrollOffset();
+  window.addEventListener('resize', updateResourceScrollOffset, { passive: true });
+
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(updateResourceScrollOffset);
+    if (header) observer.observe(header);
+    if (toolbar) observer.observe(toolbar);
+  }
+}
+
 async function initFavorites() {
   await loadResourceMap();
   const grid = document.querySelector('#resource-grid');
@@ -168,4 +191,5 @@ async function initFavorites() {
   scheduleDecorateAndSort();
 }
 
+initResourceScrollOffset();
 initFavorites();
