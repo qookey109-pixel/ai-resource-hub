@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   ingest:
-    if: github.event.issue.title == 'TRIGGER: ingest oneworks avatar'
+    if: "${{ github.event.issue.title == 'TRIGGER: ingest oneworks avatar' }}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest main
@@ -40,7 +40,7 @@ jobs:
               'use_cases': [
                   '快速製作網站、App、Agent 或產品頁使用的幾何 3D Avatar',
                   '在瀏覽器中調整 Avatar 的姿勢、材質、臉部、鏡頭與動畫後匯出 SVG、PNG 或 GIF',
-                  '透過 oneWorks Avatar Agent Skill 讓 AI Agent 參與 Avatar 編輯與 3D 場景工作流',
+                  '透過 OneWorks Avatar Agent Skill 讓 AI Agent 參與 Avatar 編輯與 3D 場景工作流',
                   '研究 TypeScript / Vite 與 React、Vue framework adapters 的 3D Avatar 整合方式'
               ],
               'pricing': 'open-source',
@@ -51,7 +51,7 @@ jobs:
               'rating': 5,
               'added_at': '2026-08-27',
               'last_checked': '2026-08-27',
-              'notes': 'Repository 採 MIT License，檢查時約 161 Stars、未封存且近期仍有更新。README 提供線上編輯器 oneWorks.cloud/avatar 與 npx skills@latest add oneworks-ai/avatar 的 Agent Skill 安裝方式；package.json 顯示專案以 TypeScript/Vite 為核心，並包含 React、Vue 與 Web 相關 adapter/runtime。'
+              'notes': 'Repository 採 MIT License，檢查時約 161 Stars、未封存且近期仍有更新。README 提供線上編輯器 oneworks.cloud/avatar 與 npx skills@latest add oneworks-ai/avatar 的 Agent Skill 安裝方式；package.json 顯示專案以 TypeScript/Vite 為核心，並包含 React、Vue 與 Web 相關 adapter/runtime。'
           }
 
           duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') == resource['url']), None)
