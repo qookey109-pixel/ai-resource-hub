@@ -1,0 +1,137 @@
+/* Resource card clarity V2 — stronger hierarchy, contrast, and multi-category readability. */
+.card {
+  min-height: 334px;
+  border-color: #dddcd6;
+  background: rgba(255, 255, 255, 0.985);
+  box-shadow: 0 5px 18px rgba(30, 29, 25, 0.055);
+}
+
+.card:hover {
+  border-color: #cfcac1;
+  box-shadow: 0 12px 30px rgba(30, 29, 25, 0.085);
+}
+
+.card.featured {
+  border-color: #ffb995;
+  box-shadow: 0 7px 22px rgba(255, 106, 53, 0.075);
+}
+
+.resource-icon {
+  background: linear-gradient(145deg, #fffaf7, #fff0e8);
+  box-shadow: inset 0 0 0 1px rgba(255, 106, 53, 0.13), 0 3px 10px rgba(30, 29, 25, 0.04);
+}
+
+.name {
+  color: #171715;
+  font-size: 22px;
+  font-weight: 850;
+  line-height: 1.22;
+  letter-spacing: -0.022em;
+}
+
+.byline {
+  margin-top: 8px;
+  color: #62625d;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.description {
+  min-height: 108px;
+  margin-top: 19px;
+  color: #343431;
+  font-size: 16.5px;
+  font-weight: 500;
+  line-height: 1.67;
+  -webkit-line-clamp: 4;
+}
+
+.use-case {
+  margin-top: 13px;
+  color: #51514d;
+  font-size: 13.5px;
+  font-weight: 570;
+  line-height: 1.58;
+  -webkit-line-clamp: 2;
+}
+
+.categories {
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.pill {
+  border: 1px solid #e3e2dc;
+  background: #f5f5f1;
+  color: #50504b;
+  padding: 5px 9px;
+  font-size: 11.5px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.card-footer {
+  padding-top: 17px;
+  border-top-color: #e8e7e1;
+}
+
+.resource-facts {
+  gap: 12px;
+  color: #5e5e59;
+  font-size: 11.5px;
+  font-weight: 550;
+}
+
+.rating {
+  color: #4f4f4a;
+  font-weight: 650;
+}
+
+.visit {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  border: 1px solid #deddd7;
+  border-radius: 9px;
+  padding: 0 10px;
+  background: #fafaf7;
+  color: #272724;
+  font-size: 13px;
+  font-weight: 820;
+}
+
+.visit:hover {
+  border-color: #ffb28f;
+  background: #fff2ec;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .card {
+    min-height: 0;
+  }
+
+  .name {
+    font-size: 20px;
+  }
+
+  .byline {
+    font-size: 11.5px;
+  }
+
+  .description {
+    min-height: 0;
+    font-size: 15.5px;
+    line-height: 1.64;
+    -webkit-line-clamp: 4;
+  }
+
+  .use-case {
+    font-size: 13px;
+  }
+
+  .pill {
+    font-size: 11px;
+  }
+}
