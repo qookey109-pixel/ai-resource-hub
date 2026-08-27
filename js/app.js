@@ -209,7 +209,7 @@ function render() {
     }
 
     const categories = fragment.querySelector('.categories');
-    for (const category of (resource.categories ?? []).slice(0, 2)) {
+    for (const category of (resource.categories ?? []).slice(0, 5)) {
       categories.append(makePill(category));
     }
 
