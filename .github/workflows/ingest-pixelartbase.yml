@@ -1,0 +1,88 @@
+name: Ingest PixelArtBase Reference
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ingest-pixelartbase.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Add resource and icon
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resources_path = Path('data/resources.json')
+          resources_doc = json.loads(resources_path.read_text(encoding='utf-8'))
+          resources = resources_doc.setdefault('resources', [])
+
+          resource = {
+              'id': 'pixelartbase-free-com-tw',
+              'name': 'PixelArtBase（免費資源網介紹）',
+              'type': 'website',
+              'url': 'https://free.com.tw/pixelartbase/',
+              'categories': ['Game AI / Game Dev', 'UI / UX / Design', 'Learning / Documentation'],
+              'tags': ['pixel-art', 'game-assets', 'design-resource', 'free-resource', 'pixelartbase'],
+              'summary': '免費資源網的 PixelArtBase 介紹頁，主題與像素藝術／遊戲美術資源相關。目前自動檢索無法穩定讀取該頁完整內文，因此原始服務來源、細部功能與授權條件先保留為待重新確認。',
+              'use_cases': [
+                  '保存 PixelArtBase 這個像素藝術相關資源入口，方便之後重新查找',
+                  '尋找像素風格、遊戲美術或相關設計資源時作為參考來源',
+                  '待原始頁面可正常讀取後，再補齊工具功能、價格與授權資訊'
+              ],
+              'pricing': 'unknown',
+              'open_source': None,
+              'license': None,
+              'difficulty': 'unknown',
+              'status': 'unknown',
+              'rating': None,
+              'added_at': '2026-08-27',
+              'last_checked': '2026-08-27',
+              'notes': '使用者提供 http://free.com.tw/pixelartbase/。加入時已正規化為 HTTPS。檢核時免費資源網主站可正常索引，但此 slug 無法由目前的網頁檢索器穩定取得完整內容，搜尋引擎亦未直接返回 PixelArtBase 頁面；因此不猜測其商用授權、是否開源或具體免費條件。'
+          }
+
+          duplicate = next((item for item in resources if item.get('id') == resource['id'] or item.get('url') in {resource['url'], 'http://free.com.tw/pixelartbase/'}), None)
+          if not duplicate:
+              resources.append(resource)
+              resources_doc['updated_at'] = '2026-08-27'
+              resources_path.write_text(json.dumps(resources_doc, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          else:
+              print(f"Resource already exists: {duplicate.get('id')}")
+
+          icons_path = Path('data/resource-icons.json')
+          icons_doc = json.loads(icons_path.read_text(encoding='utf-8'))
+          icons = icons_doc.setdefault('icons', {})
+          if 'pixelartbase-free-com-tw' not in icons:
+              icons['pixelartbase-free-com-tw'] = {
+                  'url': 'https://www.google.com/s2/favicons?sz=128&domain_url=https://free.com.tw',
+                  'source': 'domain-favicon-128'
+              }
+              icons_doc['updated_at'] = '2026-08-27'
+              icons_path.write_text(json.dumps(icons_doc, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/resources.json data/resource-icons.json; then
+            echo "Catalog already contains PixelArtBase reference."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json
+          git commit -m "Add PixelArtBase reference"
+          git push origin HEAD:main
