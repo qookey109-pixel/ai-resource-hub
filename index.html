@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Qookey AI Resource Hub — 收藏、分類、搜尋並推薦 AI、Agent、設計、開發與雲端資源。" />
+  <meta name="description" content="Qookey AI Resource Hub — 收藏、分類、搜尋 AI、Agent、設計、開發與雲端資源。" />
   <meta name="theme-color" content="#fbfbfa" />
   <title>Qookey AI Resource Hub</title>
   <link rel="icon" type="image/svg+xml" href="./assets/qookey-logo.svg?v=20260823" />
   <link rel="stylesheet" href="./css/styles.css" />
   <link rel="stylesheet" href="./css/brand.css" />
   <link rel="stylesheet" href="./css/icon-quality.css?v=20260823-1" />
-  <link rel="stylesheet" href="./css/ai.css?v=20260824-1" />
   <link rel="stylesheet" href="./css/card-readability.css?v=20260825-1" />
   <link rel="stylesheet" href="./css/category-layout.css?v=20260828-2" />
   <link rel="stylesheet" href="./css/card-clarity-v2.css?v=20260827-1" />
@@ -18,6 +17,7 @@
   <link rel="stylesheet" href="./css/favorites.css?v=20260827-1" />
   <link rel="stylesheet" href="./css/sliced-waves-background.css?v=20260828-3" />
   <link rel="stylesheet" href="./css/card-compact.css?v=20260828-3" />
+  <link rel="stylesheet" href="./css/search-clean.css?v=20260828-1" />
 </head>
 <body>
   <div id="sliced-waves-background" aria-hidden="true"></div>
@@ -42,31 +42,11 @@
         <h1 id="hero-title">Qookey AI — 資源市場</h1>
         <p class="subtitle">把好用的 AI、GitHub、Agent Skills、設計與開發工具整理到同一個地方。</p>
 
-        <section class="hero-search" aria-label="AI 任務推薦與資源搜尋">
+        <section class="hero-search" aria-label="資源搜尋">
           <div class="hero-search-box">
-            <label class="sr-only" for="search">描述任務或搜尋資源</label>
-            <input id="search" type="search" placeholder="描述你想完成的任務，或搜尋一個資源…" autocomplete="off" />
-            <span class="ai-mode-badge" aria-hidden="true">✦ AI 幫我選</span>
-            <button id="hero-submit" class="composer-button go" type="button" aria-label="讓 AI 推薦資源">→</button>
-          </div>
-        </section>
-
-        <section id="ai-panel" class="ai-panel" aria-live="polite" hidden>
-          <div class="ai-panel-head">
-            <div>
-              <h2 class="ai-panel-title">AI 資源建議</h2>
-              <p id="ai-panel-status" class="ai-panel-status"></p>
-            </div>
-            <span id="ai-panel-badge" class="ai-panel-badge">AI 推薦</span>
-          </div>
-          <div id="ai-recommendations" class="ai-recommendations"></div>
-          <div id="ai-plan" class="ai-plan" hidden>
-            <strong>建議組合方式</strong>
-            <ol></ol>
-          </div>
-          <div id="ai-caveats" class="ai-caveats" hidden>
-            <strong>注意事項</strong>
-            <ul></ul>
+            <label class="sr-only" for="search">搜尋資源</label>
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="search" type="search" placeholder="搜尋資源、分類、用途或關鍵字…" autocomplete="off" enterkeyhint="search" />
           </div>
         </section>
       </div>
@@ -76,9 +56,8 @@
       <div class="toolbar-inner">
         <div class="compact-search-wrap" aria-hidden="true">
           <span class="compact-search-icon" aria-hidden="true">⌕</span>
-          <label class="sr-only" for="compact-search">描述任務或搜尋資源</label>
-          <input id="compact-search" type="search" placeholder="描述任務或搜尋資源…" autocomplete="off" tabindex="-1" />
-          <button id="compact-submit" type="button" aria-label="讓 AI 推薦資源">→</button>
+          <label class="sr-only" for="compact-search">搜尋資源</label>
+          <input id="compact-search" type="search" placeholder="搜尋資源、分類或用途…" autocomplete="off" tabindex="-1" enterkeyhint="search" />
         </div>
         <div id="quick-categories" class="quick-categories" aria-label="資源分類"></div>
       </div>
@@ -97,28 +76,11 @@
         </div>
 
         <div class="catalog-filters">
-          <label>
-            <span class="sr-only">分類</span>
-            <select id="category-filter">
-              <option value="">全部分類</option>
-            </select>
-          </label>
-          <label>
-            <span class="sr-only">資源類型</span>
-            <select id="type-filter">
-              <option value="">全部類型</option>
-            </select>
-          </label>
+          <label><span class="sr-only">分類</span><select id="category-filter"><option value="">全部分類</option></select></label>
+          <label><span class="sr-only">資源類型</span><select id="type-filter"><option value="">全部類型</option></select></label>
           <label class="check"><input id="free-filter" type="checkbox" /> 免費 / 開源</label>
           <label class="check"><input id="open-source-filter" type="checkbox" /> 僅開源</label>
-          <label class="sort-label">
-            <span class="sr-only">排序方式</span>
-            <select id="sort-filter">
-              <option value="rating">推薦優先</option>
-              <option value="newest">最新加入</option>
-              <option value="name">名稱 A–Z</option>
-            </select>
-          </label>
+          <label class="sort-label"><span class="sr-only">排序方式</span><select id="sort-filter"><option value="rating">推薦優先</option><option value="newest">最新加入</option><option value="name">名稱 A–Z</option></select></label>
           <button id="reset-filters" class="reset" type="button">清除</button>
         </div>
       </div>
@@ -127,14 +89,14 @@
       <section id="empty-state" class="empty" hidden>
         <div class="empty-icon">⌕</div>
         <h2>找不到符合的資源</h2>
-        <p>換個關鍵字，或清除部分篩選條件。</p>
+        <p>試試較短的關鍵字、其他分類名稱或用途。</p>
       </section>
     </section>
   </main>
 
   <footer class="footer">
     <strong>Qookey AI Resource Hub</strong>
-    <span>持續整理 · 持續更新 · V0.5 AI Recommendation Baseline</span>
+    <span>持續整理 · 持續更新</span>
   </footer>
 
   <template id="resource-template">
@@ -150,18 +112,14 @@
       <p class="use-case"></p>
       <div class="categories"></div>
       <div class="card-footer">
-        <div class="resource-facts">
-          <span class="meta"></span>
-          <span class="rating"></span>
-        </div>
+        <div class="resource-facts"><span class="meta"></span><span class="rating"></span></div>
         <a class="visit" target="_blank" rel="noopener noreferrer">開啟 ↗</a>
       </div>
     </article>
   </template>
 
-  <script src="./js/clarify.js?v=20260824-1"></script>
   <script type="module" src="./js/sliced-waves-background.js?v=20260828-2"></script>
-  <script type="module" src="./js/app.js?v=20260827-2"></script>
+  <script type="module" src="./js/app.js?v=20260828-1"></script>
   <script type="module" src="./js/favorites.js?v=20260827-3"></script>
 </body>
 </html>
