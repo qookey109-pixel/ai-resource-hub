@@ -28,49 +28,16 @@ const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 function hexToRgb(hex) {
   const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!match) return [255, 255, 255];
-  return [
-    parseInt(match[1], 16),
-    parseInt(match[2], 16),
-    parseInt(match[3], 16)
-  ];
+  return [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)];
 }
 
 function mixColor(a, b, amount) {
   const t = clamp(amount);
   return [
-    a[0] + (b[0] - a[0]) * t,
-    a[1] + (b[1] - a[1]) * t,
-    a[2] + (b[2] - a[2]) * t
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t)
   ];
-}
-
-function tuneColor(rgb, brightness, contrast) {
-  return rgb.map((channel) => {
-    let value = (channel / 255) * brightness;
-    value = (value - 0.5) * contrast + 0.5;
-    return Math.round(clamp(value) * 255);
-  });
-}
-
-function createNoisePattern(ctx, intensity) {
-  const size = 112;
-  const noise = document.createElement('canvas');
-  noise.width = size;
-  noise.height = size;
-  const nctx = noise.getContext('2d');
-  if (!nctx) return null;
-
-  const image = nctx.createImageData(size, size);
-  const alphaScale = Math.round(255 * clamp(intensity, 0, 0.2));
-  for (let i = 0; i < image.data.length; i += 4) {
-    const shade = Math.random() > 0.5 ? 255 : 0;
-    image.data[i] = shade;
-    image.data[i + 1] = shade;
-    image.data[i + 2] = shade;
-    image.data[i + 3] = Math.round(Math.random() * alphaScale);
-  }
-  nctx.putImageData(image, 0, 0);
-  return ctx.createPattern(noise, 'repeat');
 }
 
 function initSlicedWaves() {
@@ -79,19 +46,22 @@ function initSlicedWaves() {
 
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
+  canvas.className = 'sliced-waves-canvas';
   host.append(canvas);
 
-  const ctx = canvas.getContext('2d', { alpha: true });
-  if (!ctx) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    host.classList.add('is-fallback-only');
+    return;
+  }
 
   const color1 = hexToRgb(CONFIG.color1);
   const color2 = hexToRgb(CONFIG.color2);
   const color3 = hexToRgb(CONFIG.color3);
-  const noisePattern = CONFIG.grain ? createNoisePattern(ctx, CONFIG.grainIntensity) : null;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  let cssWidth = 1;
-  let cssHeight = 1;
+  let width = 1;
+  let height = 1;
   let dpr = 1;
   let raf = 0;
   let startedAt = performance.now();
@@ -101,99 +71,106 @@ function initSlicedWaves() {
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    cssWidth = Math.max(1, window.innerWidth);
-    cssHeight = Math.max(1, window.innerHeight);
-    canvas.width = Math.floor(cssWidth * dpr);
-    canvas.height = Math.floor(cssHeight * dpr);
-    canvas.style.width = `${cssWidth}px`;
-    canvas.style.height = `${cssHeight}px`;
+    width = Math.max(1, window.innerWidth);
+    height = Math.max(1, window.innerHeight);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function mouseInfluence(cx, cy) {
-    if (!CONFIG.mouseInteraction || currentMouse.active <= 0.001) return 0;
-    const dx = cx / cssWidth - currentMouse.x;
-    const dy = cy / cssHeight - currentMouse.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist >= CONFIG.mouseRadius) return 0;
-    const normalized = 1 - dist / Math.max(CONFIG.mouseRadius, 0.001);
-    const eased = normalized * normalized * (3 - 2 * normalized);
-    return eased * CONFIG.mouseStrength * currentMouse.active;
+  function pointerInfluence(x, y) {
+    if (!CONFIG.mouseInteraction || currentMouse.active < 0.001) return 0;
+    const dx = x / width - currentMouse.x;
+    const dy = y / height - currentMouse.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance >= CONFIG.mouseRadius) return 0;
+    const t = 1 - distance / CONFIG.mouseRadius;
+    return t * t * (3 - 2 * t) * CONFIG.mouseStrength * currentMouse.active;
   }
 
   function draw(time) {
-    const elapsed = (time - startedAt) / 1000;
-    const speed = reduceMotion.matches ? CONFIG.speed * 0.25 : CONFIG.speed;
-    const phaseTime = elapsed * speed * Math.PI * 2;
+    try {
+      const elapsed = (time - startedAt) / 1000;
+      const speed = reducedMotion.matches ? CONFIG.speed * 0.2 : CONFIG.speed;
+      const phaseTime = elapsed * speed * Math.PI * 2;
 
-    currentMouse.x += (targetMouse.x - currentMouse.x) * 0.055;
-    currentMouse.y += (targetMouse.y - currentMouse.y) * 0.055;
-    currentMouse.active += (targetMouse.active - currentMouse.active) * 0.055;
+      currentMouse.x += (targetMouse.x - currentMouse.x) * 0.06;
+      currentMouse.y += (targetMouse.y - currentMouse.y) * 0.06;
+      currentMouse.active += (targetMouse.active - currentMouse.active) * 0.06;
 
-    ctx.clearRect(0, 0, cssWidth, cssHeight);
+      ctx.clearRect(0, 0, width, height);
 
-    const columns = Math.max(1, Math.round(CONFIG.columns));
-    const rows = Math.max(1, Math.round(CONFIG.rows));
-    const cellW = cssWidth / columns;
-    const cellH = cssHeight / rows;
-    const horizontal = CONFIG.orientation !== 'vertical';
+      const columns = Math.max(1, Math.round(CONFIG.columns));
+      const rows = Math.max(1, Math.round(CONFIG.rows));
+      const cellW = width / columns;
+      const cellH = height / rows;
+      const horizontal = CONFIG.orientation !== 'vertical';
 
-    for (let row = 0; row < rows; row += 1) {
-      for (let col = 0; col < columns; col += 1) {
-        const waveId = horizontal ? col : row;
-        const offsetId = horizontal ? row : col;
-        const direction = CONFIG.alternate && offsetId % 2 === 1 ? -1 : 1;
-        const phase = phaseTime + waveId * CONFIG.waveSpread + Math.cos(offsetId * CONFIG.rowOffset);
-        let movement = Math.sin(phase) * 0.5 + 0.5;
-        if (direction < 0) movement = 1 - movement;
+      for (let row = 0; row < rows; row += 1) {
+        for (let col = 0; col < columns; col += 1) {
+          const waveId = horizontal ? col : row;
+          const offsetId = horizontal ? row : col;
+          const phase = phaseTime + waveId * CONFIG.waveSpread + Math.cos(offsetId * CONFIG.rowOffset);
+          let movement = Math.sin(phase) * 0.5 + 0.5;
+          if (CONFIG.alternate && offsetId % 2 === 1) movement = 1 - movement;
 
-        const cellX = col * cellW;
-        const cellY = row * cellH;
-        const centerX = cellX + cellW * 0.5;
-        const centerY = cellY + cellH * 0.5;
-        const influence = mouseInfluence(centerX, centerY);
-        const thicknessRatio = clamp(CONFIG.barThickness + influence * 0.25, 0.02, 0.95);
+          const cellX = col * cellW;
+          const cellY = row * cellH;
+          const centerX = cellX + cellW * 0.5;
+          const centerY = cellY + cellH * 0.5;
+          const influence = pointerInfluence(centerX, centerY);
+          const thickness = clamp(CONFIG.barThickness + influence * 0.25, 0.025, 0.95);
+          const along = horizontal ? centerX / width : centerY / height;
 
-        const along = horizontal ? centerX / cssWidth : centerY / cssHeight;
-        const baseTint = mixColor(color2, color1, movement);
-        const mixed = mixColor(baseTint, color3, clamp(along) * 0.45);
-        const tuned = tuneColor(mixed, CONFIG.brightness * (1 + influence * 0.16), CONFIG.contrast);
-        const alpha = CONFIG.opacity * (0.8 + influence * 0.2);
-        ctx.fillStyle = `rgba(${tuned[0]}, ${tuned[1]}, ${tuned[2]}, ${alpha})`;
+          const firstMix = mixColor(color2, color1, movement);
+          const color = mixColor(firstMix, color3, clamp(along) * 0.45);
+          const alpha = clamp(CONFIG.opacity * (0.9 + influence * 0.2), 0, 0.75);
+          ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
 
-        if (horizontal) {
-          const barH = Math.max(1.5, cellH * thicknessRatio);
-          const travelPx = cellH * CONFIG.travel;
-          const offset = (0.5 - movement) * travelPx;
-          const x = cellX + cellW * 0.045;
-          const y = centerY + offset - barH * 0.5;
-          const w = cellW * 0.91;
-          const radius = Math.max(1, barH * (0.28 + CONFIG.softness));
-          ctx.beginPath();
-          ctx.roundRect(x, y, w, barH, radius);
-          ctx.fill();
-        } else {
-          const barW = Math.max(1.5, cellW * thicknessRatio);
-          const travelPx = cellW * CONFIG.travel;
-          const offset = (0.5 - movement) * travelPx;
-          const x = centerX + offset - barW * 0.5;
-          const y = cellY + cellH * 0.045;
-          const h = cellH * 0.91;
-          const radius = Math.max(1, barW * (0.28 + CONFIG.softness));
-          ctx.beginPath();
-          ctx.roundRect(x, y, barW, h, radius);
-          ctx.fill();
+          if (horizontal) {
+            const barH = Math.max(2, cellH * thickness);
+            const travelPx = cellH * CONFIG.travel;
+            const offset = (0.5 - movement) * travelPx;
+            const x = cellX + cellW * 0.035;
+            const y = centerY + offset - barH * 0.5;
+            const barW = cellW * 0.93;
+            ctx.fillRect(x, y, barW, barH);
+
+            if (CONFIG.softness > 0) {
+              ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * 0.12})`;
+              ctx.fillRect(x, y - barH * 0.45, barW, barH * 1.9);
+            }
+          } else {
+            const barW = Math.max(2, cellW * thickness);
+            const travelPx = cellW * CONFIG.travel;
+            const offset = (0.5 - movement) * travelPx;
+            const x = centerX + offset - barW * 0.5;
+            const y = cellY + cellH * 0.035;
+            const barH = cellH * 0.93;
+            ctx.fillRect(x, y, barW, barH);
+          }
         }
       }
-    }
 
-    if (noisePattern) {
-      ctx.save();
-      ctx.globalCompositeOperation = 'soft-light';
-      ctx.globalAlpha = 0.55;
-      ctx.fillStyle = noisePattern;
-      ctx.fillRect(0, 0, cssWidth, cssHeight);
-      ctx.restore();
+      if (CONFIG.grain) {
+        ctx.save();
+        ctx.globalAlpha = CONFIG.grainIntensity * 0.34;
+        for (let i = 0; i < 170; i += 1) {
+          const shade = Math.random() > 0.5 ? 255 : 0;
+          ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+          ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1);
+        }
+        ctx.restore();
+      }
+
+      host.classList.add('is-running');
+    } catch (error) {
+      console.warn('Sliced waves background fallback active', error);
+      host.classList.add('is-fallback-only');
+      raf = 0;
+      return;
     }
 
     if (pageVisible) raf = requestAnimationFrame(draw);
@@ -212,27 +189,25 @@ function initSlicedWaves() {
   }
 
   function onPointerMove(event) {
-    targetMouse.x = clamp(event.clientX / Math.max(cssWidth, 1));
-    targetMouse.y = clamp(event.clientY / Math.max(cssHeight, 1));
+    targetMouse.x = clamp(event.clientX / Math.max(width, 1));
+    targetMouse.y = clamp(event.clientY / Math.max(height, 1));
     targetMouse.active = 1;
   }
 
-  function onPointerOut(event) {
-    if (event.relatedTarget) return;
+  function onPointerLeave() {
     targetMouse.active = 0;
   }
 
   function onVisibilityChange() {
     pageVisible = !document.hidden;
-    if (pageVisible) start();
-    else stop();
+    pageVisible ? start() : stop();
   }
 
   resize();
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('pointermove', onPointerMove, { passive: true });
-  window.addEventListener('pointerout', onPointerOut, { passive: true });
-  window.addEventListener('blur', () => { targetMouse.active = 0; }, { passive: true });
+  window.addEventListener('pointerleave', onPointerLeave, { passive: true });
+  window.addEventListener('blur', onPointerLeave, { passive: true });
   document.addEventListener('visibilitychange', onVisibilityChange);
   start();
 }
