@@ -1,5 +1,4 @@
-/* Compact hero + full-page lightweight background treatment.
-   Keeps the resource cards as the visual priority. */
+/* Compact hero V2 — tighter top area so resource cards enter the viewport sooner. */
 body {
   background-color: #fbfbfa;
   background-image:
@@ -33,66 +32,70 @@ main,
   background: rgba(251, 251, 250, .9);
 }
 
+.header-inner {
+  height: 58px;
+}
+
 .market-toolbar {
+  top: 58px;
   background: rgba(251, 251, 250, .88);
 }
 
 .hero-inner {
   position: relative;
   z-index: 1;
-  width: min(900px, calc(100% - 40px));
-  padding: 36px 0 28px;
+  width: min(880px, calc(100% - 40px));
+  padding: 24px 0 20px;
 }
 
 .hero-inner h1 {
-  font-size: clamp(32px, 4.6vw, 48px);
-  line-height: 1.04;
+  font-size: clamp(30px, 4.15vw, 44px);
+  line-height: 1.02;
 }
 
 .subtitle {
-  margin-top: 10px;
-  font-size: clamp(13px, 1.45vw, 16px);
-  line-height: 1.55;
+  margin-top: 7px;
+  font-size: clamp(12.5px, 1.35vw, 15px);
+  line-height: 1.45;
 }
 
 .hero-search {
-  margin-top: 22px;
+  margin-top: 15px;
 }
 
 .hero-search-box {
-  height: 94px;
-  border-radius: 19px;
+  height: 80px;
+  border-radius: 17px;
   background: rgba(255, 255, 255, .94);
   box-shadow:
     0 0 0 3px rgba(255, 106, 53, .04),
-    0 12px 28px rgba(45, 36, 30, .055);
+    0 10px 24px rgba(45, 36, 30, .05);
   backdrop-filter: blur(8px);
 }
 
 .hero-search-box input {
-  padding: 18px 58px 47px 20px;
-  font-size: 15px;
+  padding: 15px 54px 39px 18px;
+  font-size: 14px;
 }
 
 .composer-button {
-  bottom: 11px;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  font-size: 18px;
+  bottom: 9px;
+  width: 31px;
+  height: 31px;
+  border-radius: 9px;
+  font-size: 17px;
 }
 
-.composer-button.add { left: 12px; }
-.composer-button.go { right: 12px; }
+.composer-button.add { left: 10px; }
+.composer-button.go { right: 10px; }
 
-/* Keep the category area compact so cards enter the viewport earlier. */
 .toolbar-inner {
-  padding-top: 8px;
-  padding-bottom: 9px;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 
 .catalog-shell {
-  padding-top: 8px;
+  padding-top: 7px;
 }
 
 @media (max-width: 720px) {
@@ -106,38 +109,46 @@ main,
       auto;
   }
 
+  .header-inner {
+    height: 56px;
+  }
+
+  .market-toolbar {
+    top: 56px;
+  }
+
   .hero-inner {
-    width: min(100% - 24px, 900px);
-    padding: 28px 0 20px;
+    width: min(100% - 24px, 880px);
+    padding: 20px 0 16px;
   }
 
   .hero-inner h1 {
-    font-size: clamp(29px, 9vw, 40px);
+    font-size: clamp(28px, 8.5vw, 38px);
   }
 
   .subtitle {
-    margin-top: 8px;
-    font-size: 13px;
-    line-height: 1.5;
+    margin-top: 6px;
+    font-size: 12.5px;
+    line-height: 1.45;
   }
 
   .hero-search {
-    margin-top: 17px;
+    margin-top: 13px;
   }
 
   .hero-search-box {
-    height: 86px;
-    border-radius: 17px;
+    height: 76px;
+    border-radius: 16px;
   }
 
   .hero-search-box input {
-    padding: 15px 52px 43px 16px;
-    font-size: 14px;
+    padding: 13px 49px 37px 15px;
+    font-size: 13.5px;
   }
 
   .composer-button {
-    bottom: 9px;
-    width: 32px;
-    height: 32px;
+    bottom: 8px;
+    width: 30px;
+    height: 30px;
   }
 }
