@@ -2,23 +2,12 @@ const state = {
   resources: [],
   categories: [],
   icons: {},
-  aiConfig: { enabled: false, endpoint: '' },
-  ai: {
-    active: false,
-    loading: false,
-    mode: '',
-    intentSummary: '',
-    recommendations: [],
-    stackPlan: [],
-    caveats: []
-  }
+  searchDocs: new Map()
 };
 
 const els = {
   search: document.querySelector('#search'),
   compactSearch: document.querySelector('#compact-search'),
-  heroSubmit: document.querySelector('#hero-submit'),
-  compactSubmit: document.querySelector('#compact-submit'),
   category: document.querySelector('#category-filter'),
   type: document.querySelector('#type-filter'),
   free: document.querySelector('#free-filter'),
@@ -32,13 +21,7 @@ const els = {
   totalStat: document.querySelector('#total-stat'),
   categoryStat: document.querySelector('#category-stat'),
   openStat: document.querySelector('#open-stat'),
-  template: document.querySelector('#resource-template'),
-  aiPanel: document.querySelector('#ai-panel'),
-  aiPanelStatus: document.querySelector('#ai-panel-status'),
-  aiPanelBadge: document.querySelector('#ai-panel-badge'),
-  aiRecommendations: document.querySelector('#ai-recommendations'),
-  aiPlan: document.querySelector('#ai-plan'),
-  aiCaveats: document.querySelector('#ai-caveats')
+  template: document.querySelector('#resource-template')
 };
 
 const typeLabels = {
@@ -61,6 +44,56 @@ const pricingLabels = {
   unknown: '價格未知'
 };
 
+const stopWords = new Set([
+  '我要', '我想', '想要', '幫我', '請', '可以', '一個', '一些', '的', '用', '做', '找', '搜尋', '資源', '工具'
+]);
+
+const synonymGroups = new Map(Object.entries({
+  ai: ['ai', '人工智慧', 'llm', '模型', 'agent'],
+  llm: ['llm', 'ai', '大語言模型', '模型'],
+  agent: ['agent', '代理', '智能體', 'mcp', 'skill'],
+  skills: ['skills', 'skill', 'agent skills', '技能'],
+  skill: ['skill', 'skills', 'agent skills', '技能'],
+  mcp: ['mcp', 'agent', 'tool calling'],
+  網站: ['網站', 'web', 'website', 'frontend', '前端'],
+  前端: ['前端', 'frontend', 'ui', 'web'],
+  ui: ['ui', 'ux', '設計', '介面', 'frontend'],
+  設計: ['設計', 'ui', 'ux', 'design'],
+  影片: ['影片', 'video', '短影片', '剪輯', 'shorts'],
+  短影片: ['短影片', 'shorts', 'video', '影片生成', '剪輯'],
+  剪輯: ['剪輯', 'editing', 'video', '影片'],
+  圖片: ['圖片', 'image', '圖像', '設計'],
+  語音: ['語音', 'voice', 'speech', 'tts', '音訊'],
+  音訊: ['音訊', 'audio', 'music', '語音'],
+  音樂: ['音樂', 'music', 'audio'],
+  '3d': ['3d', 'webgl', 'avatar', '模型'],
+  avatar: ['avatar', '3d', '角色', '虛擬人'],
+  遊戲: ['遊戲', 'game', 'game development'],
+  客服: ['客服', 'chatbot', '聊天', 'agent', 'line'],
+  line: ['line', '客服', '聊天', 'chatbot'],
+  爬蟲: ['爬蟲', 'scraping', '擷取', '資料蒐集'],
+  擷取: ['擷取', 'scraping', 'reader', 'markdown', '資料蒐集'],
+  研究: ['研究', 'research', 'search', '搜尋'],
+  搜尋: ['搜尋', 'search', 'research'],
+  法律: ['法律', 'legal', '法遵', 'compliance'],
+  法遵: ['法遵', 'compliance', 'legal', '法律'],
+  交易: ['交易', 'trading', '金融', '投資', 'crypto'],
+  投資: ['投資', 'trading', '交易', '金融'],
+  加密貨幣: ['加密貨幣', 'crypto', 'bitcoin', '交易'],
+  資安: ['資安', 'security', 'reverse', '逆向'],
+  逆向: ['逆向', 'reverse engineering', 'security', '資安'],
+  部署: ['部署', 'deployment', 'cloud', '雲端'],
+  雲端: ['雲端', 'cloud', 'deployment'],
+  資料庫: ['資料庫', 'database', 'backend', '後端'],
+  後端: ['後端', 'backend', 'database', 'api'],
+  自動化: ['自動化', 'automation', 'workflow'],
+  文件: ['文件', 'documentation', 'docs', 'learning'],
+  開源: ['開源', 'open source', 'open-source', 'github'],
+  免費: ['免費', 'free', 'freemium', 'open-source']
+}));
+
+let renderFrame = 0;
+
 async function loadJson(path) {
   const response = await fetch(path, { cache: 'no-store' });
   if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
@@ -68,7 +101,12 @@ async function loadJson(path) {
 }
 
 function normalise(value) {
-  return String(value ?? '').trim().toLowerCase();
+  return String(value ?? '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[＿_–—-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function categoryInfo(name) {
@@ -80,21 +118,105 @@ function categoryDisplayName(name) {
   return info?.display_name ?? info?.name ?? name ?? '其他';
 }
 
-function searchableText(resource) {
-  const translatedCategories = (resource.categories ?? []).map(categoryDisplayName);
-  return [
-    resource.name,
-    resource.summary,
-    resource.type,
-    typeLabels[resource.type],
-    resource.pricing,
-    pricingLabels[resource.pricing],
-    resource.notes,
-    ...(resource.categories ?? []),
-    ...translatedCategories,
-    ...(resource.tags ?? []),
-    ...(resource.use_cases ?? [])
-  ].join(' ').toLowerCase();
+function tokenizeQuery(query) {
+  const raw = normalise(query);
+  if (!raw) return [];
+  const tokens = raw
+    .split(/[\s,，、|/+]+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length > 0 && !stopWords.has(token));
+  return [...new Set(tokens.length ? tokens : [raw])];
+}
+
+function alternativesFor(token) {
+  return synonymGroups.get(token) ?? [token];
+}
+
+function buildSearchDoc(resource) {
+  const categories = resource.categories ?? [];
+  const translatedCategories = categories.map(categoryDisplayName);
+  const tags = resource.tags ?? [];
+  const useCases = resource.use_cases ?? [];
+
+  const fields = {
+    name: normalise(resource.name),
+    categories: normalise([...categories, ...translatedCategories].join(' ')),
+    tags: normalise(tags.join(' ')),
+    useCases: normalise(useCases.join(' ')),
+    summary: normalise(resource.summary),
+    notes: normalise(resource.notes),
+    meta: normalise([
+      resource.type,
+      typeLabels[resource.type],
+      resource.pricing,
+      pricingLabels[resource.pricing],
+      resource.open_source === true ? '開源 open source' : ''
+    ].join(' '))
+  };
+
+  fields.all = normalise(Object.values(fields).join(' '));
+  return fields;
+}
+
+function matchesAny(text, alternatives) {
+  return alternatives.some((term) => text.includes(normalise(term)));
+}
+
+function scoreResource(resource, query) {
+  if (!query) return 0;
+  const doc = state.searchDocs.get(resource.id) ?? buildSearchDoc(resource);
+  const phrase = normalise(query);
+  const tokens = tokenizeQuery(query);
+  if (!tokens.length) return 0;
+
+  let score = 0;
+  let matchedTokens = 0;
+
+  if (doc.name.includes(phrase)) score += 24;
+  else if (doc.all.includes(phrase)) score += 8;
+
+  for (const token of tokens) {
+    const alternatives = alternativesFor(token);
+    let matched = false;
+
+    if (matchesAny(doc.name, alternatives)) {
+      score += 12;
+      matched = true;
+    }
+    if (matchesAny(doc.categories, alternatives)) {
+      score += 9;
+      matched = true;
+    }
+    if (matchesAny(doc.tags, alternatives)) {
+      score += 8;
+      matched = true;
+    }
+    if (matchesAny(doc.useCases, alternatives)) {
+      score += 6;
+      matched = true;
+    }
+    if (matchesAny(doc.summary, alternatives)) {
+      score += 5;
+      matched = true;
+    }
+    if (matchesAny(doc.meta, alternatives)) {
+      score += 4;
+      matched = true;
+    }
+    if (!matched && matchesAny(doc.notes, alternatives)) {
+      score += 2;
+      matched = true;
+    }
+
+    if (matched) matchedTokens += 1;
+  }
+
+  const minimumMatches = tokens.length <= 2 ? tokens.length : Math.ceil(tokens.length * 0.67);
+  if (matchedTokens < minimumMatches) return -1;
+
+  score += matchedTokens * 2;
+  score += Math.max(0, Number(resource.rating ?? 0) - 3);
+  return score;
 }
 
 function isFree(resource) {
@@ -112,19 +234,17 @@ function matchesSecondaryFilters(resource) {
 }
 
 function filteredResources() {
-  if (state.ai.active && state.ai.recommendations.length) {
-    const byId = new Map(state.resources.map((resource) => [resource.id, resource]));
-    return state.ai.recommendations
-      .map((recommendation) => byId.get(recommendation.id))
-      .filter(Boolean)
-      .filter(matchesSecondaryFilters);
-  }
-
   const query = normalise(els.search.value);
-  const resources = state.resources.filter((resource) => {
-    if (query && !searchableText(resource).includes(query)) return false;
-    return matchesSecondaryFilters(resource);
-  });
+  let resources = state.resources.filter(matchesSecondaryFilters);
+
+  if (query) {
+    resources = resources
+      .map((resource) => ({ resource, score: scoreResource(resource, query) }))
+      .filter((item) => item.score >= 0)
+      .sort((a, b) => b.score - a.score || (b.resource.rating ?? -1) - (a.resource.rating ?? -1) || String(a.resource.name).localeCompare(String(b.resource.name)))
+      .map((item) => item.resource);
+    return resources;
+  }
 
   const sort = els.sort.value;
   resources.sort((a, b) => {
@@ -135,7 +255,6 @@ function filteredResources() {
     }
     return (b.rating ?? -1) - (a.rating ?? -1) || String(a.name).localeCompare(String(b.name));
   });
-
   return resources;
 }
 
@@ -159,10 +278,7 @@ function showFallbackIcon(iconEl, resource) {
 
 function renderResourceIcon(iconEl, resource) {
   const icon = state.icons?.[resource.id];
-  if (!icon?.url) {
-    showFallbackIcon(iconEl, resource);
-    return;
-  }
+  if (!icon?.url) return showFallbackIcon(iconEl, resource);
 
   const img = document.createElement('img');
   img.src = icon.url;
@@ -177,7 +293,6 @@ function renderResourceIcon(iconEl, resource) {
   img.style.objectFit = 'contain';
   img.style.borderRadius = '9px';
   img.addEventListener('error', () => showFallbackIcon(iconEl, resource), { once: true });
-
   iconEl.replaceChildren(img);
   iconEl.classList.add('has-brand-icon');
 }
@@ -202,36 +317,30 @@ function render() {
 
     const useCase = fragment.querySelector('.use-case');
     const primaryUseCase = resource.use_cases?.[0];
-    if (primaryUseCase) {
-      useCase.textContent = `適合：${primaryUseCase}`;
-    } else {
-      useCase.hidden = true;
-    }
+    if (primaryUseCase) useCase.textContent = `適合：${primaryUseCase}`;
+    else useCase.hidden = true;
 
     const categories = fragment.querySelector('.categories');
-    for (const category of (resource.categories ?? []).slice(0, 5)) {
-      categories.append(makePill(category));
-    }
+    for (const category of (resource.categories ?? []).slice(0, 5)) categories.append(makePill(category));
 
-    const sourceLabel = resource.open_source === true
-      ? '開源'
-      : resource.open_source === false
-        ? '非開源'
-        : '來源未確認';
-
-    fragment.querySelector('.meta').textContent = [
-      pricingLabels[resource.pricing] ?? '價格未知',
-      sourceLabel
-    ].join(' · ');
+    const sourceLabel = resource.open_source === true ? '開源' : resource.open_source === false ? '非開源' : '來源未確認';
+    fragment.querySelector('.meta').textContent = [pricingLabels[resource.pricing] ?? '價格未知', sourceLabel].join(' · ');
 
     const link = fragment.querySelector('.visit');
     link.href = resource.url;
     link.setAttribute('aria-label', `開啟 ${resource.name}`);
-
     els.grid.append(fragment);
   });
 
   syncQuickCategoryState();
+}
+
+function scheduleRender() {
+  if (renderFrame) cancelAnimationFrame(renderFrame);
+  renderFrame = requestAnimationFrame(() => {
+    renderFrame = 0;
+    render();
+  });
 }
 
 function populateCategories() {
@@ -267,7 +376,6 @@ function createQuickCategory(label, category = '') {
   button.dataset.category = category;
   button.textContent = label;
   button.addEventListener('click', () => {
-    clearAiState(true);
     els.category.value = category;
     render();
     document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -278,10 +386,7 @@ function createQuickCategory(label, category = '') {
 function renderQuickCategories() {
   els.quickCategories.replaceChildren();
   els.quickCategories.append(createQuickCategory('全部資源', ''));
-
-  const usedCategories = new Set(
-    state.resources.flatMap((resource) => resource.categories ?? [])
-  );
+  const usedCategories = new Set(state.resources.flatMap((resource) => resource.categories ?? []));
 
   for (const info of state.categories) {
     if (!usedCategories.has(info.name)) continue;
@@ -297,168 +402,18 @@ function syncQuickCategoryState() {
   }
 }
 
-function setSearchValue(value, { clearAi = false } = {}) {
+function setSearchValue(value, immediate = false) {
   els.search.value = value;
   els.compactSearch.value = value;
-  if (clearAi) clearAiState(true);
-  render();
+  if (immediate) render();
+  else scheduleRender();
 }
 
 function goToResults() {
   document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function clearAiState(hidePanel = false) {
-  state.ai.active = false;
-  state.ai.mode = '';
-  state.ai.intentSummary = '';
-  state.ai.recommendations = [];
-  state.ai.stackPlan = [];
-  state.ai.caveats = [];
-  if (hidePanel) {
-    els.aiPanel.hidden = true;
-    els.aiPanel.classList.remove('error');
-  }
-}
-
-function setAiLoading(loading) {
-  state.ai.loading = loading;
-  for (const button of [els.heroSubmit, els.compactSubmit]) {
-    button.disabled = loading;
-    button.classList.toggle('is-loading', loading);
-    button.textContent = loading ? '…' : '→';
-  }
-}
-
-function renderList(container, items) {
-  const list = container.querySelector('ol, ul');
-  list.replaceChildren();
-  for (const item of items) {
-    const li = document.createElement('li');
-    li.textContent = item;
-    list.append(li);
-  }
-  container.hidden = items.length === 0;
-}
-
-function renderAiPanel() {
-  els.aiPanel.hidden = false;
-  els.aiPanel.classList.remove('error');
-  els.aiRecommendations.replaceChildren();
-  els.aiPanelBadge.textContent = state.ai.mode === 'fallback' ? '備援建議' : 'AI 推薦';
-  els.aiPanelStatus.textContent = state.ai.intentSummary || '已依你的任務從目前資源庫挑選候選。';
-
-  const byId = new Map(state.resources.map((resource) => [resource.id, resource]));
-  for (const recommendation of state.ai.recommendations) {
-    const resource = byId.get(recommendation.id);
-    if (!resource) continue;
-
-    const item = document.createElement('article');
-    item.className = 'ai-recommendation-item';
-
-    const top = document.createElement('div');
-    top.className = 'ai-recommendation-top';
-
-    const name = document.createElement('h3');
-    name.className = 'ai-recommendation-name';
-    name.textContent = resource.name;
-
-    const role = document.createElement('span');
-    role.className = 'ai-recommendation-role';
-    role.textContent = recommendation.role || '推薦資源';
-
-    top.append(name, role);
-    item.append(top);
-
-    if (recommendation.reason) {
-      const reason = document.createElement('p');
-      reason.className = 'ai-recommendation-reason';
-      reason.textContent = recommendation.reason;
-      item.append(reason);
-    }
-
-    if (recommendation.how_to_use) {
-      const how = document.createElement('p');
-      how.className = 'ai-recommendation-how';
-      how.textContent = `怎麼用：${recommendation.how_to_use}`;
-      item.append(how);
-    }
-
-    els.aiRecommendations.append(item);
-  }
-
-  renderList(els.aiPlan, state.ai.stackPlan);
-  renderList(els.aiCaveats, state.ai.caveats);
-}
-
-function renderAiUnavailable(message) {
-  clearAiState(false);
-  els.aiPanel.hidden = false;
-  els.aiPanel.classList.add('error');
-  els.aiPanelBadge.textContent = '尚未啟用';
-  els.aiPanelStatus.textContent = message;
-  els.aiRecommendations.replaceChildren();
-  els.aiPlan.hidden = true;
-  els.aiCaveats.hidden = true;
-}
-
-async function requestAiRecommendations() {
-  const query = String(els.search.value || '').trim();
-  if (query.length < 2) {
-    goToResults();
-    return;
-  }
-
-  if (!state.aiConfig.enabled || !state.aiConfig.endpoint) {
-    renderAiUnavailable('AI 後端程式已準備完成，但目前還沒有部署啟用；現在先保留關鍵字搜尋結果。');
-    goToResults();
-    return;
-  }
-
-  setAiLoading(true);
-  els.aiPanel.hidden = false;
-  els.aiPanel.classList.remove('error');
-  els.aiPanelBadge.textContent = '分析中';
-  els.aiPanelStatus.textContent = '正在理解任務，並從目前資源庫挑選最適合的組合…';
-  els.aiRecommendations.replaceChildren();
-  els.aiPlan.hidden = true;
-  els.aiCaveats.hidden = true;
-
-  try {
-    const response = await fetch(state.aiConfig.endpoint, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query })
-    });
-
-    if (!response.ok) throw new Error(`AI backend ${response.status}`);
-    const data = await response.json();
-    const recommendations = Array.isArray(data.recommendations)
-      ? data.recommendations.filter((item) => state.resources.some((resource) => resource.id === item.id)).slice(0, 5)
-      : [];
-
-    if (!recommendations.length) throw new Error('AI backend returned no valid catalog resources');
-
-    state.ai.active = true;
-    state.ai.mode = data.mode === 'fallback' ? 'fallback' : 'ai';
-    state.ai.intentSummary = String(data.intent_summary || '');
-    state.ai.recommendations = recommendations;
-    state.ai.stackPlan = Array.isArray(data.stack_plan) ? data.stack_plan : [];
-    state.ai.caveats = Array.isArray(data.caveats) ? data.caveats : [];
-
-    renderAiPanel();
-    render();
-    els.aiPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  } catch (error) {
-    console.error(error);
-    renderAiUnavailable('AI 推薦暫時連線失敗；原本的關鍵字搜尋仍可正常使用。');
-  } finally {
-    setAiLoading(false);
-  }
-}
-
 function resetFilters() {
-  clearAiState(true);
   els.search.value = '';
   els.compactSearch.value = '';
   els.category.value = '';
@@ -478,58 +433,60 @@ function updateCompactMode() {
 }
 
 function bindEvents() {
-  els.search.addEventListener('input', () => setSearchValue(els.search.value, { clearAi: true }));
-  els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value, { clearAi: true }));
+  els.search.addEventListener('input', () => setSearchValue(els.search.value));
+  els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value));
 
   for (const el of [els.category, els.type, els.free, els.openSource, els.sort]) {
-    el.addEventListener('input', render);
-    el.addEventListener('change', render);
+    el.addEventListener('input', scheduleRender);
+    el.addEventListener('change', scheduleRender);
   }
 
   els.reset.addEventListener('click', resetFilters);
-  els.heroSubmit.addEventListener('click', requestAiRecommendations);
-  els.compactSubmit.addEventListener('click', requestAiRecommendations);
   window.addEventListener('scroll', updateCompactMode, { passive: true });
 
   document.addEventListener('keydown', (event) => {
-    const activeTag = document.activeElement?.tagName;
+    const active = document.activeElement;
+    const activeTag = active?.tagName;
+
     if (event.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) {
       event.preventDefault();
       (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
+      return;
     }
-    if (event.key === 'Escape' && [els.search, els.compactSearch].includes(document.activeElement)) {
-      clearAiState(true);
-      setSearchValue('');
-      document.activeElement.blur();
+
+    if (event.key === 'Escape' && [els.search, els.compactSearch].includes(active)) {
+      setSearchValue('', true);
+      active.blur();
+      return;
     }
-    if (event.key === 'Enter' && [els.search, els.compactSearch].includes(document.activeElement)) {
+
+    if (event.key === 'Enter' && [els.search, els.compactSearch].includes(active)) {
       event.preventDefault();
-      requestAiRecommendations();
+      setSearchValue(active.value, true);
+      goToResults();
     }
   });
 }
 
 async function init() {
   try {
-    const [resourceDoc, categoryDoc, iconDoc, aiConfigDoc] = await Promise.all([
+    const [resourceDoc, categoryDoc, iconDoc] = await Promise.all([
       loadJson('./data/resources.json'),
       loadJson('./data/categories.json'),
-      loadJson('./data/resource-icons.json'),
-      loadJson('./data/ai-config.json')
+      loadJson('./data/resource-icons.json')
     ]);
 
     state.resources = Array.isArray(resourceDoc.resources) ? resourceDoc.resources : [];
     state.categories = Array.isArray(categoryDoc.categories) ? categoryDoc.categories : [];
     state.icons = iconDoc && typeof iconDoc.icons === 'object' ? iconDoc.icons : {};
-    state.aiConfig = {
-      enabled: aiConfigDoc?.enabled === true,
-      endpoint: String(aiConfigDoc?.endpoint || '').trim()
-    };
 
     populateCategories();
     populateTypes();
     renderStats();
     renderQuickCategories();
+
+    for (const resource of state.resources) state.searchDocs.set(resource.id, buildSearchDoc(resource));
+
     bindEvents();
     updateCompactMode();
     render();
