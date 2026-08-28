@@ -29,22 +29,21 @@ body {
   height: 100%;
 }
 
-.site-header,
 main,
-.footer,
-.skip-link {
+.footer {
   position: relative;
   z-index: 1;
 }
 
-.hero-section {
-  background: transparent !important;
-}
-
 .site-header {
+  z-index: 40;
   background: rgba(251, 251, 249, .82) !important;
   backdrop-filter: blur(18px) saturate(1.05);
   -webkit-backdrop-filter: blur(18px) saturate(1.05);
+}
+
+.hero-section {
+  background: transparent !important;
 }
 
 .market-toolbar {
