@@ -125,6 +125,10 @@
     "anti-gambling-trader-tw": {
       "url": "https://github.com/mars-tw.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "create360-ai": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://create360.ai",
+      "source": "domain-favicon-128-fallback"
     }
   }
 }
