@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-27",
+  "updated_at": "2026-08-28",
   "categories": [
     {
       "id": "ai-llm",
@@ -175,6 +175,12 @@
       "name": "Learning / Documentation",
       "display_name": "學習 / 文件",
       "icon": "📚"
+    },
+    {
+      "id": "writing-screenwriting",
+      "name": "Writing / Screenwriting",
+      "display_name": "寫作 / 編劇",
+      "icon": "✍️"
     },
     {
       "id": "other",

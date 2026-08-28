@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-27",
+  "updated_at": "2026-08-28",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -117,6 +117,10 @@
     "pixelartbase-free-com-tw": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://free.com.tw",
       "source": "domain-favicon-128"
+    },
+    "ai-drama-pound": {
+      "url": "https://github.com/POUND0423.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
