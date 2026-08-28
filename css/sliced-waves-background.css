@@ -1,0 +1,91 @@
+/* Full-page sliced-waves background layer. */
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  background: #f8f8f5 !important;
+  background-image: none !important;
+}
+
+#sliced-waves-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(234, 179, 8, .08), transparent 34%),
+    radial-gradient(circle at 84% 18%, rgba(16, 185, 129, .07), transparent 34%),
+    radial-gradient(circle at 68% 82%, rgba(203, 31, 61, .06), transparent 38%),
+    #f8f8f5;
+}
+
+#sliced-waves-background canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.site-header,
+main,
+.footer,
+.skip-link {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section {
+  background: transparent !important;
+}
+
+.site-header {
+  background: rgba(251, 251, 249, .82) !important;
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+}
+
+.market-toolbar {
+  background: rgba(251, 251, 249, .80) !important;
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+}
+
+.hero-search-box,
+.card,
+.empty {
+  background: rgba(255, 255, 255, .91) !important;
+  backdrop-filter: blur(10px) saturate(1.04);
+  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+}
+
+.card {
+  box-shadow:
+    0 10px 30px rgba(31, 32, 27, .055),
+    0 1px 0 rgba(255, 255, 255, .72) inset;
+}
+
+.quick-category {
+  background: rgba(255, 255, 255, .88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.quick-category:hover,
+.quick-category.active {
+  background: rgba(255, 241, 235, .94);
+}
+
+.footer {
+  background: rgba(248, 248, 245, .42);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sliced-waves-background canvas {
+    opacity: .72;
+  }
+}
