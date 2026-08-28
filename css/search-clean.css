@@ -50,6 +50,15 @@
   padding-right: 15px !important;
 }
 
+/* Keep the card grid immediately below category navigation. */
+.catalog-head {
+  display: none !important;
+}
+
+.catalog-shell {
+  padding-top: 6px !important;
+}
+
 /* Defensive cleanup for stale markup cached by Safari. */
 .ai-mode-badge,
 .composer-button,
