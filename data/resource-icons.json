@@ -133,6 +133,10 @@
     "builderio-agent-native": {
       "url": "https://github.com/BuilderIO.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "sirius-walkthrough-me": {
+      "url": "https://github.com/sirius-cc-wu.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
