@@ -1,12 +1,16 @@
-/* Full-page sliced-waves background layer. */
+/* Full-page sliced-waves background layer V3. */
 html,
 body {
   min-height: 100%;
 }
 
+html {
+  background: #f7f7f2;
+}
+
 body {
   position: relative;
-  background: #f7f7f2 !important;
+  background: transparent !important;
   background-image: none !important;
 }
 
@@ -20,7 +24,7 @@ body {
     radial-gradient(circle at 14% 12%, rgba(234, 179, 8, .20), transparent 31%),
     radial-gradient(circle at 86% 16%, rgba(16, 185, 129, .17), transparent 31%),
     radial-gradient(circle at 66% 84%, rgba(203, 31, 61, .14), transparent 36%),
-    linear-gradient(180deg, rgba(255,255,255,.32), rgba(247,247,242,.52)),
+    linear-gradient(180deg, rgba(255,255,255,.25), rgba(247,247,242,.38)),
     #f7f7f2;
 }
 
@@ -61,62 +65,67 @@ body {
 }
 
 main,
+.catalog-shell,
+.grid,
+.hero-section,
 .footer {
   position: relative;
   z-index: 1;
+  background: transparent !important;
 }
 
 .site-header {
   z-index: 40;
-  background: rgba(251, 251, 249, .76) !important;
-  backdrop-filter: blur(18px) saturate(1.05);
-  -webkit-backdrop-filter: blur(18px) saturate(1.05);
-}
-
-.hero-section {
-  background: transparent !important;
+  background: rgba(251, 251, 249, .68) !important;
+  backdrop-filter: blur(16px) saturate(1.04);
+  -webkit-backdrop-filter: blur(16px) saturate(1.04);
 }
 
 .market-toolbar {
-  background: rgba(251, 251, 249, .74) !important;
-  backdrop-filter: blur(18px) saturate(1.05);
-  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+  background: rgba(251, 251, 249, .68) !important;
+  backdrop-filter: blur(16px) saturate(1.04);
+  -webkit-backdrop-filter: blur(16px) saturate(1.04);
 }
 
 .hero-search-box,
-.card,
 .empty {
-  background: rgba(255, 255, 255, .90) !important;
-  backdrop-filter: blur(10px) saturate(1.04);
-  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+  background: rgba(255, 255, 255, .86) !important;
+  backdrop-filter: blur(9px) saturate(1.03);
+  -webkit-backdrop-filter: blur(9px) saturate(1.03);
 }
 
 .card {
+  background: rgba(255, 255, 255, .82) !important;
+  backdrop-filter: blur(8px) saturate(1.03);
+  -webkit-backdrop-filter: blur(8px) saturate(1.03);
   box-shadow:
-    0 10px 30px rgba(31, 32, 27, .06),
-    0 1px 0 rgba(255, 255, 255, .74) inset;
+    0 7px 22px rgba(31, 32, 27, .055),
+    0 1px 0 rgba(255, 255, 255, .68) inset;
 }
 
 .quick-category {
-  background: rgba(255, 255, 255, .84);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, .76);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 .quick-category:hover,
 .quick-category.active {
-  background: rgba(255, 241, 235, .93);
+  background: rgba(255, 241, 235, .89);
 }
 
 .footer {
-  background: rgba(248, 248, 245, .38);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 @media (max-width: 720px) {
   #sliced-waves-background::before {
     opacity: .26;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, .88) !important;
   }
 }
 
