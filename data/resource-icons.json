@@ -121,6 +121,10 @@
     "ai-drama-pound": {
       "url": "https://github.com/POUND0423.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "anti-gambling-trader-tw": {
+      "url": "https://github.com/mars-tw.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
