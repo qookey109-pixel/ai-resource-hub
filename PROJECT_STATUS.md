@@ -7,7 +7,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 AI recommendation scaffold + V0.4.1 marketplace baseline**
+- Current version: **V0.5 live AI recommendation + V0.4.1 marketplace baseline**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -47,11 +47,12 @@ Status date: 2026-08-30 (Asia/Taipei)
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml` and the latest catalog deployment completed successfully on 2026-08-30.
+- Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 
-## V0.5 AI recommendation scaffold
+## V0.5 AI recommendation
 
-The large homepage task box now has a real AI recommendation path instead of being only decorative search UI.
+The large homepage task box has a live AI recommendation path in addition to instant keyword filtering.
 
 Implemented:
 
@@ -68,14 +69,17 @@ Implemented:
 - Backend accepts only the configured production origin plus localhost development origins.
 - Task input is limited to 2–500 characters.
 - No third-party AI API key is placed in frontend code or repository files.
-- Manual deployment workflow added at `.github/workflows/deploy-ai-worker.yml`.
-- Deployment / activation instructions documented in `docs/AI_BACKEND.md`.
+- Deployment workflow lives at `.github/workflows/deploy-ai-worker.yml`.
+- The workflow verifies Cloudflare credentials, deploys the Worker, checks `/health`, runs semantic recommendation regressions, then writes the frontend endpoint only after those checks pass.
+- Deployment / activation instructions are documented in `docs/AI_BACKEND.md`.
 
 Current activation state:
 
-- `data/ai-config.json`: `enabled=false`
-- Worker code is ready but **Cloudflare deployment URL is not yet configured**.
-- Until activation, keyword search remains fully functional; explicitly requesting AI shows a clear backend-not-enabled message rather than failing silently.
+- `data/ai-config.json`: `enabled=true`
+- Configured endpoint: `https://qookey-ai-resource-recommender.q-oo109.workers.dev/api/recommend`
+- Activation commit: `d3f02fe6089589996003c8b5c4d943bcf6961517` (`Activate deployed AI recommender`, 2026-08-23).
+- The activation workflow passed Worker health and three semantic recommendation regression checks before enabling the frontend endpoint.
+- A fresh external network health check was not re-run during this status synchronization; repository deployment evidence remains the current authority for activation state.
 
 ## Current catalog
 
@@ -94,20 +98,15 @@ Current activation state:
 
 ## Deployment state
 
-The static repository is ready for GitHub Pages deployment through GitHub Actions.
-
-If the Pages workflow cannot create the site automatically, enable it once in GitHub:
-
-`Settings → Pages → Build and deployment → Source: GitHub Actions`
-
-The AI Worker is separate from GitHub Pages and still needs Cloudflare deployment. The manual workflow requires repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, or it can be deployed locally with Wrangler. After deployment, put the final `/api/recommend` URL in `data/ai-config.json` and set `enabled=true`.
-
-Do not claim AI recommendations are live until the Worker endpoint is deployed, configured and verified successfully.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the 2026-08-30 catalog update deployment completed successfully.
+- Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
+- The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
+- Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
+- The Worker reads the current public `data/resources.json` authority from GitHub `main`, so catalog-only additions do not require a Worker code redeploy.
 
 ## Not yet completed
 
-- Cloudflare Worker deployment / live AI endpoint activation.
-- End-to-end production AI recommendation smoke test.
+- Automated recurring production Worker health / semantic regression monitoring.
 - Semantic / vector search for larger catalogs.
 - Favorites / personal collections.
 - Automated metadata refresh.
@@ -140,4 +139,4 @@ Do not claim AI recommendations are live until the Worker endpoint is deployed, 
 
 ## Next step
 
-Deploy the prepared Cloudflare Worker, capture its public `/api/recommend` endpoint, enable it in `data/ai-config.json`, then run an end-to-end production test using task prompts such as `我要做 LINE AI 客服`, `我要做 AI 短影片`, and `我要做 Three.js 3D 遊戲效果`. Continue ingesting verified user-supplied resources in parallel.
+Implement an automated resource-health and metadata-refresh workflow before the catalog grows much larger. The first version should validate each canonical URL, flag broken or redirected resources without deleting them automatically, refresh GitHub repository activity metadata where available, and produce a reviewable report/PR instead of silently overwriting verified catalog data. Continue ingesting verified user-supplied resources in parallel.
