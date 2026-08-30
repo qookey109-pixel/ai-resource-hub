@@ -7,7 +7,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + V0.4.1 marketplace baseline**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -15,7 +15,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **39 verified resources**.
+- Catalog now contains **40 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -32,6 +32,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - H3 Storyboard Skill added as an active MIT-licensed MiniMax H3 storyboard / performance Skill, with controlled-comparison evidence, explicit verified/partly-verified/inferred confidence labels and a complementary boundary with H3 prompt-syntax / ComfyUI setup Skills.
 - MetalForge added as an active freemium browser shader editor for SwiftUI and supported React Native Skia effects, with free live editing/preview and a €5/month Pro export tier; commercial rights for exported content are recorded from the official site.
 - vgpu added as an active MIT-licensed Vercel Labs WebGPU / WGSL TypeScript library with browser, Dawn-backed Node and deterministic mock runtimes plus Agent-ready CLI, llms.txt, examples API and MCP documentation.
+- OpenExecutive added as an active Apache-2.0 virtual executive multi-agent system: one coherent Executive persona backed by eight specialist agents, company-document RAG, episodic memory, scheduling, web/API/CLI access and Slack/Email/Telegram/Google Chat/Discord integrations. The default Claude API path can be replaced or supplemented with OpenRouter or OpenAI-compatible local models.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -44,14 +45,15 @@ Status date: 2026-08-30 (Asia/Taipei)
 - ThreeUI Community uses the repository's official `public/threeui-mark.svg` project mark rather than a generic category icon or owner avatar.
 - ElevenLabs and Meshy AI use resource-specific domain favicons rather than category icons.
 - MetalForge uses its own domain favicon; vgpu uses the vgpu.sh documentation-domain favicon rather than a shared category icon.
+- OpenExecutive currently uses the SenteLabsAI 256px GitHub organization avatar because no dedicated project logo/icon was found in the repository tree.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Health V0.1 merge deployment completed successfully on 2026-08-30.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Health V0.2 merge deployment completed successfully on 2026-08-30.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
-- Resource Health V0.1 is implemented through `scripts/resource_health.py`, `.github/workflows/resource-health.yml` and `docs/RESOURCE_HEALTH.md`. It validates catalog structure, checks canonical URLs, observes GitHub repository metadata and produces reviewable JSON/Markdown artifacts without mutating verified catalog data.
-- Resource Health PR validation passed, and the first full `main` run (`33312359208`) completed successfully on 2026-08-30. Report counters: 39 total resources, 37 reachable, 2 restricted/rate-limited, 2 redirected, 0 broken 404/410, 0 transient/network/other errors, 24 GitHub repositories observed, and 1 metadata observation.
-- The first Resource Health review queue contains Cloudflare Dashboard (403), xorxor_hu CodePen (403), Supabase Dashboard redirect, Mistral Studio redirect behavior, and a World Monitor AGPL SPDX naming mismatch. No catalog fields were changed automatically from these observations.
+- Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
+- Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
+- Resource Health V0.2 PR validation passed, and the first full V0.2 `main` run (`33312760577`) completed successfully on 2026-08-30: 39 total resources, 34 clean, 5 expected variances and **0 review-required** items. Raw counters remained 37 reachable, 2 restricted/rate-limited, 2 redirected, 0 broken 404/410 and 0 transient/network/other errors.
 
 ## V0.5 AI recommendation
 
@@ -82,36 +84,40 @@ Current activation state:
 - Configured endpoint: `https://qookey-ai-resource-recommender.q-oo109.workers.dev/api/recommend`
 - Activation commit: `d3f02fe6089589996003c8b5c4d943bcf6961517` (`Activate deployed AI recommender`, 2026-08-23).
 - The activation workflow passed Worker health and three semantic recommendation regression checks before enabling the frontend endpoint.
-- A fresh external network health check was not re-run during the 2026-08-30 status synchronization; repository deployment evidence remains the current authority for activation state.
+- Repository deployment evidence remains the current authority for activation state.
 
-## Resource Health V0.1
+## Resource Health V0.2
 
-The catalog now has a non-destructive recurring health layer.
+The catalog has a non-destructive recurring health + reviewed-triage layer.
 
 Behavior:
 
-- Pull requests that touch the catalog/checker/workflow run structural validation only.
-- Relevant `main` pushes, manual dispatches and the weekly Monday `03:17 UTC` schedule run the full URL/GitHub metadata check.
-- Reports are uploaded as 30-day GitHub Actions artifacts and summarized in the workflow UI.
-- 401 / 403 / 429 are classified as restricted rather than automatically broken.
+- Pull requests that touch the catalog/checker/policy/workflow run structural validation only.
+- Relevant `main` pushes, manual dispatches and the weekly Monday `03:17 UTC` schedule run the full URL/GitHub metadata check and reviewed triage.
+- Raw and reviewed reports are uploaded as 30-day GitHub Actions artifacts and summarized in the workflow UI.
+- 401 / 403 / 429 remain raw `restricted` observations rather than being automatically labeled broken.
 - 404 / 410 are flagged as broken.
-- Redirects and GitHub metadata differences are review evidence only.
+- Reviewed expectations can classify known auth/anti-bot/redirect/SPDX behavior as `expected-variance` while preserving raw evidence.
 - Verified pricing, licensing, status, descriptions and canonical URLs remain unchanged until reviewed.
 
-First full-run evidence:
+First V0.2 full-run evidence:
 
-- Workflow run: `33312359208`
-- Commit: `9d414350aef29f35f4045398852f0591f91541f6`
+- Workflow run: `33312760577`
+- Commit: `c903f9c8f37046084ff919246281209619cbb4bf`
 - Result: PASS
+- Clean: 34
+- Expected variance: 5
+- Review required: 0
 - Broken resources: 0
 - Automatic catalog mutations: 0
 
 ## Current catalog
 
-- Total resources: 39
+- Total resources: 40
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
+- Resource-health review policy: `data/resource-health-expectations.json`
 - AI runtime config: `data/ai-config.json`
 - Multi-category classification is enabled.
 - Unknown metadata remains `unknown` / `null` instead of being guessed.
@@ -123,7 +129,7 @@ First full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the Resource Health V0.1 merge deployment completed successfully on 2026-08-30.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the Resource Health V0.2 merge deployment completed successfully on 2026-08-30.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -134,8 +140,8 @@ First full-run evidence:
 - Automated recurring production Worker health / semantic regression monitoring.
 - Semantic / vector search for larger catalogs.
 - Favorites / personal collections.
-- Automated metadata refresh PR generation; Resource Health V0.1 reports observations only.
-- GitHub Stars / activity synchronization into verified catalog metadata; V0.1 only observes current values in artifacts.
+- Automated metadata refresh PR generation; Resource Health V0.2 classifies observations but still does not modify verified catalog data.
+- GitHub Stars / activity synchronization into verified catalog metadata; Resource Health observes current values in artifacts only.
 - Backend database migration.
 - Per-resource detail pages.
 - Local cached copies of every third-party resource icon.
@@ -164,4 +170,4 @@ First full-run evidence:
 
 ## Next step
 
-Review the first Resource Health queue before adding automatic metadata PR generation. Treat the Cloudflare Dashboard and CodePen 403 responses as expected access restrictions unless independent evidence shows the resources are unavailable; inspect the Supabase and Mistral redirect behavior; normalize or document the World Monitor `AGPL-3.0-only` versus GitHub `AGPL-3.0` SPDX naming difference. After those review rules are stable, Resource Health V0.2 can propose metadata refresh PRs while still requiring human review. Continue ingesting verified user-supplied resources in parallel.
+After the OpenExecutive catalog change lands on `main`, inspect its automatic Resource Health V0.2 run to confirm the new canonical URL and Apache-2.0 metadata produce no unreviewed drift. Then continue with the planned production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.

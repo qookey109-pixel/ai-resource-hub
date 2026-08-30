@@ -157,6 +157,10 @@
     "vercel-labs-vgpu": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://vgpu.sh",
       "source": "official-docs-domain-favicon-128"
+    },
+    "sentelabs-openexecutive": {
+      "url": "https://github.com/SenteLabsAI.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
     }
   }
 }
