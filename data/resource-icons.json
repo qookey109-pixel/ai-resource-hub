@@ -165,6 +165,10 @@
     "openstreetmap": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.openstreetmap.org",
       "source": "official-domain-favicon-128"
+    },
+    "token-gremlin-abyssal": {
+      "url": "https://github.com/Token-Gremlin.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
