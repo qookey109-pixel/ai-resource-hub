@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-08-30",
+  "equivalent_license_pairs": [
+    [
+      "AGPL-3.0-only",
+      "AGPL-3.0"
+    ]
+  ],
+  "resources": {
+    "cloudflare-dashboard": {
+      "allowed_url_statuses": [
+        "reachable",
+        "restricted"
+      ],
+      "reason": "Cloudflare Dashboard is an authenticated/anti-bot surface and may return HTTP 403 to automated probes even when the dashboard itself is available."
+    },
+    "xorxor-hu-codepen": {
+      "allowed_url_statuses": [
+        "reachable",
+        "restricted"
+      ],
+      "reason": "CodePen may return HTTP 403 to automated probes; independent public search evidence still resolves xorxor_hu and its public pens."
+    },
+    "supabase-dashboard": {
+      "allow_redirect": true,
+      "allowed_final_url_prefixes": [
+        "https://supabase.com/dashboard"
+      ],
+      "reason": "The public Supabase dashboard route currently normalizes to /dashboard/org; keep the shorter canonical catalog URL unless product navigation changes materially."
+    },
+    "mistral-studio": {
+      "allow_redirect": true,
+      "allowed_final_hosts": [
+        "console.mistral.ai",
+        "auth.mistral.ai",
+        "v2.auth.mistral.ai"
+      ],
+      "reason": "Unauthenticated Mistral Console access is expected to enter Mistral's authentication flow; generated login redirects are not a broken-resource signal by themselves."
+    }
+  }
+}
