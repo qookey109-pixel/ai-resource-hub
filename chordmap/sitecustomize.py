@@ -1,10 +1,15 @@
-from fastapi.responses import HTMLResponse
+try:
+    from fastapi.responses import HTMLResponse
+    import app.main as main
+except ModuleNotFoundError:
+    # During Render's dependency-install phase FastAPI is not available yet.
+    # The next Python process (Uvicorn startup) will import this file again.
+    main = None
 
-import app.main as main
+if main is not None:
+    _original_index = main.index
 
-_original_index = main.index
-
-HELPER = r'''
+    HELPER = r'''
 <style>
 .ytassist{display:none;margin-top:14px;padding:14px;border:1px solid #3b465b;background:#0d131d;border-radius:14px;gap:10px}
 .ytassist.show{display:grid}.ytassist strong{font-size:14px}.ytassist p{margin:0;color:#8e9aad;font-size:12px;line-height:1.65}
@@ -42,19 +47,18 @@ HELPER = r'''
     event.preventDefault(); event.stopImmediatePropagation(); refresh();
     setStatus('YouTube 一般播放頁不能直接交給 ChordMap 當音訊檔。請使用下方 TurboScribe 按鈕轉成你有權使用的 MP3，再回來上傳。');
   },true);
-  document.querySelector('.badge')?.replaceChildren(document.createTextNode('ChordMap V0.3.2'));
+  const badge=document.querySelector('.badge'); if(badge) badge.textContent='ChordMap V0.3.2';
 })();
 </script>
 '''
 
-# Remove the original root route and replace only the rendered shell.
-main.app.router.routes[:] = [
-    route for route in main.app.router.routes
-    if not (getattr(route, 'path', None) == '/' and 'GET' in (getattr(route, 'methods', None) or set()))
-]
+    main.app.router.routes[:] = [
+        route for route in main.app.router.routes
+        if not (getattr(route, 'path', None) == '/' and 'GET' in (getattr(route, 'methods', None) or set()))
+    ]
 
-@main.app.get('/', response_class=HTMLResponse)
-def youtube_helper_index():
-    response = _original_index()
-    body = response.body.decode('utf-8')
-    return HTMLResponse(body.replace('</body>', HELPER + '\n</body>'))
+    @main.app.get('/', response_class=HTMLResponse)
+    def youtube_helper_index():
+        response = _original_index()
+        body = response.body.decode('utf-8')
+        return HTMLResponse(body.replace('</body>', HELPER + '\n</body>'))
