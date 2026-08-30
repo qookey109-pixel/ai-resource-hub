@@ -141,6 +141,14 @@
     "tt-a1i-archify": {
       "url": "https://github.com/tt-a1i.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "voltagent-awesome-agent-skills": {
+      "url": "https://github.com/VoltAgent.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "phileiny-h3-storyboard-skill": {
+      "url": "https://github.com/phileiny.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
