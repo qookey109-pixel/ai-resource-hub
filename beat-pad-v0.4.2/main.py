@@ -20,7 +20,7 @@ MAX_DURATION_SECONDS = 10 * 60
 DOWNLOAD_TIMEOUT_SECONDS = 180
 INFO_TIMEOUT_SECONDS = 60
 
-app = FastAPI(title="Qookey Beat Pad V0.4.2", version="0.4.2")
+app = FastAPI(title="Qookey Beat Pad V0.4.3", version="0.4.3")
 youtube_lock = asyncio.Semaphore(1)
 
 
@@ -32,6 +32,11 @@ VIDEO_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
 
 
 def canonicalize_youtube_url(value: str) -> tuple[str, str]:
+    """Return canonical single-video YouTube URL and video id.
+
+    Mix/playlist/query parameters such as list=, index=, start_radio= and si=
+    are deliberately discarded so a watch URL is always treated as one video.
+    """
     value = value.strip()
     try:
         parsed = urlparse(value)
@@ -54,6 +59,7 @@ def canonicalize_youtube_url(value: str) -> tuple[str, str]:
         raise ValueError("目前只接受 youtube.com 或 youtu.be 網址。")
 
     video_id = ""
+
     if host in {"youtu.be", "www.youtu.be"}:
         video_id = parsed.path.strip("/").split("/")[0]
     else:
@@ -86,12 +92,19 @@ def command_error(proc: subprocess.CompletedProcess[str], fallback: str) -> str:
 
 def run_cmd(args: list[str], timeout: int) -> subprocess.CompletedProcess[str]:
     try:
-        return subprocess.run(args, check=False, text=True, capture_output=True, timeout=timeout)
+        return subprocess.run(
+            args,
+            check=False,
+            text=True,
+            capture_output=True,
+            timeout=timeout,
+        )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("處理逾時，請稍後再試或換較短的影片。") from exc
 
 
 def yt_dlp_runtime_args() -> list[str]:
+    """Use a supported JS runtime for current YouTube challenge solving."""
     if shutil.which("deno"):
         return ["--js-runtimes", "deno"]
     if shutil.which("node"):
@@ -105,6 +118,7 @@ def extract_youtube_audio(url: str) -> tuple[bytes, dict]:
 
     with tempfile.TemporaryDirectory(prefix="beatpad-yt-") as tmp:
         tmpdir = Path(tmp)
+
         info_cmd = [
             sys.executable, "-m", "yt_dlp",
             *yt_dlp_runtime_args(),
@@ -129,6 +143,7 @@ def extract_youtube_audio(url: str) -> tuple[bytes, dict]:
             raise RuntimeError("無法確認影片長度。")
         if duration > MAX_DURATION_SECONDS:
             raise RuntimeError("目前最多分析 10 分鐘的 YouTube 影片。")
+
         if info.get("is_live"):
             raise RuntimeError("目前不支援 YouTube 直播。")
 
@@ -157,10 +172,18 @@ def extract_youtube_audio(url: str) -> tuple[bytes, dict]:
 
         source = max(candidates, key=lambda p: p.stat().st_size)
         wav = tmpdir / "analysis.wav"
+
         ffmpeg_cmd = [
-            "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
-            "-i", str(source), "-vn", "-ac", "1", "-ar", "11025",
-            "-c:a", "pcm_s16le", str(wav),
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel", "error",
+            "-y",
+            "-i", str(source),
+            "-vn",
+            "-ac", "1",
+            "-ar", "11025",
+            "-c:a", "pcm_s16le",
+            str(wav),
         ]
         ff_proc = run_cmd(ffmpeg_cmd, 120)
         if ff_proc.returncode != 0 or not wav.exists():
@@ -174,6 +197,7 @@ def extract_youtube_audio(url: str) -> tuple[bytes, dict]:
             "title": str(info.get("title") or "YouTube"),
             "duration": float(duration),
             "id": str(info.get("id") or ""),
+            "uploader": str(info.get("uploader") or info.get("channel") or ""),
         }
         return data, meta
 
@@ -190,6 +214,7 @@ def health() -> JSONResponse:
         yt_dlp_ok = True
     except Exception:
         yt_dlp_ok = False
+
     runtime = "deno" if shutil.which("deno") else ("node" if shutil.which("node") else None)
     return JSONResponse({
         "ok": bool(shutil.which("ffmpeg") and yt_dlp_ok and runtime),
@@ -213,7 +238,17 @@ async def youtube_audio(payload: YouTubeRequest) -> Response:
         try:
             data, meta = await asyncio.to_thread(extract_youtube_audio, url)
         except RuntimeError as exc:
-            raise HTTPException(status_code=422, detail=str(exc)) from exc
+            message = str(exc)
+            lower = message.lower()
+            if "sign in to confirm" in lower or "not a bot" in lower or "login_required" in lower:
+                raise HTTPException(
+                    status_code=422,
+                    detail={
+                        "code": "YOUTUBE_AUTH_REQUIRED",
+                        "message": "YouTube 暫時封鎖這個雲端 IP，需要登入驗證。請改用 TurboScribe 轉成 MP3，再把檔案丟回本站分析。",
+                    },
+                ) from exc
+            raise HTTPException(status_code=422, detail={"code": "YOUTUBE_FETCH_FAILED", "message": message}) from exc
         except Exception as exc:
             raise HTTPException(status_code=500, detail="YouTube 音訊處理發生未預期錯誤。") from exc
 
