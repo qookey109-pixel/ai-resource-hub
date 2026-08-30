@@ -116,7 +116,7 @@
     },
     "pixelartbase-free-com-tw": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://free.com.tw",
-      "source": "domain-favicon-128"
+      "source": "domain-favicon-128-fallback"
     },
     "ai-drama-pound": {
       "url": "https://github.com/POUND0423.png?size=256",
@@ -149,6 +149,14 @@
     "phileiny-h3-storyboard-skill": {
       "url": "https://github.com/phileiny.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "metalforge-shader-editor": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://metalforge.xyz",
+      "source": "domain-favicon-128"
+    },
+    "vercel-labs-vgpu": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://vgpu.sh",
+      "source": "official-docs-domain-favicon-128"
     }
   }
 }
