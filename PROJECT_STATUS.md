@@ -1,6 +1,6 @@
 # Project Status
 
-Status date: 2026-08-23 (Asia/Taipei)
+Status date: 2026-08-30 (Asia/Taipei)
 
 ## Project
 
@@ -15,7 +15,7 @@ Status date: 2026-08-23 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **25 verified resources**.
+- Catalog now contains **37 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -28,6 +28,8 @@ Status date: 2026-08-23 (Asia/Taipei)
 - ThreeUI Community added as an active MIT-licensed React / Three.js visual component library with 50 Community components, 111 Community routes, 164 browse results, npm distribution and a separate entitlement boundary for Pro source access.
 - ElevenLabs added as an active freemium AI audio / voice platform covering TTS, STT, voice cloning, dubbing, music, voice/chat Agents and APIs, with plan-specific commercial and cloning rights recorded.
 - Meshy AI added as an active freemium AI 3D platform covering Text-to-3D, Image-to-3D, AI texturing, rigging/animation, 3D Agent and API workflows, with current Free-plan download/licensing caveats recorded.
+- Awesome Agent Skills added as an active MIT-licensed curated index with 1,497+ Agent Skills from official engineering teams and the community; linked third-party Skills retain their own licenses and terms.
+- H3 Storyboard Skill added as an active MIT-licensed MiniMax H3 storyboard / performance Skill, with controlled-comparison evidence, explicit verified/partly-verified/inferred confidence labels and a complementary boundary with H3 prompt-syntax / ComfyUI setup Skills.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -74,7 +76,7 @@ Current activation state:
 
 ## Current catalog
 
-- Total resources: 25
+- Total resources: 37
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
