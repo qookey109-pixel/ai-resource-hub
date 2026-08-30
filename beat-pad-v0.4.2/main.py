@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -202,9 +202,75 @@ def extract_youtube_audio(url: str) -> tuple[bytes, dict]:
         return data, meta
 
 
+FALLBACK_INJECTION = r"""
+<style>
+#qookey-fallback{display:none;margin-top:12px;padding:14px;border:1px solid #66531f;border-radius:14px;background:#1a160b}
+#qookey-fallback.show{display:block}
+#qookey-drop{margin-top:10px;padding:16px;border:1px dashed #6e7890;border-radius:12px;text-align:center;color:#97a4b8}
+#qookey-drop.drag{border-color:#2ed3a7;color:#f5f7fb}
+</style>
+<script>
+(()=>{
+  const status=document.getElementById('status');
+  const urlInput=document.getElementById('url');
+  const fileInput=document.getElementById('fileInput');
+  const analyze=document.getElementById('analyze');
+  const oldTurbo=document.getElementById('turboFallback');
+  const h1=document.querySelector('h1');
+  if(h1)h1.textContent='YouTube → Beat Pad V0.4.3';
+  document.title='Qookey Beat Pad V0.4.3';
+  if(!status||!urlInput||!fileInput)return;
+
+  const panel=document.createElement('div');
+  panel.id='qookey-fallback';
+  panel.innerHTML='<strong>⚠️ YouTube 要求登入驗證</strong><div class="small" style="margin-top:6px">Render 的雲端 IP 被 YouTube bot check 擋住。先用 TurboScribe 手動轉 MP3，下載後把檔案丟回這裡，本站會自動接著分析。</div><div class="row" style="margin-top:10px"><button id="qookey-turbo" class="btn primary" type="button">複製網址並開 TurboScribe ↗</button><button id="qookey-pick" class="btn" type="button">＋ 選擇轉好的 MP3</button></div><div id="qookey-drop">把 MP3 / WAV / M4A 拖到這裡</div>';
+  status.insertAdjacentElement('afterend',panel);
+  if(oldTurbo)oldTurbo.style.display='none';
+
+  let converted=false;
+  const turbo=panel.querySelector('#qookey-turbo');
+  const pick=panel.querySelector('#qookey-pick');
+  const drop=panel.querySelector('#qookey-drop');
+
+  turbo.addEventListener('click',async()=>{
+    const u=urlInput.value.trim();
+    if(u&&navigator.clipboard){try{await navigator.clipboard.writeText(u)}catch(_){}}
+    window.open('https://turboscribe.ai/zh-TW/downloader/youtube/mp3/free','_blank','noopener,noreferrer');
+    status.textContent='已開啟 TurboScribe；網址已嘗試複製。轉好後回來選 MP3，本站會自動分析。';
+  });
+
+  pick.addEventListener('click',()=>{converted=true;fileInput.value='';fileInput.click()});
+  fileInput.addEventListener('change',()=>{
+    if(!converted)return; converted=false;
+    setTimeout(()=>{if(!analyze.disabled)analyze.click()},350);
+  });
+
+  for(const n of ['dragenter','dragover'])drop.addEventListener(n,e=>{e.preventDefault();drop.classList.add('drag')});
+  for(const n of ['dragleave','drop'])drop.addEventListener(n,e=>{e.preventDefault();drop.classList.remove('drag')});
+  drop.addEventListener('drop',e=>{
+    const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+    if(!f)return;
+    try{
+      const dt=new DataTransfer();dt.items.add(f);fileInput.files=dt.files;converted=true;fileInput.dispatchEvent(new Event('change',{bubbles:true}));
+    }catch(_){status.textContent='拖放不支援，請按「選擇轉好的 MP3」。'}
+  });
+
+  const showIfBlocked=()=>{
+    const t=(status.textContent||'').toLowerCase();
+    if(t.includes('youtube_auth_required')||t.includes('not a bot')||t.includes('sign in to confirm')||t.includes('bot check')||t.includes('登入驗證'))panel.classList.add('show');
+  };
+  new MutationObserver(showIfBlocked).observe(status,{childList:true,subtree:true,characterData:true});
+  showIfBlocked();
+})();
+</script>
+"""
+
+
 @app.get("/")
-def index() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+def index() -> HTMLResponse:
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace("</body>", FALLBACK_INJECTION + "</body>")
+    return HTMLResponse(html, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/health")
@@ -243,12 +309,9 @@ async def youtube_audio(payload: YouTubeRequest) -> Response:
             if "sign in to confirm" in lower or "not a bot" in lower or "login_required" in lower:
                 raise HTTPException(
                     status_code=422,
-                    detail={
-                        "code": "YOUTUBE_AUTH_REQUIRED",
-                        "message": "YouTube 暫時封鎖這個雲端 IP，需要登入驗證。請改用 TurboScribe 轉成 MP3，再把檔案丟回本站分析。",
-                    },
+                    detail="YOUTUBE_AUTH_REQUIRED | YouTube 雲端 IP 被 bot check 擋住，需要登入驗證。請使用 TurboScribe 備援，轉成 MP3 後丟回本站分析。",
                 ) from exc
-            raise HTTPException(status_code=422, detail={"code": "YOUTUBE_FETCH_FAILED", "message": message}) from exc
+            raise HTTPException(status_code=422, detail=message) from exc
         except Exception as exc:
             raise HTTPException(status_code=500, detail="YouTube 音訊處理發生未預期錯誤。") from exc
 
