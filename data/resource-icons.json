@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-28",
+  "updated_at": "2026-08-30",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -136,6 +136,10 @@
     },
     "sirius-walkthrough-me": {
       "url": "https://github.com/sirius-cc-wu.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "tt-a1i-archify": {
+      "url": "https://github.com/tt-a1i.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }

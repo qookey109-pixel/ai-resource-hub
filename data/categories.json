@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-28",
+  "updated_at": "2026-08-30",
   "categories": [
     {
       "id": "ai-llm",
@@ -13,6 +13,12 @@
       "name": "AI Coding",
       "display_name": "AI 程式開發",
       "icon": "💻"
+    },
+    {
+      "id": "architecture-system-design",
+      "name": "Architecture / System Design",
+      "display_name": "架構 / 系統設計",
+      "icon": "🏗️"
     },
     {
       "id": "agent-skills",
