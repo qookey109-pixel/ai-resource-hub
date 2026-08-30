@@ -47,8 +47,11 @@ Status date: 2026-08-30 (Asia/Taipei)
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml` and the latest catalog deployment completed successfully on 2026-08-30.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Health V0.1 merge deployment completed successfully on 2026-08-30.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
+- Resource Health V0.1 is implemented through `scripts/resource_health.py`, `.github/workflows/resource-health.yml` and `docs/RESOURCE_HEALTH.md`. It validates catalog structure, checks canonical URLs, observes GitHub repository metadata and produces reviewable JSON/Markdown artifacts without mutating verified catalog data.
+- Resource Health PR validation passed, and the first full `main` run (`33312359208`) completed successfully on 2026-08-30. Report counters: 39 total resources, 37 reachable, 2 restricted/rate-limited, 2 redirected, 0 broken 404/410, 0 transient/network/other errors, 24 GitHub repositories observed, and 1 metadata observation.
+- The first Resource Health review queue contains Cloudflare Dashboard (403), xorxor_hu CodePen (403), Supabase Dashboard redirect, Mistral Studio redirect behavior, and a World Monitor AGPL SPDX naming mismatch. No catalog fields were changed automatically from these observations.
 
 ## V0.5 AI recommendation
 
@@ -79,7 +82,29 @@ Current activation state:
 - Configured endpoint: `https://qookey-ai-resource-recommender.q-oo109.workers.dev/api/recommend`
 - Activation commit: `d3f02fe6089589996003c8b5c4d943bcf6961517` (`Activate deployed AI recommender`, 2026-08-23).
 - The activation workflow passed Worker health and three semantic recommendation regression checks before enabling the frontend endpoint.
-- A fresh external network health check was not re-run during this status synchronization; repository deployment evidence remains the current authority for activation state.
+- A fresh external network health check was not re-run during the 2026-08-30 status synchronization; repository deployment evidence remains the current authority for activation state.
+
+## Resource Health V0.1
+
+The catalog now has a non-destructive recurring health layer.
+
+Behavior:
+
+- Pull requests that touch the catalog/checker/workflow run structural validation only.
+- Relevant `main` pushes, manual dispatches and the weekly Monday `03:17 UTC` schedule run the full URL/GitHub metadata check.
+- Reports are uploaded as 30-day GitHub Actions artifacts and summarized in the workflow UI.
+- 401 / 403 / 429 are classified as restricted rather than automatically broken.
+- 404 / 410 are flagged as broken.
+- Redirects and GitHub metadata differences are review evidence only.
+- Verified pricing, licensing, status, descriptions and canonical URLs remain unchanged until reviewed.
+
+First full-run evidence:
+
+- Workflow run: `33312359208`
+- Commit: `9d414350aef29f35f4045398852f0591f91541f6`
+- Result: PASS
+- Broken resources: 0
+- Automatic catalog mutations: 0
 
 ## Current catalog
 
@@ -98,7 +123,7 @@ Current activation state:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the 2026-08-30 catalog update deployment completed successfully.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the Resource Health V0.1 merge deployment completed successfully on 2026-08-30.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -109,9 +134,8 @@ Current activation state:
 - Automated recurring production Worker health / semantic regression monitoring.
 - Semantic / vector search for larger catalogs.
 - Favorites / personal collections.
-- Automated metadata refresh.
-- GitHub Stars / activity synchronization.
-- Resource health checks.
+- Automated metadata refresh PR generation; Resource Health V0.1 reports observations only.
+- GitHub Stars / activity synchronization into verified catalog metadata; V0.1 only observes current values in artifacts.
 - Backend database migration.
 - Per-resource detail pages.
 - Local cached copies of every third-party resource icon.
@@ -136,7 +160,8 @@ Current activation state:
 15. AI recommendation output may only refer to resources present in the current catalog; validate IDs server-side and client-side.
 16. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
 17. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
+18. Resource Health output is evidence for review, not automatic authority. External availability or GitHub metadata alone must not silently overwrite verified catalog records.
 
 ## Next step
 
-Implement an automated resource-health and metadata-refresh workflow before the catalog grows much larger. The first version should validate each canonical URL, flag broken or redirected resources without deleting them automatically, refresh GitHub repository activity metadata where available, and produce a reviewable report/PR instead of silently overwriting verified catalog data. Continue ingesting verified user-supplied resources in parallel.
+Review the first Resource Health queue before adding automatic metadata PR generation. Treat the Cloudflare Dashboard and CodePen 403 responses as expected access restrictions unless independent evidence shows the resources are unavailable; inspect the Supabase and Mistral redirect behavior; normalize or document the World Monitor `AGPL-3.0-only` versus GitHub `AGPL-3.0` SPDX naming difference. After those review rules are stable, Resource Health V0.2 can propose metadata refresh PRs while still requiring human review. Continue ingesting verified user-supplied resources in parallel.
