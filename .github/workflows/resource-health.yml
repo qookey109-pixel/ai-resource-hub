@@ -1,0 +1,79 @@
+name: Resource Health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+  push:
+    branches:
+      - main
+    paths:
+      - "data/resources.json"
+      - "scripts/resource_health.py"
+      - ".github/workflows/resource-health.yml"
+  pull_request:
+    paths:
+      - "data/resources.json"
+      - "scripts/resource_health.py"
+      - ".github/workflows/resource-health.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resource-health-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate catalog structure
+        run: python scripts/resource_health.py --validate-only
+
+  health:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Check resource URLs and GitHub metadata
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/resource_health.py --timeout 12
+
+      - name: Publish report to workflow summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f reports/resource-health/resource-health.md ]; then
+            cat reports/resource-health/resource-health.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Resource health report was not generated." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload resource health report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resource-health-${{ github.run_id }}
+          path: reports/resource-health/
+          if-no-files-found: warn
+          retention-days: 30
