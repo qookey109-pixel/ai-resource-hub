@@ -15,7 +15,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **37 verified resources**.
+- Catalog now contains **39 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -30,6 +30,8 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Meshy AI added as an active freemium AI 3D platform covering Text-to-3D, Image-to-3D, AI texturing, rigging/animation, 3D Agent and API workflows, with current Free-plan download/licensing caveats recorded.
 - Awesome Agent Skills added as an active MIT-licensed curated index with 1,497+ Agent Skills from official engineering teams and the community; linked third-party Skills retain their own licenses and terms.
 - H3 Storyboard Skill added as an active MIT-licensed MiniMax H3 storyboard / performance Skill, with controlled-comparison evidence, explicit verified/partly-verified/inferred confidence labels and a complementary boundary with H3 prompt-syntax / ComfyUI setup Skills.
+- MetalForge added as an active freemium browser shader editor for SwiftUI and supported React Native Skia effects, with free live editing/preview and a €5/month Pro export tier; commercial rights for exported content are recorded from the official site.
+- vgpu added as an active MIT-licensed Vercel Labs WebGPU / WGSL TypeScript library with browser, Dawn-backed Node and deterministic mock runtimes plus Agent-ready CLI, llms.txt, examples API and MCP documentation.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -41,6 +43,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Higher-resolution icon sources are preferred. DSH Desktop uses its repository's official SVG app icon. AI Website Cloner Template currently falls back to the author's 256px GitHub avatar because no dedicated project logo was verified.
 - ThreeUI Community uses the repository's official `public/threeui-mark.svg` project mark rather than a generic category icon or owner avatar.
 - ElevenLabs and Meshy AI use resource-specific domain favicons rather than category icons.
+- MetalForge uses its own domain favicon; vgpu uses the vgpu.sh documentation-domain favicon rather than a shared category icon.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -76,7 +79,7 @@ Current activation state:
 
 ## Current catalog
 
-- Total resources: 37
+- Total resources: 39
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
