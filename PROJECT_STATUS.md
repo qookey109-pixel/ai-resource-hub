@@ -15,7 +15,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
-- Catalog now contains **40 verified resources**.
+- Catalog now contains **41 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -33,7 +33,9 @@ Status date: 2026-08-30 (Asia/Taipei)
 - MetalForge added as an active freemium browser shader editor for SwiftUI and supported React Native Skia effects, with free live editing/preview and a €5/month Pro export tier; commercial rights for exported content are recorded from the official site.
 - vgpu added as an active MIT-licensed Vercel Labs WebGPU / WGSL TypeScript library with browser, Dawn-backed Node and deterministic mock runtimes plus Agent-ready CLI, llms.txt, examples API and MCP documentation.
 - OpenExecutive added as an active Apache-2.0 virtual executive multi-agent system: one coherent Executive persona backed by eight specialist agents, company-document RAG, episodic memory, scheduling, web/API/CLI access and Slack/Email/Telegram/Google Chat/Discord integrations. The default Claude API path can be replaced or supplemented with OpenRouter or OpenAI-compatible local models.
+- OpenStreetMap added as an active community-driven open geospatial data platform. Catalog metadata records ODbL-1.0 for map data, attribution/share-alike requirements, and the separate usage-policy boundary for official API, tile and Nominatim services.
 - Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
+- Added a new `Maps / GIS` category with Traditional Chinese display name `地圖 / GIS` for mapping, geospatial data and GIS resources.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
 - Category display names are localized to Traditional Chinese while stable internal category keys remain unchanged for data compatibility.
@@ -46,6 +48,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - ElevenLabs and Meshy AI use resource-specific domain favicons rather than category icons.
 - MetalForge uses its own domain favicon; vgpu uses the vgpu.sh documentation-domain favicon rather than a shared category icon.
 - OpenExecutive currently uses the SenteLabsAI 256px GitHub organization avatar because no dedicated project logo/icon was found in the repository tree.
+- OpenStreetMap uses its official domain favicon source; the provided Taipei-specific map viewport is intentionally normalized to the canonical public homepage in the catalog.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
@@ -54,6 +57,7 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
 - Resource Health V0.2 PR validation passed, and the first full V0.2 `main` run (`33312760577`) completed successfully on 2026-08-30: 39 total resources, 34 clean, 5 expected variances and **0 review-required** items. Raw counters remained 37 reachable, 2 restricted/rate-limited, 2 redirected, 0 broken 404/410 and 0 transient/network/other errors.
+- The post-OpenExecutive full Resource Health V0.2 `main` run (`33313186974`) also completed successfully, including structural validation, URL/GitHub observation, reviewed triage and artifact upload.
 
 ## V0.5 AI recommendation
 
@@ -113,7 +117,7 @@ First V0.2 full-run evidence:
 
 ## Current catalog
 
-- Total resources: 40
+- Total resources: 41
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -170,4 +174,4 @@ First V0.2 full-run evidence:
 
 ## Next step
 
-After the OpenExecutive catalog change lands on `main`, inspect its automatic Resource Health V0.2 run to confirm the new canonical URL and Apache-2.0 metadata produce no unreviewed drift. Then continue with the planned production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.
+After the OpenStreetMap catalog change lands on `main`, inspect its automatic Resource Health V0.2 run to confirm the canonical homepage remains reachable and produces no unreviewed drift. Then continue with the planned production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.

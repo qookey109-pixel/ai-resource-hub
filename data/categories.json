@@ -39,6 +39,12 @@
       "icon": "⚖️"
     },
     {
+      "id": "maps-gis",
+      "name": "Maps / GIS",
+      "display_name": "地圖 / GIS",
+      "icon": "🗺️"
+    },
+    {
       "id": "search-research",
       "name": "Search / Research",
       "display_name": "搜尋 / 研究",
