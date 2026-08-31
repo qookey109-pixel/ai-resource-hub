@@ -235,6 +235,62 @@
         "url": "https://github.com/vibeinging/dsh-desktop/releases/latest",
         "description": "官方 GitHub 最新 Release，可取得目前公開的桌面安裝套件與版本資訊。"
       }
+    ],
+    "emil-kowalski-skills": [
+      {
+        "label": "skills.sh 安裝與索引頁",
+        "kind": "website",
+        "url": "https://skills.sh/emilkowalski/skills",
+        "description": "上游 Repository README 指向的 Skills 索引與安裝入口，可瀏覽各個 UI、動畫、Swift 與設計工程 Skill。"
+      },
+      {
+        "label": "核心 emil-design-eng Skill 定義",
+        "kind": "documentation",
+        "url": "https://github.com/emilkowalski/skills/blob/main/skills/emil-design-eng/SKILL.md",
+        "description": "官方核心 Design Engineering Skill 定義，整理 UI polish、動畫判斷、元件設計與介面品質規則。"
+      }
+    ],
+    "hallmark": [
+      {
+        "label": "Hallmark 官方 Live Demo",
+        "kind": "demo",
+        "url": "https://www.usehallmark.com/",
+        "description": "Hallmark 官方互動展示站，可查看不同主題、版型與 build／audit／redesign／study 工作流。"
+      },
+      {
+        "label": "Hallmark Recipes",
+        "kind": "documentation",
+        "url": "https://github.com/Nutlope/hallmark/blob/main/docs/recipes.md",
+        "description": "官方可複製使用的實作 Recipes，提供多種 brief、推導結果、版型選擇與 Live example。"
+      }
+    ],
+    "ip-as-logo-skill": [
+      {
+        "label": "IP as Logo 官方素材網站",
+        "kind": "website",
+        "url": "https://ipaslogo.com/",
+        "description": "上游 Repository 指定的免費 IP as Logo 瀏覽與下載網站，可直接搜尋由同一套 Skill 規則產生的角色素材。"
+      },
+      {
+        "label": "IP as Logo SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/s1dashu/ip-as-logo-skill/blob/main/SKILL.md",
+        "description": "官方 Agent Skill 定義，涵蓋三方向提案、六候選流程、簡化規則、配色與圖片生成模型需求。"
+      }
+    ],
+    "reverse-skill": [
+      {
+        "label": "reverse-skill 官方專案網站",
+        "kind": "website",
+        "url": "https://reverse.apivix.com/",
+        "description": "官方專案網站，介紹安全任務路由、工具鏈、自舉流程與授權研究的 Scope Gate。"
+      },
+      {
+        "label": "reverse-skill 線上教學",
+        "kind": "documentation",
+        "url": "https://reverse.apivix.com/docs/",
+        "description": "官方教學文件，說明 AI 初始化、授權邊界、首個 Case、完整工作流與常見問題。"
+      }
     ]
   }
 }
