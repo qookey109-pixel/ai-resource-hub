@@ -31,24 +31,24 @@
       "source": "domain-favicon-128"
     },
     "cloudflare-dashboard": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.cloudflare.com",
-      "source": "domain-favicon-128"
+      "url": "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/public/logo.svg",
+      "source": "official-repository-project-logo-svg"
     },
     "xorxor-hu-codepen": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io",
       "source": "domain-favicon-128"
     },
     "oracle-cloud-free-tier": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.oracle.com",
-      "source": "domain-favicon-128"
+      "url": "https://github.com/oracle.png?size=256",
+      "source": "github-organization-avatar-256"
     },
     "supabase-dashboard": {
       "url": "https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/public/supabase-logo.svg",
       "source": "official-repository-project-logo-svg"
     },
     "mistral-studio": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mistral.ai",
-      "source": "domain-favicon-128"
+      "url": "https://github.com/mistralai.png?size=256",
+      "source": "github-organization-avatar-256"
     },
     "capafy-ai": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
@@ -95,12 +95,12 @@
       "source": "official-repository-project-mark-svg"
     },
     "elevenlabs": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://elevenlabs.io",
-      "source": "domain-favicon-128"
+      "url": "https://github.com/elevenlabs.png?size=256",
+      "source": "github-organization-avatar-256"
     },
     "meshy-ai": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.meshy.ai",
-      "source": "domain-favicon-128"
+      "url": "https://github.com/meshy-dev.png?size=256",
+      "source": "github-organization-avatar-256"
     },
     "mattpocock-skills": {
       "url": "https://github.com/mattpocock.png?size=256",
