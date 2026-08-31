@@ -27,11 +27,14 @@ For every new URL:
 
 ## Frontend rules
 
-- Keep V0.x browsing and detail views dependency-free unless there is a clear benefit to adding a dependency.
+- Keep the production V0.x browsing and detail runtime dependency-free unless there is a clear benefit to adding a runtime dependency.
+- Test-only development dependencies are allowed when they protect critical browser behavior and do not ship to GitHub Pages.
 - Preserve mobile and desktop usability.
 - Search must work across name, summary, categories, tags, and use cases.
 - Never require AI or a backend just to browse the resource catalog.
 - Resource Detail may read supplemental registries such as icons and official links, but `data/resources.json` remains the identity and canonical-primary-URL authority.
+- Keep resource-detail deep links keyed by stable catalog IDs; do not derive identity from display names.
+- Frontend interaction changes affecting resource cards, favorites, external links, detail dialogs, keyboard behavior, or browser history should pass `npm run test:browser` and the `Frontend Interaction Regression` workflow before merge.
 
 ## Future recommendation layer
 

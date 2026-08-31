@@ -15,6 +15,7 @@ if (dialog) {
     tagsSection: dialog.querySelector('[data-detail-section="tags"]'),
     tags: dialog.querySelector('.resource-detail-tags'),
     visit: dialog.querySelector('.resource-detail-visit'),
+    share: dialog.querySelector('.resource-detail-share'),
     closeButtons: dialog.querySelectorAll('[data-detail-close]')
   };
 
@@ -53,14 +54,13 @@ if (dialog) {
     unknown: '狀態未知'
   };
 
-  const interactiveSelector = 'a, button, input, select, textarea, label, [contenteditable="true"]';
-
   let resources = [];
   let categories = [];
   let icons = {};
   let resourceById = new Map();
   let resourceIdByUrl = new Map();
   let lastTrigger = null;
+  let shareResetTimer = 0;
 
   async function loadJson(path) {
     const response = await fetch(path, { cache: 'no-store' });
@@ -76,6 +76,26 @@ if (dialog) {
     } catch {
       return String(value || '').replace(/\/$/, '');
     }
+  }
+
+  function currentHistoryState() {
+    return history.state && typeof history.state === 'object' ? history.state : {};
+  }
+
+  function detailUrl(resourceId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('resource', resourceId);
+    return url;
+  }
+
+  function baseUrl() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('resource');
+    return url;
+  }
+
+  function resourceIdFromLocation() {
+    return new URL(window.location.href).searchParams.get('resource');
   }
 
   function categoryInfo(name) {
@@ -174,9 +194,18 @@ if (dialog) {
     return '前往資源 ↗';
   }
 
+  function resetShareButton() {
+    if (!detailEls.share) return;
+    window.clearTimeout(shareResetTimer);
+    shareResetTimer = 0;
+    detailEls.share.textContent = '複製連結';
+    detailEls.share.classList.remove('is-copied');
+  }
+
   function renderResource(resource) {
     dialog.dataset.resourceId = resource.id;
     renderIcon(resource);
+    resetShareButton();
 
     const type = typeLabels[resource.type] ?? '其他';
     const primaryCategory = categoryDisplayName(resource.categories?.[0]);
@@ -204,8 +233,20 @@ if (dialog) {
     detailEls.visit.setAttribute('aria-label', `${visitLabel(resource).replace(' ↗', '')}：${resource.name}`);
   }
 
-  function showDialog(resource, trigger = null) {
-    lastTrigger = trigger || document.activeElement;
+  function setExpandedTrigger(trigger, expanded) {
+    if (!(trigger instanceof HTMLElement)) return;
+    trigger.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  }
+
+  function showDialog(resource, trigger = null, focusClose = true) {
+    if (trigger instanceof HTMLElement) {
+      if (lastTrigger && lastTrigger !== trigger) setExpandedTrigger(lastTrigger, false);
+      lastTrigger = trigger;
+      setExpandedTrigger(lastTrigger, true);
+    } else if (!dialog.open && !lastTrigger && document.activeElement instanceof HTMLElement) {
+      lastTrigger = document.activeElement;
+    }
+
     renderResource(resource);
     document.body.classList.add('resource-detail-open');
 
@@ -215,12 +256,40 @@ if (dialog) {
       dialog.setAttribute('open', '');
     }
 
-    requestAnimationFrame(() => dialog.querySelector('.resource-detail-close')?.focus());
+    if (focusClose) requestAnimationFrame(() => dialog.querySelector('.resource-detail-close')?.focus());
   }
 
-  function closeDialog() {
+  function closeDialogInternal() {
     if (typeof dialog.close === 'function' && dialog.open) dialog.close();
-    else dialog.removeAttribute('open');
+    else if (dialog.hasAttribute('open')) {
+      dialog.removeAttribute('open');
+      dialog.dispatchEvent(new Event('close'));
+    }
+  }
+
+  function pushResourceHistory(resource) {
+    if (resourceIdFromLocation() === resource.id && currentHistoryState().qookeyResource === resource.id) return;
+    history.pushState({ ...currentHistoryState(), qookeyResource: resource.id }, '', detailUrl(resource.id));
+  }
+
+  function openResource(resource, trigger = null) {
+    pushResourceHistory(resource);
+    showDialog(resource, trigger);
+  }
+
+  function requestCloseDialog() {
+    const resourceId = resourceIdFromLocation();
+    if (resourceId && currentHistoryState().qookeyResource === resourceId) {
+      history.back();
+      return;
+    }
+
+    if (resourceId) {
+      const nextState = { ...currentHistoryState() };
+      delete nextState.qookeyResource;
+      history.replaceState(nextState, '', baseUrl());
+    }
+    closeDialogInternal();
   }
 
   function findResourceForCard(card) {
@@ -235,14 +304,56 @@ if (dialog) {
   function decorateCard(card) {
     if (!(card instanceof HTMLElement)) return;
     card.dataset.detailTrigger = 'true';
-    card.tabIndex = 0;
+    card.removeAttribute('tabindex');
+    card.removeAttribute('aria-label');
+
+    let hitTarget = card.querySelector('.card-detail-hit');
+    if (!hitTarget) {
+      hitTarget = document.createElement('button');
+      hitTarget.type = 'button';
+      hitTarget.className = 'card-detail-hit';
+      card.prepend(hitTarget);
+    }
+
     const name = card.querySelector('.name')?.textContent?.trim() || '這個資源';
-    card.setAttribute('aria-label', `查看 ${name} 的詳細資訊`);
+    hitTarget.setAttribute('aria-label', `查看 ${name} 的詳細資訊`);
+    hitTarget.setAttribute('aria-haspopup', 'dialog');
+    hitTarget.setAttribute('aria-controls', 'resource-detail-dialog');
+    hitTarget.setAttribute('aria-expanded', 'false');
   }
 
   function decorateCards(root = document) {
     if (root instanceof Element && root.matches('.card')) decorateCard(root);
     for (const card of root.querySelectorAll?.('.card') || []) decorateCard(card);
+  }
+
+  async function copyShareLink() {
+    const resourceId = dialog.dataset.resourceId;
+    if (!resourceId || !detailEls.share) return;
+    const url = detailUrl(resourceId).href;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.append(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+      detailEls.share.textContent = '已複製 ✓';
+      detailEls.share.classList.add('is-copied');
+      shareResetTimer = window.setTimeout(resetShareButton, 1800);
+    } catch (error) {
+      console.warn('Unable to copy resource detail link', error);
+      detailEls.share.textContent = '請複製網址列';
+      shareResetTimer = window.setTimeout(resetShareButton, 2200);
+    }
   }
 
   const ready = Promise.all([
@@ -273,43 +384,71 @@ if (dialog) {
   }
 
   document.addEventListener('click', async (event) => {
-    const card = event.target.closest?.('.card[data-detail-trigger="true"]');
-    if (!card) return;
-    if (event.target.closest?.(interactiveSelector)) return;
+    const hitTarget = event.target.closest?.('.card-detail-hit');
+    if (!hitTarget) return;
 
     event.preventDefault();
     await ready;
+    const card = hitTarget.closest('.card');
     const resource = findResourceForCard(card);
     if (!resource) return;
-    showDialog(resource, card);
-  });
-
-  document.addEventListener('keydown', async (event) => {
-    if (!['Enter', ' '].includes(event.key)) return;
-    const card = event.target.closest?.('.card[data-detail-trigger="true"]');
-    if (!card || event.target !== card) return;
-
-    event.preventDefault();
-    await ready;
-    const resource = findResourceForCard(card);
-    if (!resource) return;
-    showDialog(resource, card);
+    openResource(resource, hitTarget);
   });
 
   for (const button of detailEls.closeButtons) {
-    button.addEventListener('click', closeDialog);
+    button.addEventListener('click', requestCloseDialog);
   }
+
+  detailEls.share?.addEventListener('click', copyShareLink);
+
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    requestCloseDialog();
+  });
 
   dialog.addEventListener('click', (event) => {
     if (event.target !== dialog) return;
     const rect = dialog.getBoundingClientRect();
     const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
-    if (!inside) closeDialog();
+    if (!inside) requestCloseDialog();
   });
 
   dialog.addEventListener('close', () => {
     document.body.classList.remove('resource-detail-open');
+    resetShareButton();
+    setExpandedTrigger(lastTrigger, false);
     if (lastTrigger instanceof HTMLElement && document.contains(lastTrigger)) lastTrigger.focus();
     lastTrigger = null;
+  });
+
+  window.addEventListener('popstate', async () => {
+    await ready;
+    const resourceId = resourceIdFromLocation();
+    const resource = resourceId ? resourceById.get(resourceId) : null;
+    if (resource) showDialog(resource, null);
+    else closeDialogInternal();
+  });
+
+  ready.then(() => {
+    const resourceId = resourceIdFromLocation();
+    if (!resourceId) return;
+
+    const resource = resourceById.get(resourceId);
+    if (!resource) {
+      const nextState = { ...currentHistoryState() };
+      delete nextState.qookeyResource;
+      history.replaceState(nextState, '', baseUrl());
+      return;
+    }
+
+    if (currentHistoryState().qookeyResource !== resourceId) {
+      const originalUrl = new URL(window.location.href);
+      const previousState = { ...currentHistoryState() };
+      delete previousState.qookeyResource;
+      history.replaceState({ ...previousState, qookeyResourceBase: true }, '', baseUrl());
+      history.pushState({ qookeyResource: resourceId }, '', originalUrl);
+    }
+
+    showDialog(resource, null);
   });
 }
