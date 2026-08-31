@@ -123,6 +123,56 @@
         "url": "https://github.com/Raymondhou0917/speak-human-tw/blob/master/evals/benchmark.md",
         "description": "官方 42 條合成評測案例，包含該修正與不該誤改的對照情境。"
       }
+    ],
+    "ui-skills": [
+      {
+        "label": "UI Skills 官方網站",
+        "kind": "website",
+        "url": "https://www.ui-skills.com/",
+        "description": "官方資源首頁，可瀏覽設計工程 Skills、CLI 與 MCP 使用入口。"
+      },
+      {
+        "label": "UI Skills GitHub Repository",
+        "kind": "github",
+        "url": "https://github.com/ibelick/ui-skills",
+        "description": "官方開源 Repository，可查看 Skill registry、CLI、版本與 MIT 授權原始碼。"
+      }
+    ],
+    "cloudflare-dashboard": [
+      {
+        "label": "Cloudflare Developers",
+        "kind": "documentation",
+        "url": "https://developers.cloudflare.com/",
+        "description": "Cloudflare 官方開發者文件總入口，涵蓋 Workers、Pages、R2、D1 與其他平台服務。"
+      },
+      {
+        "label": "Cloudflare Workers Getting Started",
+        "kind": "documentation",
+        "url": "https://developers.cloudflare.com/workers/get-started/",
+        "description": "官方 Workers 入門文件，可從 Dashboard、CLI 或範本開始建立與部署 Worker。"
+      }
+    ],
+    "supabase-dashboard": [
+      {
+        "label": "Supabase 官方文件",
+        "kind": "documentation",
+        "url": "https://supabase.com/docs",
+        "description": "Supabase 官方文件總入口，涵蓋 Postgres、Auth、Storage、Realtime、Edge Functions 與開發 SDK。"
+      }
+    ],
+    "mistral-studio": [
+      {
+        "label": "Mistral AI Documentation",
+        "kind": "documentation",
+        "url": "https://docs.mistral.ai/",
+        "description": "Mistral 官方文件入口，涵蓋 Studio、API、模型、Agents、OCR、Audio、RAG 與 SDK。"
+      },
+      {
+        "label": "Mistral Studio 文件",
+        "kind": "documentation",
+        "url": "https://docs.mistral.ai/studio",
+        "description": "官方 Studio 文件，說明 Playground、API Keys、Agents、使用量與開發者工作流。"
+      }
     ]
   }
 }
