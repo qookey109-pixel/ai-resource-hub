@@ -1,0 +1,99 @@
+/* Official and secondary links inside Resource Detail V1.1. */
+.resource-detail-links {
+  display: grid;
+  gap: 8px;
+}
+
+.resource-detail-link-card {
+  display: grid;
+  gap: 5px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+  color: #555550;
+  text-decoration: none;
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+
+.resource-detail-link-card:hover,
+.resource-detail-link-card:focus-visible {
+  transform: translateY(-1px);
+  border-color: #ffb594;
+  background: #fffaf7;
+  outline: none;
+}
+
+.resource-detail-link-card.is-primary {
+  border-color: #ffd2bd;
+  background: #fffaf7;
+}
+
+.resource-detail-link-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.resource-detail-link-top strong {
+  min-width: 0;
+  color: #343431;
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+.resource-detail-link-kind {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #f4f4f1;
+  color: #8b8b85;
+  padding: 3px 6px;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.resource-detail-link-card.is-primary .resource-detail-link-kind {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.resource-detail-link-description {
+  color: #777771;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.resource-detail-link-host {
+  overflow: hidden;
+  color: #a0a09a;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .resource-detail-links {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-detail-link-card {
+    padding: 12px;
+  }
+
+  .resource-detail-link-top strong {
+    font-size: 12px;
+  }
+
+  .resource-detail-link-description {
+    font-size: 10.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resource-detail-link-card {
+    transition: none;
+  }
+}
