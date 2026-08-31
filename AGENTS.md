@@ -30,11 +30,13 @@ For every new URL:
 - Keep the production V0.x browsing and detail runtime dependency-free unless there is a clear benefit to adding a runtime dependency.
 - Test-only development dependencies are allowed when they protect critical browser behavior and do not ship to GitHub Pages.
 - Preserve mobile and desktop usability.
-- Search must work across name, summary, categories, tags, and use cases.
+- Search must work across name, summary, categories, tags, use cases, and verified secondary-link metadata from `data/resource-links.json`.
+- Secondary-link search may improve discovery of an existing resource, but it must never create a second resource identity or override the canonical primary URL from `data/resources.json`.
+- Supplemental-link loading failure must not prevent the core catalog from loading or searching its canonical resource fields.
 - Never require AI or a backend just to browse the resource catalog.
 - Resource Detail may read supplemental registries such as icons and official links, but `data/resources.json` remains the identity and canonical-primary-URL authority.
 - Keep resource-detail deep links keyed by stable catalog IDs; do not derive identity from display names.
-- Frontend interaction changes affecting resource cards, favorites, external links, detail dialogs, keyboard behavior, or browser history should pass `npm run test:browser` and the `Frontend Interaction Regression` workflow before merge.
+- Frontend interaction or discovery changes affecting resource cards, favorites, external links, detail dialogs, keyboard behavior, browser history, or search indexing should pass `npm run test:browser` and the `Frontend Interaction Regression` workflow before merge.
 
 ## Future recommendation layer
 
