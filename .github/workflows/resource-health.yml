@@ -9,15 +9,19 @@ on:
       - main
     paths:
       - "data/resources.json"
+      - "data/resource-links.json"
       - "data/resource-health-expectations.json"
       - "scripts/resource_health.py"
+      - "scripts/resource_links_validate.py"
       - "scripts/resource_health_triage.py"
       - ".github/workflows/resource-health.yml"
   pull_request:
     paths:
       - "data/resources.json"
+      - "data/resource-links.json"
       - "data/resource-health-expectations.json"
       - "scripts/resource_health.py"
+      - "scripts/resource_links_validate.py"
       - "scripts/resource_health_triage.py"
       - ".github/workflows/resource-health.yml"
 
@@ -43,6 +47,9 @@ jobs:
 
       - name: Validate catalog structure
         run: python scripts/resource_health.py --validate-only
+
+      - name: Validate secondary resource links
+        run: python scripts/resource_links_validate.py
 
       - name: Validate reviewed health expectations
         run: python scripts/resource_health_triage.py --validate-only
