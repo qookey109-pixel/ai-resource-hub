@@ -70,6 +70,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The post-ABYSSAL full Resource Health V0.2 `main` run (`33315462209`) completed successfully, and its GitHub Pages deployment (`33315462214`) also completed successfully.
 - The Resource Detail V1 GitHub Pages deployment (`33361678368`) completed successfully on 2026-08-31.
 - The Resource Detail V1.2 GitHub Pages deployment (`33363526510`) completed successfully on 2026-08-31.
+- The Resource Detail V1.3 GitHub Pages deployment (`33365202446`) completed successfully on 2026-08-31.
+- The Resource Detail V1.3 main-branch Frontend Interaction Regression (`33365202433`) completed successfully on 2026-08-31, covering card detail opening, Escape/history closing, favorite/external-link isolation, direct Archify deep links and clipboard sharing.
 
 ## V0.5 AI recommendation
 
@@ -147,8 +149,8 @@ First V0.2 full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is Resource Detail V1.2 run `33363526510`, completed successfully on 2026-08-31. V1.3 production deployment should be confirmed after its merge to `main`.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml` and is test-only; it does not add a production frontend dependency.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is Resource Detail V1.3 run `33365202446`, completed successfully on 2026-08-31.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main run is `33365202433`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -193,4 +195,4 @@ First V0.2 full-run evidence:
 
 ## Next step
 
-Finish Resource Detail V1.3 validation and production deployment confirmation. Then move to V1.4 discovery improvements: expand verified official-link coverage, include `data/resource-links.json` labels/descriptions in search, improve icon reliability, and continue production AI recommender monitoring while ingesting verified user-supplied resources in parallel.
+Proceed with V1.4 discovery improvements: expand verified official-link coverage, include `data/resource-links.json` labels/descriptions in search, improve icon reliability, and continue production AI recommender monitoring while ingesting verified user-supplied resources in parallel.
