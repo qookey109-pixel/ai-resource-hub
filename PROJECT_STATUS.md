@@ -7,7 +7,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.1**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -16,6 +16,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
 - Per-resource Detail V1 is implemented as a dependency-free responsive dialog opened from each resource card. It exposes the full summary, all use cases, pricing/open-source/license/difficulty/status/rating/date facts, all categories, tags, notes and the canonical external resource link without requiring AI or a backend.
+- Resource Detail V1.1 adds an official/secondary-link section backed by `data/resource-links.json`. The canonical primary URL still comes from `data/resources.json`; the supplemental registry only adds verified project pages, documentation, demos, galleries, APIs or download links for an existing resource, so aliases do not become duplicate catalog cards.
+- The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **42 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
@@ -52,11 +54,11 @@ Status date: 2026-08-31 (Asia/Taipei)
 - MetalForge uses its own domain favicon; vgpu uses the vgpu.sh documentation-domain favicon rather than a shared category icon.
 - OpenExecutive currently uses the SenteLabsAI 256px GitHub organization avatar because no dedicated project logo/icon was found in the repository tree.
 - OpenStreetMap uses its official domain favicon source; the provided Taipei-specific map viewport is intentionally normalized to the canonical public homepage in the catalog.
-- ABYSSAL currently uses the Token-Gremlin 256px GitHub owner avatar as a resource-specific fallback; the official live demo is recorded in the resource notes instead of creating a duplicate catalog card.
+- ABYSSAL currently uses the Token-Gremlin 256px GitHub owner avatar as a resource-specific fallback; its official live demo is stored as a secondary link in `data/resource-links.json` instead of creating a duplicate catalog card.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the latest confirmed ABYSSAL merge deployment completed successfully on 2026-08-30.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Detail V1 deployment completed successfully on 2026-08-31.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
@@ -64,6 +66,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The post-OpenExecutive full Resource Health V0.2 `main` run (`33313186974`) also completed successfully, including structural validation, URL/GitHub observation, reviewed triage and artifact upload.
 - The post-OpenStreetMap full Resource Health V0.2 `main` run (`33313859565`) completed successfully, and its GitHub Pages deployment (`33313859569`) also completed successfully.
 - The post-ABYSSAL full Resource Health V0.2 `main` run (`33315462209`) completed successfully, and its GitHub Pages deployment (`33315462214`) also completed successfully.
+- The Resource Detail V1 GitHub Pages deployment (`33361678368`) completed successfully on 2026-08-31.
 
 ## V0.5 AI recommendation
 
@@ -127,6 +130,7 @@ First V0.2 full-run evidence:
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
+- Secondary official-link registry: `data/resource-links.json`
 - Resource-health review policy: `data/resource-health-expectations.json`
 - AI runtime config: `data/ai-config.json`
 - Multi-category classification is enabled.
@@ -140,7 +144,7 @@ First V0.2 full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed ABYSSAL deployment (`33315462214`) completed successfully on 2026-08-30.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed Resource Detail V1 deployment (`33361678368`) completed successfully on 2026-08-31.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -154,7 +158,8 @@ First V0.2 full-run evidence:
 - Automated metadata refresh PR generation; Resource Health V0.2 classifies observations but still does not modify verified catalog data.
 - GitHub Stars / activity synchronization into verified catalog metadata; Resource Health observes current values in artifacts only.
 - Backend database migration.
-- Dedicated standalone per-resource routes/pages beyond the current Resource Detail V1 modal view.
+- Dedicated standalone per-resource routes/pages beyond the current Resource Detail V1.1 modal view.
+- Wider verified official-link coverage across the catalog beyond the initially seeded resources.
 - Local cached copies of every third-party resource icon.
 - Final typography and exact accent palette.
 
@@ -164,21 +169,22 @@ First V0.2 full-run evidence:
 2. Do not overwrite verified resource metadata without checking the source again.
 3. A resource may belong to multiple categories.
 4. Unknown values must remain `unknown` / `null`; do not guess.
-5. `data/resources.json` is the V0.x resource authority.
-6. Repository `main` is the project authority unless a later versioned governance rule changes this.
-7. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
-8. Never publish credentials, secrets, API keys, tokens, private account IDs, temporary auth-flow URLs, or private dashboard links.
-9. Prefer canonical public URLs for resources stored in the public catalog.
-10. Preserve the V0.4 marketplace structure while iterating on visual details unless a later explicit design decision changes it.
-11. User-facing `summary`, `use_cases` and `notes` must be Traditional Chinese by default.
-12. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
-13. Resource cards should prefer resource-specific official icons; category icons are fallback only.
-14. A public repository without an explicit license must not be described as freely reusable or commercially usable; preserve license as unknown until verified.
-15. AI recommendation output may only refer to resources present in the current catalog; validate IDs server-side and client-side.
-16. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
-17. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
-18. Resource Health output is evidence for review, not automatic authority. External availability or GitHub metadata alone must not silently overwrite verified catalog records.
+5. `data/resources.json` is the V0.x resource identity and canonical-primary-URL authority.
+6. `data/resource-links.json` may only add verified secondary public links for an existing resource; it must not create aliases as new resources or override the canonical primary URL.
+7. Repository `main` is the project authority unless a later versioned governance rule changes this.
+8. Add a new category when a real resource does not fit existing categories; do not force misleading classification.
+9. Never publish credentials, secrets, API keys, tokens, private account IDs, temporary auth-flow URLs, or private dashboard links.
+10. Prefer canonical public URLs for resources stored in the public catalog and stable official URLs for secondary links.
+11. Preserve the V0.4 marketplace structure while iterating on visual details unless a later explicit design decision changes it.
+12. User-facing `summary`, `use_cases`, `notes` and secondary-link descriptions must be Traditional Chinese by default.
+13. External visual references may guide layout or design principles, but do not copy proprietary code, branding, characters or assets.
+14. Resource cards should prefer resource-specific official icons; category icons are fallback only.
+15. A public repository without an explicit license must not be described as freely reusable or commercially usable; preserve license as unknown until verified.
+16. AI recommendation output may only refer to resources present in the current catalog; validate IDs server-side and client-side.
+17. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
+18. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
+19. Resource Health output is evidence for review, not automatic authority. External availability or GitHub metadata alone must not silently overwrite verified catalog records.
 
 ## Next step
 
-After Resource Detail V1 lands on `main`, confirm the GitHub Pages deployment and do a browser-level interaction check for desktop/mobile dialog layout, focus/close behavior and external resource links. Then continue with production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.
+After Resource Detail V1.1 lands on `main`, confirm the GitHub Pages deployment and do a browser-level interaction check for the official-links section on desktop/mobile, including Archify's Project Page / Scenario Guide / Proof Lab and ABYSSAL's Live Demo. Then continue with production AI recommender health monitoring, wider verified link coverage and later metadata-refresh PR generation while continuing to ingest verified user-supplied resources in parallel.
