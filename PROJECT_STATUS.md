@@ -7,7 +7,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.1**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -17,6 +17,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Marketplace UX baseline established and preserved.
 - Per-resource Detail V1 is implemented as a dependency-free responsive dialog opened from each resource card. It exposes the full summary, all use cases, pricing/open-source/license/difficulty/status/rating/date facts, all categories, tags, notes and the canonical external resource link without requiring AI or a backend.
 - Resource Detail V1.1 adds an official/secondary-link section backed by `data/resource-links.json`. The canonical primary URL still comes from `data/resources.json`; the supplemental registry only adds verified project pages, documentation, demos, galleries, APIs or download links for an existing resource, so aliases do not become duplicate catalog cards.
+- Resource Detail V1.2 removes the redundant `詳細資訊` button, makes the resource card itself the detail interaction surface, and enlarges the dedicated external `開啟 ↗` target while keeping favorite/external-link actions independent.
+- Resource Detail V1.3 adds a native full-card detail hit target with dialog accessibility metadata, shareable `?resource=<id>` detail URLs, browser Back/Forward synchronization, a `複製連結` action, and automated Playwright browser regressions. Playwright is test-only; the production browsing runtime remains dependency-free.
 - The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **42 verified resources**.
@@ -39,7 +41,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - OpenExecutive added as an active Apache-2.0 virtual executive multi-agent system: one coherent Executive persona backed by eight specialist agents, company-document RAG, episodic memory, scheduling, web/API/CLI access and Slack/Email/Telegram/Google Chat/Discord integrations. The default Claude API path can be replaced or supplemented with OpenRouter or OpenAI-compatible local models.
 - OpenStreetMap added as an active community-driven open geospatial data platform. Catalog metadata records ODbL-1.0 for map data, attribution/share-alike requirements, and the separate usage-policy boundary for official API, tile and Nominatim services.
 - ABYSSAL — Natural Disasters added as an active MIT-licensed Three.js / WebGL2 cinematic ocean and extreme-weather simulation with multi-cascade FFT waves, volumetric clouds, hurricanes, tsunamis, waterspouts, GPU-generated runtime assets, adaptive quality and an official GitHub Pages live demo. Catalog notes explicitly distinguish it from scientific weather/disaster prediction and separate the optional community token disclosure from the software itself.
-- Added a new `3D / WebGL / Graphics` category with Traditional Chinese display name `3D / WebGL / 圖形` instead of forcing 3D resources into unrelated categories.
+- Canonical 3D category authority remains `3D / WebGL` with category id `three-d-webgl`; the previously documented `3D / WebGL / Graphics` wording was stale status prose and is not a canonical category.
 - Added a new `Maps / GIS` category with Traditional Chinese display name `地圖 / GIS` for mapping, geospatial data and GIS resources.
 - All current user-facing resource descriptions, use cases and notes are Traditional Chinese.
 - Frontend type / pricing / source-state labels are localized to Traditional Chinese.
@@ -58,7 +60,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Detail V1 deployment completed successfully on 2026-08-31.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Detail V1.2 deployment (`33363526510`) completed successfully on 2026-08-31.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
@@ -67,6 +69,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The post-OpenStreetMap full Resource Health V0.2 `main` run (`33313859565`) completed successfully, and its GitHub Pages deployment (`33313859569`) also completed successfully.
 - The post-ABYSSAL full Resource Health V0.2 `main` run (`33315462209`) completed successfully, and its GitHub Pages deployment (`33315462214`) also completed successfully.
 - The Resource Detail V1 GitHub Pages deployment (`33361678368`) completed successfully on 2026-08-31.
+- The Resource Detail V1.2 GitHub Pages deployment (`33363526510`) completed successfully on 2026-08-31.
 
 ## V0.5 AI recommendation
 
@@ -144,7 +147,8 @@ First V0.2 full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed Resource Detail V1 deployment (`33361678368`) completed successfully on 2026-08-31.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is Resource Detail V1.2 run `33363526510`, completed successfully on 2026-08-31. V1.3 production deployment should be confirmed after its merge to `main`.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml` and is test-only; it does not add a production frontend dependency.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -158,8 +162,9 @@ First V0.2 full-run evidence:
 - Automated metadata refresh PR generation; Resource Health V0.2 classifies observations but still does not modify verified catalog data.
 - GitHub Stars / activity synchronization into verified catalog metadata; Resource Health observes current values in artifacts only.
 - Backend database migration.
-- Dedicated standalone per-resource routes/pages beyond the current Resource Detail V1.1 modal view.
+- Dedicated path-based standalone per-resource routes/pages beyond the current query-parameter detail deep links.
 - Wider verified official-link coverage across the catalog beyond the initially seeded resources.
+- Search indexing for `data/resource-links.json` labels/descriptions such as Scenario Guide, Proof Lab and Live Demo.
 - Local cached copies of every third-party resource icon.
 - Final typography and exact accent palette.
 
@@ -184,7 +189,8 @@ First V0.2 full-run evidence:
 17. AI backend deployment secrets must stay in Cloudflare or GitHub Secrets, never in public frontend files.
 18. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
 19. Resource Health output is evidence for review, not automatic authority. External availability or GitHub metadata alone must not silently overwrite verified catalog records.
+20. Resource detail share URLs must use stable catalog resource IDs and must not create a second resource identity or override the canonical external URL.
 
 ## Next step
 
-After Resource Detail V1.1 lands on `main`, confirm the GitHub Pages deployment and do a browser-level interaction check for the official-links section on desktop/mobile, including Archify's Project Page / Scenario Guide / Proof Lab and ABYSSAL's Live Demo. Then continue with production AI recommender health monitoring, wider verified link coverage and later metadata-refresh PR generation while continuing to ingest verified user-supplied resources in parallel.
+Finish Resource Detail V1.3 validation and production deployment confirmation. Then move to V1.4 discovery improvements: expand verified official-link coverage, include `data/resource-links.json` labels/descriptions in search, improve icon reliability, and continue production AI recommender monitoring while ingesting verified user-supplied resources in parallel.
