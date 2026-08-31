@@ -12,12 +12,13 @@ The repository includes a GitHub Actions Pages workflow at `.github/workflows/pa
 
 ## Current version
 
-**V0.5 — live AI recommendation + Resource Health V0.2 + Resource Detail V1.3**
+**V0.5 — live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4**
 
 Current capabilities:
 
 - Static GitHub Pages-ready marketplace website
-- Search across names, descriptions, tags, use cases, notes, pricing, and categories
+- Search across names, descriptions, tags, use cases, notes, pricing, categories, and verified official/secondary-link labels and descriptions
+- Verified link-aware discovery, so terms such as `Proof Lab` or `Scenario Guide` can resolve the parent catalog resource without creating duplicate cards
 - Category and resource-type filters
 - Free/open-source filters
 - Recommendation, newest, and name sorting
@@ -45,7 +46,7 @@ Current capabilities:
 
 `data/resource-icons.json` is the resource-specific icon registry.
 
-`data/resource-links.json` is a supplemental registry for verified secondary public links. It does not create new resources or override the canonical primary URL.
+`data/resource-links.json` is a supplemental registry for verified secondary public links. It does not create new resources or override the canonical primary URL. Discovery V1.4 may index its verified labels, descriptions, kinds and stable public URL components for search, but it does not promote those links into separate resources.
 
 Repository `main` is the project authority unless a later versioned governance rule changes this.
 
@@ -92,7 +93,8 @@ Before adding a resource:
 │   ├── resource-links.json
 │   └── resources.json
 ├── tests/
-│   └── resource-detail.spec.js
+│   ├── resource-detail.spec.js
+│   └── search-discovery.spec.js
 └── docs/
     ├── RESOURCE_LINKS.md
     └── RESOURCE_SCHEMA.md
@@ -100,7 +102,7 @@ Before adding a resource:
 
 ## Browser regression tests
 
-The production website remains dependency-free. The repository uses Playwright only as a development/CI dependency for critical interaction regressions:
+The production website remains dependency-free. The repository uses Playwright only as a development/CI dependency for critical interaction and discovery regressions:
 
 ```bash
 npm install
@@ -108,12 +110,11 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-The tests cover card-to-detail interaction, favorite/external-link separation, deep-link opening, Back-button closing and resource-link copying.
+The tests cover card-to-detail interaction, favorite/external-link separation, deep-link opening, Back-button closing, resource-link copying, and verified secondary-link search discovery.
 
 ## Roadmap
 
 - Expand verified official-link coverage across more catalog resources
-- Include `data/resource-links.json` labels/descriptions in search discovery
 - Improve local icon reliability for verified third-party icons
 - Automated recurring production Worker health / semantic regression monitoring
 - Semantic / vector search for larger catalogs
