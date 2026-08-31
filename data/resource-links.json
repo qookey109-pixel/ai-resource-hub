@@ -173,6 +173,68 @@
         "url": "https://docs.mistral.ai/studio",
         "description": "官方 Studio 文件，說明 Playground、API Keys、Agents、使用量與開發者工作流。"
       }
+    ],
+    "world-monitor": [
+      {
+        "label": "World Monitor 官方網站",
+        "kind": "website",
+        "url": "https://www.worldmonitor.app",
+        "description": "官方 Web App，可直接使用全球情報、OSINT、地緣政治、災害、基礎設施與市場監控介面。"
+      },
+      {
+        "label": "World Monitor Documentation",
+        "kind": "documentation",
+        "url": "https://www.worldmonitor.app/docs/documentation",
+        "description": "官方完整文件入口，涵蓋功能、架構、資料來源、演算法、自架與各站點變體。"
+      },
+      {
+        "label": "World Monitor OpenAPI",
+        "kind": "api",
+        "url": "https://worldmonitor.app/openapi.yaml",
+        "description": "官方 REST API 的 OpenAPI 規格，可用來檢視可程式化存取的端點與契約。"
+      }
+    ],
+    "pi-agent-harness": [
+      {
+        "label": "Pi 官方網站",
+        "kind": "website",
+        "url": "https://pi.dev",
+        "description": "Pi Agent Harness 官方專案網站，提供專案介紹與互動 Demo。"
+      },
+      {
+        "label": "Pi Documentation",
+        "kind": "documentation",
+        "url": "https://pi.dev/docs/latest",
+        "description": "官方最新版文件，涵蓋 Coding Agent、Agent Runtime、統一 LLM API、TUI 與相關套件。"
+      }
+    ],
+    "voice-studio": [
+      {
+        "label": "VoiceStudio 官方網站",
+        "kind": "website",
+        "url": "https://voicestudio.sh",
+        "description": "VoiceStudio 官方網站與產品入口，介紹本機語音複製、配音、轉錄與長篇音訊工作流。"
+      },
+      {
+        "label": "VoiceStudio 最新版本下載",
+        "kind": "download",
+        "url": "https://github.com/debpalash/VoiceStudio/releases/latest",
+        "description": "官方 GitHub 最新 Release，可下載 macOS、Windows 與 Linux 的穩定版安裝套件。"
+      }
+    ],
+    "dsh-desktop": [
+      {
+        "label": "DSH Desktop 官方網站",
+        "kind": "website",
+        "url": "https://dshdesktopstation.com/",
+        "description": "DSH Desktop 專案官網，提供產品說明、下載入口與常見問題。"
+      },
+      {
+        "label": "DSH Desktop 最新版本下載",
+        "kind": "download",
+        "url": "https://github.com/vibeinging/dsh-desktop/releases/latest",
+        "description": "官方 GitHub 最新 Release，可取得目前公開的桌面安裝套件與版本資訊。"
+      }
     ]
   }
 }
