@@ -1,13 +1,13 @@
 # Project Status
 
-Status date: 2026-08-30 (Asia/Taipei)
+Status date: 2026-08-31 (Asia/Taipei)
 
 ## Project
 
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -15,6 +15,8 @@ Status date: 2026-08-30 (Asia/Taipei)
 - Repository foundation and governance files established.
 - Canonical V0.1 resource schema and category catalog established.
 - Marketplace UX baseline established and preserved.
+- Per-resource Detail V1 is implemented as a dependency-free responsive dialog opened from each resource card. It exposes the full summary, all use cases, pricing/open-source/license/difficulty/status/rating/date facts, all categories, tags, notes and the canonical external resource link without requiring AI or a backend.
+- Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **42 verified resources**.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
@@ -54,13 +56,14 @@ Status date: 2026-08-30 (Asia/Taipei)
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Health V0.2 merge deployment completed successfully on 2026-08-30.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the latest confirmed ABYSSAL merge deployment completed successfully on 2026-08-30.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
 - Resource Health V0.2 PR validation passed, and the first full V0.2 `main` run (`33312760577`) completed successfully on 2026-08-30: 39 total resources, 34 clean, 5 expected variances and **0 review-required** items. Raw counters remained 37 reachable, 2 restricted/rate-limited, 2 redirected, 0 broken 404/410 and 0 transient/network/other errors.
 - The post-OpenExecutive full Resource Health V0.2 `main` run (`33313186974`) also completed successfully, including structural validation, URL/GitHub observation, reviewed triage and artifact upload.
 - The post-OpenStreetMap full Resource Health V0.2 `main` run (`33313859565`) completed successfully, and its GitHub Pages deployment (`33313859569`) also completed successfully.
+- The post-ABYSSAL full Resource Health V0.2 `main` run (`33315462209`) completed successfully, and its GitHub Pages deployment (`33315462214`) also completed successfully.
 
 ## V0.5 AI recommendation
 
@@ -137,7 +140,7 @@ First V0.2 full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed OpenStreetMap deployment completed successfully on 2026-08-30.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed ABYSSAL deployment (`33315462214`) completed successfully on 2026-08-30.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -147,11 +150,11 @@ First V0.2 full-run evidence:
 
 - Automated recurring production Worker health / semantic regression monitoring.
 - Semantic / vector search for larger catalogs.
-- Favorites / personal collections.
+- Account/cloud-synced personal collections beyond the current browser-local favorites.
 - Automated metadata refresh PR generation; Resource Health V0.2 classifies observations but still does not modify verified catalog data.
 - GitHub Stars / activity synchronization into verified catalog metadata; Resource Health observes current values in artifacts only.
 - Backend database migration.
-- Per-resource detail pages.
+- Dedicated standalone per-resource routes/pages beyond the current Resource Detail V1 modal view.
 - Local cached copies of every third-party resource icon.
 - Final typography and exact accent palette.
 
@@ -178,4 +181,4 @@ First V0.2 full-run evidence:
 
 ## Next step
 
-After the ABYSSAL catalog change lands on `main`, inspect its automatic Resource Health V0.2 run and GitHub Pages deployment. Then continue with production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.
+After Resource Detail V1 lands on `main`, confirm the GitHub Pages deployment and do a browser-level interaction check for desktop/mobile dialog layout, focus/close behavior and external resource links. Then continue with production AI recommender health monitoring and later metadata-refresh PR generation, while continuing to ingest verified user-supplied resources in parallel.
