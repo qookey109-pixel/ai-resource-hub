@@ -29,6 +29,86 @@
         "url": "https://token-gremlin.github.io/natural-disasters/",
         "description": "直接在瀏覽器體驗 ABYSSAL 的 Cinematic 與 Sandbox 模式。"
       }
+    ],
+    "anime-js": [
+      {
+        "label": "Anime.js 官方網站",
+        "kind": "website",
+        "url": "https://animejs.com/",
+        "description": "Anime.js 官方網站，可查看功能概覽、範例與最新使用入口。"
+      },
+      {
+        "label": "Anime.js Documentation",
+        "kind": "documentation",
+        "url": "https://animejs.com/documentation/",
+        "description": "官方完整文件，涵蓋 Animation、Timeline、Draggable、Scroll、SVG、WAAPI 等 API。"
+      }
+    ],
+    "mechanical-deployables-threejs": [
+      {
+        "label": "互動式 Deployables Demo",
+        "kind": "demo",
+        "url": "https://www.survive10waves.com/demo/deployables/",
+        "description": "Repository 官方 homepage 指向的互動 Demo，可直接查看機械式展開、收納與模型效果。"
+      }
+    ],
+    "threeui-community": [
+      {
+        "label": "ThreeUI 官方瀏覽站",
+        "kind": "website",
+        "url": "https://threeui.com/",
+        "description": "ThreeUI 官方元件瀏覽入口，可查看 Community 元件、即時預覽與互動控制。"
+      }
+    ],
+    "oneworks-avatar": [
+      {
+        "label": "OneWorks Avatar 線上編輯器",
+        "kind": "demo",
+        "url": "https://oneworks.cloud/avatar/",
+        "description": "官方線上 Avatar 編輯器，可調整姿勢、材質、臉部、鏡頭與動畫並匯出 SVG、PNG 或 GIF。"
+      },
+      {
+        "label": "Avatar 完整使用指南",
+        "kind": "documentation",
+        "url": "https://oneworks.cloud/docs/en/usage/avatar",
+        "description": "官方 Avatar 文件，涵蓋匯出、開發整合、Runtime 邊界、本機開發與部署。"
+      }
+    ],
+    "vercel-labs-vgpu": [
+      {
+        "label": "vgpu 官方文件與範例",
+        "kind": "documentation",
+        "url": "https://vgpu.sh/",
+        "description": "Vercel Labs vgpu Repository 指定的官方文件與 Examples 入口。"
+      }
+    ],
+    "meshy-ai": [
+      {
+        "label": "Meshy 官方文件",
+        "kind": "documentation",
+        "url": "https://docs.meshy.ai/en",
+        "description": "Meshy 官方文件入口，涵蓋 Web App、3D 生成、動畫、外掛、3D Printing 與開發者整合。"
+      },
+      {
+        "label": "Meshy API Documentation",
+        "kind": "api",
+        "url": "https://docs.meshy.ai/en/api",
+        "description": "官方 REST API 文件與端點索引，包含 Text／Image to 3D、Rigging、Animation、Retexture、Webhooks 與 API Playground。"
+      }
+    ],
+    "elevenlabs": [
+      {
+        "label": "ElevenLabs 官方文件",
+        "kind": "documentation",
+        "url": "https://elevenlabs.io/docs/overview/intro",
+        "description": "ElevenLabs 官方文件入口，涵蓋 ElevenCreative、ElevenAgents、ElevenAPI 與語音／生成式音訊工作流。"
+      },
+      {
+        "label": "ElevenLabs API Reference",
+        "kind": "api",
+        "url": "https://elevenlabs.io/docs/api-reference/introduction",
+        "description": "官方 API Reference，提供 REST／WebSocket、官方 SDK、端點與整合範例。"
+      }
     ]
   }
 }
