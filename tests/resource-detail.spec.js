@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+const { test, expect } = require('@playwright/test');
 
 test('card hit target opens detail and Escape closes through history', async ({ page }) => {
   await page.goto('/');
