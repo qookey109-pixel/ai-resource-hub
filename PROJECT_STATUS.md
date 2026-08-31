@@ -7,7 +7,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -19,6 +19,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Resource Detail V1.1 adds an official/secondary-link section backed by `data/resource-links.json`. The canonical primary URL still comes from `data/resources.json`; the supplemental registry only adds verified project pages, documentation, demos, galleries, APIs or download links for an existing resource, so aliases do not become duplicate catalog cards.
 - Resource Detail V1.2 removes the redundant `詳細資訊` button, makes the resource card itself the detail interaction surface, and enlarges the dedicated external `開啟 ↗` target while keeping favorite/external-link actions independent.
 - Resource Detail V1.3 adds a native full-card detail hit target with dialog accessibility metadata, shareable `?resource=<id>` detail URLs, browser Back/Forward synchronization, a `複製連結` action, and automated Playwright browser regressions. Playwright is test-only; the production browsing runtime remains dependency-free.
+- Discovery V1.4 indexes verified `data/resource-links.json` labels, kinds, descriptions and stable public URL components as supplemental search signals. Official-link matches resolve the existing parent resource card rather than creating duplicate resources, and failure to load the supplemental link registry does not block canonical catalog browsing/search.
 - The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **42 verified resources**.
@@ -59,8 +60,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - ABYSSAL currently uses the Token-Gremlin 256px GitHub owner avatar as a resource-specific fallback; its official live demo is stored as a secondary link in `data/resource-links.json` instead of creating a duplicate catalog card.
 - If an external resource icon cannot load, the frontend automatically falls back to the existing category icon so cards never render as broken images.
 - Account-specific / temporary URLs continue to be sanitized before publication.
-- Search, compact sticky search, category filtering, type filtering, free/open-source filters and sorting remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Resource Detail V1.2 deployment (`33363526510`) completed successfully on 2026-08-31.
+- Search, compact sticky search, category filtering, type filtering, free/open-source filters, sorting and verified official-link discovery remain intact.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Discovery V1.4 deployment (`33365865782`) completed successfully on 2026-08-31.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
@@ -72,6 +73,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The Resource Detail V1.2 GitHub Pages deployment (`33363526510`) completed successfully on 2026-08-31.
 - The Resource Detail V1.3 GitHub Pages deployment (`33365202446`) completed successfully on 2026-08-31.
 - The Resource Detail V1.3 main-branch Frontend Interaction Regression (`33365202433`) completed successfully on 2026-08-31, covering card detail opening, Escape/history closing, favorite/external-link isolation, direct Archify deep links and clipboard sharing.
+- The Discovery V1.4 main-branch Frontend Interaction Regression (`33365865785`) completed successfully on 2026-08-31, including regressions that `Proof Lab` and `Scenario Guide` search back to the existing Archify resource card.
 
 ## V0.5 AI recommendation
 
@@ -141,6 +143,7 @@ First V0.2 full-run evidence:
 - Multi-category classification is enabled.
 - Unknown metadata remains `unknown` / `null` instead of being guessed.
 - Technical tags may remain English for searchability, while user-facing explanatory copy is Traditional Chinese.
+- Verified secondary-link labels, kinds, descriptions and stable public URL components may participate in search ranking, but they remain supplemental metadata attached to an existing resource ID.
 
 ## Pending ingestion
 
@@ -149,8 +152,8 @@ First V0.2 full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is Resource Detail V1.3 run `33365202446`, completed successfully on 2026-08-31.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main run is `33365202433`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is Discovery V1.4 run `33365865782`, completed successfully on 2026-08-31.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main run is Discovery V1.4 run `33365865785`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -166,7 +169,6 @@ First V0.2 full-run evidence:
 - Backend database migration.
 - Dedicated path-based standalone per-resource routes/pages beyond the current query-parameter detail deep links.
 - Wider verified official-link coverage across the catalog beyond the initially seeded resources.
-- Search indexing for `data/resource-links.json` labels/descriptions such as Scenario Guide, Proof Lab and Live Demo.
 - Local cached copies of every third-party resource icon.
 - Final typography and exact accent palette.
 
@@ -192,7 +194,8 @@ First V0.2 full-run evidence:
 18. Website reconstruction / cloning resources must be described for authorized migration, recovery, learning or other lawful use; do not present copying third-party branding, protected assets or deceptive impersonation as acceptable use.
 19. Resource Health output is evidence for review, not automatic authority. External availability or GitHub metadata alone must not silently overwrite verified catalog records.
 20. Resource detail share URLs must use stable catalog resource IDs and must not create a second resource identity or override the canonical external URL.
+21. Secondary-link search may improve discovery of an existing catalog resource, but supplemental-link loading failure must not prevent canonical catalog browsing or search.
 
 ## Next step
 
-Proceed with V1.4 discovery improvements: expand verified official-link coverage, include `data/resource-links.json` labels/descriptions in search, improve icon reliability, and continue production AI recommender monitoring while ingesting verified user-supplied resources in parallel.
+Continue Discovery V1.4 by expanding verified official-link coverage across the catalog and improving icon reliability. Keep production AI recommender monitoring and verified user-supplied resource ingestion running in parallel without changing canonical resource identity rules.
