@@ -291,6 +291,62 @@
         "url": "https://reverse.apivix.com/docs/",
         "description": "官方教學文件，說明 AI 初始化、授權邊界、首個 Case、完整工作流與常見問題。"
       }
+    ],
+    "money-printer-turbo": [
+      {
+        "label": "MoneyPrinterTurbo 最新版本下載",
+        "kind": "download",
+        "url": "https://github.com/harry0703/MoneyPrinterTurbo/releases/latest",
+        "description": "官方 GitHub 最新 Release，可查看版本資訊並取得目前提供的安裝或發布檔案。"
+      },
+      {
+        "label": "MoneyPrinterTurbo Agent Skill",
+        "kind": "documentation",
+        "url": "https://github.com/harry0703/MoneyPrinterTurbo/blob/main/docs/skill/SKILL.md",
+        "description": "官方 Repository 內的 Agent Skill 定義，說明如何讓支援 Skills 的 AI Agent 操作 MoneyPrinterTurbo 影片生成工作流。"
+      }
+    ],
+    "mattpocock-skills": [
+      {
+        "label": "skills.sh 安裝與索引頁",
+        "kind": "website",
+        "url": "https://www.skills.sh/mattpocock/skills",
+        "description": "上游 README 指定的 Skills 索引與安裝入口，可瀏覽並選擇 Skills For Real Engineers 的各項工程 Skill。"
+      },
+      {
+        "label": "setup-matt-pocock-skills Skill",
+        "kind": "documentation",
+        "url": "https://github.com/mattpocock/skills/blob/main/skills/engineering/setup-matt-pocock-skills/SKILL.md",
+        "description": "官方初始化 Skill，協助設定 Issue Tracker、Triage 標籤與專案 Domain 文件位置，供其他工程 Skills 共用。"
+      }
+    ],
+    "builderio-agent-native": [
+      {
+        "label": "Agent-Native 官方文件",
+        "kind": "documentation",
+        "url": "https://www.agent-native.com/docs",
+        "description": "官方完整文件入口，涵蓋 Actions、Agent Runtime、資料庫、MCP／A2A、模板、部署與應用程式架構。"
+      },
+      {
+        "label": "Agent-Native Apps Gallery",
+        "kind": "gallery",
+        "url": "https://www.agent-native.com/apps/",
+        "description": "官方第一方與社群 Agent-Native Apps 瀏覽入口，可查看可直接體驗或客製的完整應用範例。"
+      }
+    ],
+    "phileiny-h3-storyboard-skill": [
+      {
+        "label": "H3 Storyboard SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/phileiny/h3-storyboard-skill/blob/main/skills/h3-storyboard/SKILL.md",
+        "description": "官方繁體中文 Skill 定義，涵蓋劇本拆鏡、節拍密度、角色表演、鏡頭與後製分工流程。"
+      },
+      {
+        "label": "H3 Storyboard SOURCES.md",
+        "kind": "documentation",
+        "url": "https://github.com/phileiny/h3-storyboard-skill/blob/main/skills/h3-storyboard/SOURCES.md",
+        "description": "官方證據與來源文件，區分 controlled comparison、partly verified 與 inferred 規則，方便判斷各項建議的驗證程度。"
+      }
     ]
   }
 }
