@@ -7,7 +7,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 3 + Icon Quality Batch 4 audit**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -22,6 +22,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Discovery V1.4 indexes verified `data/resource-links.json` labels, kinds, descriptions and stable public URL components as supplemental search signals. Official-link matches resolve the existing parent resource card rather than creating duplicate resources, and failure to load the supplemental link registry does not block canonical catalog browsing/search.
 - Icon Reliability V1 adds a dependency-free runtime fallback layer for resource icons. Verified per-resource icons remain first choice; failed GitHub project images can fall back to the repository owner/organization avatar, website/platform icons can fall back to canonical-site favicons, and the existing category icon remains the final fallback. The same behavior applies to catalog cards and Resource Detail.
 - The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
+- Official Links Batch 3 adds **9 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: World Monitor website/documentation/OpenAPI, Pi website/documentation, VoiceStudio website/latest release, and DSH Desktop website/latest release. PR #30 was merged as `9b71c4f90b22817e186797a2922978ccd42d371f` after Resource Health PR validation and Frontend Interaction Regression passed.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **43 verified resources**.
 - `說人話 speak-human-tw` added as an active MIT-licensed Traditional Chinese proofreading / de-AI-writing Agent Skill. Catalog metadata records its 38 AI-writing trace checks, Taiwan-usage normalization, two-stage confirmation workflow, prompt-injection boundary and the official 42-case synthetic benchmark; SKILL.md and benchmark are stored as verified supplemental links rather than duplicate resources.
@@ -56,6 +57,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Higher-resolution icon sources are preferred. DSH Desktop uses its repository's official SVG app icon. AI Website Cloner Template currently falls back to the author's 256px GitHub avatar because no dedicated project logo was verified.
 - ThreeUI Community uses the repository's official `public/threeui-mark.svg` project mark rather than a generic category icon or owner avatar.
 - Icon Quality Batches 1–3 replace verified generic/low-resolution favicon sources with better official assets where available: React Bits uses its repository 512×512 project icon; Supabase, OpenStreetMap and Cloudflare use official repository SVG assets; Mistral, ElevenLabs, Meshy and Oracle use verified organization avatars; UI Skills now uses the official `ibelick/ui-skills` repository `public/favicon.svg`. Resources without a clearly better stable official static asset remain unchanged rather than guessing branding.
+- Icon Quality Batch 4 audit reviewed remaining generic/favicon-backed targets and intentionally made **no icon registry changes** where a clearly better, stable, verified official static SVG/PNG/project mark could not be established. Existing verified icons/favicons remain preferred over speculative branding replacements.
 - ElevenLabs and Meshy AI currently use their verified GitHub organization avatars as resource-specific icons.
 - MetalForge uses its own domain favicon; vgpu uses the vgpu.sh documentation-domain favicon rather than a shared category icon.
 - OpenExecutive currently uses the SenteLabsAI 256px GitHub organization avatar because no dedicated project logo/icon was found in the repository tree.
@@ -65,7 +67,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - If a verified external resource icon cannot load, Icon Reliability V1 first attempts a derived resource-specific fallback from the canonical resource URL and only then returns to the existing category icon, so cards and details do not remain broken or blank.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters, sorting and verified official-link discovery remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the post-speak-human / Icon Quality Batch 3 deployment (`33369832330`) completed successfully on 2026-08-31.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Official Links Batch 3 deployment (`33375300274`) completed successfully on 2026-08-31.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
@@ -81,6 +83,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The Icon Reliability V1 main-branch Frontend Interaction Regression (`33367477368`) completed successfully on 2026-08-31, covering failed ThreeUI official SVG fallback to the GitHub owner avatar on catalog/detail surfaces and final preservation of the `3D / WebGL` category fallback when derived candidates are exhausted.
 - The post-speak-human / Icon Quality Batch 3 main-branch Frontend Interaction Regression (`33369832325`) completed successfully on 2026-08-31.
 - The post-speak-human full Resource Health V0.2 main run (`33369832370`) completed successfully on 2026-08-31: **43 total, 38 clean, 5 expected variances, 0 review-required, 0 broken and 0 errors**. Raw observations were 41 reachable, 2 restricted and 2 redirected; the workflow performed no automatic catalog mutations.
+- The Official Links Batch 3 main-branch Frontend Interaction Regression (`33375300366`) completed successfully on 2026-08-31.
+- The Official Links Batch 3 full Resource Health V0.2 main run (`33375300206`) completed successfully on 2026-08-31: **43 total, 38 clean, 5 expected variances, 0 review-required, 0 broken and 0 errors**. Raw observations were 41 reachable, 2 restricted and 2 redirected; 27 GitHub resources were metadata-checked and the workflow made no automatic catalog mutations.
 
 ## V0.5 AI recommendation
 
@@ -140,8 +144,8 @@ First V0.2 full-run evidence:
 
 Latest full-run evidence:
 
-- Workflow run: `33369832370`
-- Commit: `a22092d48b215aed38a5ef7223bfa523d145b780`
+- Workflow run: `33375300206`
+- Commit: `9b71c4f90b22817e186797a2922978ccd42d371f`
 - Result: PASS
 - Total: 43
 - Clean: 38
@@ -149,6 +153,10 @@ Latest full-run evidence:
 - Review required: 0
 - Broken resources: 0
 - Errors: 0
+- Raw reachable: 41
+- Raw restricted: 2
+- Raw redirected: 2
+- GitHub metadata checked: 27
 - Automatic catalog mutations: 0
 
 ## Current catalog
@@ -172,9 +180,9 @@ Latest full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed deployment is post-speak-human / Icon Quality Batch 3 run `33369832330`, completed successfully on 2026-08-31.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main run is post-speak-human / Icon Quality Batch 3 run `33369832325`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
-- Full Resource Health V0.2 latest confirmed main run is `33369832370`, completed successfully with 43 total resources, 38 clean, 5 expected variances and 0 review-required items.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Official Links Batch 3 run `33375300274`, completed successfully on 2026-08-31.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Official Links Batch 3 run `33375300366`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
+- Full Resource Health V0.2 latest confirmed main run is `33375300206`, completed successfully with 43 total resources, 38 clean, 5 expected variances and 0 review-required items; raw evidence contains 0 broken resources and 0 errors.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -221,4 +229,4 @@ Latest full-run evidence:
 
 ## Next step
 
-Continue Discovery V1.4 with wider verified official-link coverage and Icon Quality Batch 4: audit the remaining generic favicon-backed entries one by one, replace only those with verified better official static SVG/PNG/project marks, and leave ambiguous branding untouched. Keep production AI recommender monitoring and verified user-supplied resource ingestion running in parallel without changing canonical resource identity rules.
+Continue Discovery V1.4 with wider verified official-link coverage across the remaining catalog. Keep icon quality work opportunistic: replace a favicon only when a clearly better stable official project mark is verified, otherwise preserve the current verified fallback. In parallel, continue production AI recommender monitoring and verified user-supplied resource ingestion without changing canonical resource identity rules.
