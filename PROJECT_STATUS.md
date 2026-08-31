@@ -7,7 +7,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 3 + Icon Quality Batch 4 audit**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 4 + Icon Quality Batch 4 audit**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -23,6 +23,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - Icon Reliability V1 adds a dependency-free runtime fallback layer for resource icons. Verified per-resource icons remain first choice; failed GitHub project images can fall back to the repository owner/organization avatar, website/platform icons can fall back to canonical-site favicons, and the existing category icon remains the final fallback. The same behavior applies to catalog cards and Resource Detail.
 - The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
 - Official Links Batch 3 adds **9 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: World Monitor website/documentation/OpenAPI, Pi website/documentation, VoiceStudio website/latest release, and DSH Desktop website/latest release. PR #30 was merged as `9b71c4f90b22817e186797a2922978ccd42d371f` after Resource Health PR validation and Frontend Interaction Regression passed.
+- Official Links Batch 4 adds **8 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: Skills For Designers and Engineers skills.sh/core Skill, Hallmark Live Demo/Recipes, IP as Logo website/SKILL.md, and reverse-skill project website/online tutorial. PR #32 was merged as `51403b5a04f43e546d62a542a23ec41de1990eac` after Resource Health PR validation and Frontend Interaction Regression passed.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Catalog now contains **43 verified resources**.
 - `說人話 speak-human-tw` added as an active MIT-licensed Traditional Chinese proofreading / de-AI-writing Agent Skill. Catalog metadata records its 38 AI-writing trace checks, Taiwan-usage normalization, two-stage confirmation workflow, prompt-injection boundary and the official 42-case synthetic benchmark; SKILL.md and benchmark are stored as verified supplemental links rather than duplicate resources.
@@ -67,7 +68,7 @@ Status date: 2026-08-31 (Asia/Taipei)
 - If a verified external resource icon cannot load, Icon Reliability V1 first attempts a derived resource-specific fallback from the canonical resource URL and only then returns to the existing category icon, so cards and details do not remain broken or blank.
 - Account-specific / temporary URLs continue to be sanitized before publication.
 - Search, compact sticky search, category filtering, type filtering, free/open-source filters, sorting and verified official-link discovery remain intact.
-- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Official Links Batch 3 deployment (`33375300274`) completed successfully on 2026-08-31.
+- GitHub Pages deployment workflow remains at `.github/workflows/pages.yml`; the Official Links Batch 4 deployment (`33377553317`) completed successfully on 2026-08-31.
 - Cloudflare AI recommender deployment is recorded as activated on 2026-08-23 after the deployment workflow passed Worker health and semantic recommendation checks.
 - Resource Health V0.1 is implemented through `scripts/resource_health.py` and records raw catalog URL / GitHub metadata observations without mutating verified catalog data.
 - Resource Health V0.2 adds `data/resource-health-expectations.json` plus `scripts/resource_health_triage.py` so known authentication, anti-bot, redirect and SPDX-label behavior can be classified as reviewed expected variance while raw evidence remains preserved.
@@ -85,6 +86,8 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The post-speak-human full Resource Health V0.2 main run (`33369832370`) completed successfully on 2026-08-31: **43 total, 38 clean, 5 expected variances, 0 review-required, 0 broken and 0 errors**. Raw observations were 41 reachable, 2 restricted and 2 redirected; the workflow performed no automatic catalog mutations.
 - The Official Links Batch 3 main-branch Frontend Interaction Regression (`33375300366`) completed successfully on 2026-08-31.
 - The Official Links Batch 3 full Resource Health V0.2 main run (`33375300206`) completed successfully on 2026-08-31: **43 total, 38 clean, 5 expected variances, 0 review-required, 0 broken and 0 errors**. Raw observations were 41 reachable, 2 restricted and 2 redirected; 27 GitHub resources were metadata-checked and the workflow made no automatic catalog mutations.
+- The Official Links Batch 4 main-branch Frontend Interaction Regression (`33377553393`) completed successfully on 2026-08-31.
+- The Official Links Batch 4 full Resource Health V0.2 main run (`33377553303`) completed successfully on 2026-08-31: **43 total, 38 clean, 5 expected variances, 0 review-required, 0 broken and 0 errors**. Raw observations were 41 reachable, 2 restricted and 2 redirected; 27 GitHub resources were metadata-checked and the workflow made no automatic catalog mutations.
 
 ## V0.5 AI recommendation
 
@@ -144,8 +147,8 @@ First V0.2 full-run evidence:
 
 Latest full-run evidence:
 
-- Workflow run: `33375300206`
-- Commit: `9b71c4f90b22817e186797a2922978ccd42d371f`
+- Workflow run: `33377553303`
+- Commit: `51403b5a04f43e546d62a542a23ec41de1990eac`
 - Result: PASS
 - Total: 43
 - Clean: 38
@@ -180,9 +183,9 @@ Latest full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Official Links Batch 3 run `33375300274`, completed successfully on 2026-08-31.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Official Links Batch 3 run `33375300366`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
-- Full Resource Health V0.2 latest confirmed main run is `33375300206`, completed successfully with 43 total resources, 38 clean, 5 expected variances and 0 review-required items; raw evidence contains 0 broken resources and 0 errors.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Official Links Batch 4 run `33377553317`, completed successfully on 2026-08-31.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Official Links Batch 4 run `33377553393`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
+- Full Resource Health V0.2 latest confirmed main run is `33377553303`, completed successfully with 43 total resources, 38 clean, 5 expected variances and 0 review-required items; raw evidence contains 0 broken resources and 0 errors.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -229,4 +232,4 @@ Latest full-run evidence:
 
 ## Next step
 
-Continue Discovery V1.4 with wider verified official-link coverage across the remaining catalog. Keep icon quality work opportunistic: replace a favicon only when a clearly better stable official project mark is verified, otherwise preserve the current verified fallback. In parallel, continue production AI recommender monitoring and verified user-supplied resource ingestion without changing canonical resource identity rules.
+Continue Discovery V1.4 with Official Links Batch 5 across remaining resources that have clearly verifiable official documentation, demo, release or Skill entry points. Keep icon quality work opportunistic: replace a favicon only when a clearly better stable official project mark is verified, otherwise preserve the current verified fallback. In parallel, continue production AI recommender monitoring and verified user-supplied resource ingestion without changing canonical resource identity rules.
