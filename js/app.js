@@ -2,6 +2,7 @@ const state = {
   resources: [],
   categories: [],
   icons: {},
+  resourceLinks: {},
   searchDocs: new Map()
 };
 
@@ -42,6 +43,17 @@ const pricingLabels = {
   paid: '付費',
   'open-source': '開源',
   unknown: '價格未知'
+};
+
+const linkKindLabels = {
+  github: 'GitHub 原始碼 專案',
+  website: '網站 官方網站 Project Page',
+  documentation: '文件 Documentation Docs Guide 指南',
+  demo: 'Demo Live Demo 展示 試用',
+  gallery: 'Gallery 圖庫 案例 展示',
+  api: 'API 介面',
+  download: '下載 Download',
+  other: '官方連結 相關連結'
 };
 
 const stopWords = new Set([
@@ -132,6 +144,33 @@ function alternativesFor(token) {
   return synonymGroups.get(token) ?? [token];
 }
 
+function linkUrlSearchText(value) {
+  try {
+    const url = new URL(value);
+    const pathText = decodeURIComponent(url.pathname)
+      .replace(/[\/_–—-]+/g, ' ')
+      .trim();
+    return `${url.hostname.replace(/^www\./, '')} ${pathText}`;
+  } catch {
+    return '';
+  }
+}
+
+function buildOfficialLinkSearchText(resourceId) {
+  const entries = state.resourceLinks?.[resourceId];
+  if (!Array.isArray(entries)) return '';
+
+  return entries
+    .map((entry) => [
+      entry?.label,
+      entry?.kind,
+      linkKindLabels[entry?.kind] ?? linkKindLabels.other,
+      entry?.description,
+      linkUrlSearchText(entry?.url)
+    ].filter(Boolean).join(' '))
+    .join(' ');
+}
+
 function buildSearchDoc(resource) {
   const categories = resource.categories ?? [];
   const translatedCategories = categories.map(categoryDisplayName);
@@ -144,6 +183,7 @@ function buildSearchDoc(resource) {
     tags: normalise(tags.join(' ')),
     useCases: normalise(useCases.join(' ')),
     summary: normalise(resource.summary),
+    officialLinks: normalise(buildOfficialLinkSearchText(resource.id)),
     notes: normalise(resource.notes),
     meta: normalise([
       resource.type,
@@ -189,6 +229,10 @@ function scoreResource(resource, query) {
     }
     if (matchesAny(doc.tags, alternatives)) {
       score += 8;
+      matched = true;
+    }
+    if (matchesAny(doc.officialLinks, alternatives)) {
+      score += 7;
       matched = true;
     }
     if (matchesAny(doc.useCases, alternatives)) {
@@ -470,15 +514,20 @@ function bindEvents() {
 
 async function init() {
   try {
-    const [resourceDoc, categoryDoc, iconDoc] = await Promise.all([
+    const [resourceDoc, categoryDoc, iconDoc, linkDoc] = await Promise.all([
       loadJson('./data/resources.json'),
       loadJson('./data/categories.json'),
-      loadJson('./data/resource-icons.json')
+      loadJson('./data/resource-icons.json'),
+      loadJson('./data/resource-links.json').catch((error) => {
+        console.warn('Supplemental resource links unavailable for search', error);
+        return { links: {} };
+      })
     ]);
 
     state.resources = Array.isArray(resourceDoc.resources) ? resourceDoc.resources : [];
     state.categories = Array.isArray(categoryDoc.categories) ? categoryDoc.categories : [];
     state.icons = iconDoc && typeof iconDoc.icons === 'object' ? iconDoc.icons : {};
+    state.resourceLinks = linkDoc && typeof linkDoc.links === 'object' ? linkDoc.links : {};
 
     populateCategories();
     populateTypes();
