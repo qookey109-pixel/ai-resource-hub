@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-30",
+  "updated_at": "2026-08-31",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -23,8 +23,8 @@
       "source": "github-owner-avatar-256"
     },
     "react-bits-shape-grid": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://reactbits.dev",
-      "source": "domain-favicon-128"
+      "url": "https://raw.githubusercontent.com/DavidHDev/react-bits/main/public/android-chrome-512x512.png",
+      "source": "official-repository-android-chrome-512"
     },
     "ui-skills": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.ui-skills.com",
@@ -43,8 +43,8 @@
       "source": "domain-favicon-128"
     },
     "supabase-dashboard": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://supabase.com",
-      "source": "domain-favicon-128"
+      "url": "https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/public/supabase-logo.svg",
+      "source": "official-repository-project-logo-svg"
     },
     "mistral-studio": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mistral.ai",
@@ -163,8 +163,8 @@
       "source": "github-organization-avatar-256-fallback-no-project-logo"
     },
     "openstreetmap": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.openstreetmap.org",
-      "source": "official-domain-favicon-128"
+      "url": "https://raw.githubusercontent.com/openstreetmap/openstreetmap-website/master/app/assets/images/osm_logo.svg",
+      "source": "official-repository-project-logo-svg"
     },
     "token-gremlin-abyssal": {
       "url": "https://github.com/Token-Gremlin.png?size=256",
