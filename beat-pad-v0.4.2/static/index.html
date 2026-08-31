@@ -1,17 +1,122 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Qookey Beat Pad V0.4.2</title><style>
-:root{color-scheme:dark;--bg:#0b0f16;--p:#151b26;--p2:#1b2432;--line:#2b374b;--text:#f5f7fb;--muted:#97a4b8;--a:#7c5cff;--g:#2ed3a7;--r:#ff657d;--y:#f0c75e}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#192234 0,#0b0f16 45%);font-family:system-ui,-apple-system,sans-serif;color:var(--text)}main{width:min(1100px,calc(100% - 20px));margin:24px auto 50px}h1{font-size:clamp(30px,5vw,48px);margin:4px 0;letter-spacing:-.04em}.ey{color:var(--g);font-size:12px;font-weight:800;letter-spacing:.12em}.sub,.small{color:var(--muted);line-height:1.5}.box{background:rgba(21,27,38,.95);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:16px}.row{display:flex;gap:9px;flex-wrap:wrap}.url{flex:1;min-width:240px;min-height:46px;border:1px solid var(--line);border-radius:13px;background:#0e141d;color:var(--text);padding:0 13px;font-size:16px}.btn{min-height:44px;border:1px solid var(--line);border-radius:13px;background:var(--p2);color:var(--text);font-weight:800;padding:0 14px;cursor:pointer}.btn.primary{background:var(--g);color:#071711;border:0}.btn.alt{display:inline-flex;align-items:center;text-decoration:none}.status{margin-top:10px;padding:10px;border-radius:12px;background:#101620;color:var(--muted);font-size:13px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.metric{background:#101620;border:1px solid var(--line);border-radius:14px;padding:12px}.metric span{color:var(--muted);font-size:11px}.metric b{display:block;font-size:24px;margin-top:4px}.pads{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.pad{min-height:92px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(#1c2533,#141a24);color:var(--text);text-align:left;padding:12px}.pad.hit{background:var(--a)}.pad small{display:block;color:var(--muted);margin-top:20px}.seqwrap{overflow-x:auto}.seq{min-width:820px}.srow,.count{display:grid;grid-template-columns:95px repeat(16,1fr);gap:5px;margin-bottom:6px;align-items:center}.count{color:var(--muted);font-size:10px;text-align:center}.lane{font-size:12px;font-weight:800}.step{aspect-ratio:1;border:1px solid var(--line);border-radius:7px;background:#20293a}.step.on{background:var(--g);border-color:var(--g)}.step.now{outline:2px solid var(--a);outline-offset:1px}h2{font-size:19px;margin:24px 0 8px}.range{width:100%;accent-color:var(--a)}audio{width:100%;margin-top:10px}@media(max-width:700px){.metrics{grid-template-columns:1fr 1fr}.pads{grid-template-columns:1fr 1fr}}@media(max-width:420px){.metrics{grid-template-columns:1fr}}
-</style></head><body><main id="app" tabindex="0"><div class="ey">QOOKEY BEAT LAB</div><h1>YouTube → Beat Pad V0.4.2</h1><div class="sub">貼公開 YouTube 單支影片網址，自動抓可存取音訊、估 BPM，並把低頻 / 中頻 / 高頻事件映射成 Kick、Snare、Hi-Hat 16-Step Pattern。</div>
-<section class="box"><div class="row"><input id="url" class="url" value="https://www.youtube.com/watch?v=7MoHyqk3lYI&list=RDW5xjljl5jO4&index=2" aria-label="YouTube URL"><button id="load" class="btn primary">▶ 讀取 YouTube</button></div><div class="row" style="margin-top:8px"><a class="btn alt" target="_blank" rel="noopener noreferrer" href="https://turboscribe.ai/zh-TW/downloader/youtube/mp3/free">TurboScribe 備用轉換 ↗</a><button id="analyze" class="btn" disabled>🔎 分析節奏</button></div><div id="status" class="status">Ready。系統會自動移除 YouTube Mix 的 list / index 參數。</div><audio id="player" controls></audio><div class="metrics"><div class="metric"><span>BPM</span><b id="bpm">—</b></div><div class="metric"><span>Kick</span><b id="kick">—</b></div><div class="metric"><span>Snare</span><b id="snare">—</b></div><div class="metric"><span>Hi-Hat</span><b id="hat">—</b></div></div><div style="margin-top:12px"><div class="small">偵測靈敏度 <span id="sv">58%</span></div><input id="sens" class="range" type="range" min="30" max="85" value="58"></div></section>
-<h2>Beat Pads</h2><section id="pads" class="pads"></section><h2>16-Step Pattern</h2><section class="box seqwrap"><div id="seq" class="seq"></div></section><div class="row" style="margin-top:12px"><button id="playPattern" class="btn primary">▶ 播放 Pattern</button><button id="clear" class="btn">清空</button></div><p class="small">請只分析你有權使用或獲授權的內容。TurboScribe 僅為手動備援入口，本站不會自動操作它。</p>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qookey Beat Pad V0.4.4</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0f16;--p:#151b26;--p2:#1b2432;--line:#2b374b;--text:#f5f7fb;--muted:#97a4b8;--a:#7c5cff;--g:#2ed3a7;--r:#ff657d;--y:#f0c75e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#192234 0,#0b0f16 45%);font-family:system-ui,-apple-system,sans-serif;color:var(--text)}
+main{width:min(1100px,calc(100% - 20px));margin:24px auto 50px}h1{font-size:clamp(30px,5vw,48px);margin:4px 0;letter-spacing:-.04em}
+.ey{color:var(--g);font-size:12px;font-weight:800;letter-spacing:.12em}.sub,.small{color:var(--muted);line-height:1.5}
+.box{background:rgba(21,27,38,.95);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:16px}
+.row{display:flex;gap:9px;flex-wrap:wrap}.url{flex:1;min-width:240px;min-height:46px;border:1px solid var(--line);border-radius:13px;background:#0e141d;color:var(--text);padding:0 13px;font-size:16px}
+.btn{min-height:44px;border:1px solid var(--line);border-radius:13px;background:var(--p2);color:var(--text);font-weight:800;padding:0 14px;cursor:pointer}
+.btn.primary{background:var(--g);color:#071711;border:0}.btn.alt{display:inline-flex;align-items:center;text-decoration:none}.btn:disabled{opacity:.5;cursor:not-allowed}
+.status{margin-top:10px;padding:10px;border-radius:12px;background:#101620;color:var(--muted);font-size:13px}
+.fallback{display:none;margin-top:10px;padding:12px;border:1px solid #64531e;border-radius:13px;background:#1b1609}.fallback.show{display:block}
+.drop{margin-top:10px;padding:24px 12px;border:2px dashed #46536a;border-radius:14px;text-align:center;color:var(--muted);transition:.12s}
+.drop.drag{border-color:var(--g);background:#112019;color:var(--text)}.drop strong{display:block;color:var(--text);margin-bottom:4px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.metric{background:#101620;border:1px solid var(--line);border-radius:14px;padding:12px}
+.metric span{color:var(--muted);font-size:11px}.metric b{display:block;font-size:24px;margin-top:4px}
+.pads{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.pad{min-height:92px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(#1c2533,#141a24);color:var(--text);text-align:left;padding:12px}
+.pad.hit{background:var(--a)}.pad small{display:block;color:var(--muted);margin-top:20px}
+.seqwrap{overflow-x:auto}.seq{min-width:820px}.srow,.count{display:grid;grid-template-columns:95px repeat(16,1fr);gap:5px;margin-bottom:6px;align-items:center}
+.count{color:var(--muted);font-size:10px;text-align:center}.lane{font-size:12px;font-weight:800}.step{aspect-ratio:1;border:1px solid var(--line);border-radius:7px;background:#20293a}
+.step.on{background:var(--g);border-color:var(--g)}.step.now{outline:2px solid var(--a);outline-offset:1px}h2{font-size:19px;margin:24px 0 8px}
+.range{width:100%;accent-color:var(--a)}audio{width:100%;margin-top:10px}
+@media(max-width:700px){.metrics{grid-template-columns:1fr 1fr}.pads{grid-template-columns:1fr 1fr}}@media(max-width:420px){.metrics{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main id="app" tabindex="0">
+<div class="ey">QOOKEY BEAT LAB</div>
+<h1>YouTube → Beat Pad V0.4.4</h1>
+<div class="sub">YouTube 可以先嘗試直接讀取；若雲端 IP 被 YouTube 擋住，就用 TurboScribe 轉 MP3，再把檔案直接丟回這一頁。MP3 / WAV / M4A 都可以在瀏覽器本機解碼後分析。</div>
+<section class="box">
+  <div class="row">
+    <input id="url" class="url" value="https://www.youtube.com/watch?v=7MoHyqk3lYI&list=RDW5xjljl5jO4&index=2" aria-label="YouTube URL">
+    <button id="load" class="btn primary" type="button">▶ 讀取 YouTube</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <button id="turboFallback" class="btn alt" type="button">TurboScribe 備用轉換 ↗</button>
+    <button id="pickFile" class="btn" type="button">＋ 選擇 MP3 / WAV / M4A</button>
+    <button id="analyze" class="btn" type="button" disabled>🔎 分析節奏</button>
+  </div>
+  <input id="fileInput" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg" hidden>
+  <div id="fallback" class="fallback">
+    <strong>⚠️ YouTube 要求登入驗證</strong>
+    <div class="small" style="margin-top:5px">按 TurboScribe 轉成 MP3，下載後直接回這頁「選檔」或拖到下面。</div>
+  </div>
+  <div id="dropzone" class="drop" tabindex="0">
+    <strong>把 MP3 / WAV / M4A 拖到這裡</strong>
+    或按上面的「選擇 MP3 / WAV / M4A」
+  </div>
+  <div id="status" class="status">Ready。你可以直接貼 YouTube，或直接丟音訊檔。</div>
+  <audio id="player" controls></audio>
+  <div class="metrics">
+    <div class="metric"><span>BPM</span><b id="bpm">—</b></div>
+    <div class="metric"><span>Kick</span><b id="kick">—</b></div>
+    <div class="metric"><span>Snare</span><b id="snare">—</b></div>
+    <div class="metric"><span>Hi-Hat</span><b id="hat">—</b></div>
+  </div>
+  <div style="margin-top:12px">
+    <div class="small">偵測靈敏度 <span id="sv">58%</span></div>
+    <input id="sens" class="range" type="range" min="30" max="85" value="58">
+  </div>
+</section>
+<h2>Beat Pads</h2>
+<section id="pads" class="pads"></section>
+<h2>16-Step Pattern</h2>
+<section class="box seqwrap"><div id="seq" class="seq"></div></section>
+<div class="row" style="margin-top:12px">
+  <button id="playPattern" class="btn primary" type="button">▶ 播放 Pattern</button>
+  <button id="clear" class="btn" type="button">清空</button>
+</div>
+<p class="small">音訊檔只在你的瀏覽器中解碼分析，不會上傳到本站後端。請只分析你有權使用或獲授權的內容。</p>
 <script>
-(()=>{const names=['Kick','Snare','Closed Hat','Open Hat','Clap','Low Tom','Rim','Shaker'];const pads=document.getElementById('pads'),seqEl=document.getElementById('seq'),status=document.getElementById('status'),load=document.getElementById('load'),analyze=document.getElementById('analyze'),player=document.getElementById('player'),sens=document.getElementById('sens'),sv=document.getElementById('sv');const grid=Array.from({length:8},()=>Array(16).fill(false));let ctx=null,buf=null,bpm=120,playing=false,timer=null,step=0,next=0;
-function audio(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}function flash(i){const x=pads.querySelector('[data-i="'+i+'"]');if(!x)return;x.classList.add('hit');setTimeout(()=>x.classList.remove('hit'),90)}function noise(d=.12){const b=ctx.createBuffer(1,ctx.sampleRate*d,ctx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;return b}
+(()=>{
+const names=['Kick','Snare','Closed Hat','Open Hat','Clap','Low Tom','Rim','Shaker'];
+const pads=document.getElementById('pads'),seqEl=document.getElementById('seq'),status=document.getElementById('status');
+const load=document.getElementById('load'),analyze=document.getElementById('analyze'),player=document.getElementById('player');
+const sens=document.getElementById('sens'),sv=document.getElementById('sv'),urlInput=document.getElementById('url');
+const fileInput=document.getElementById('fileInput'),pickFile=document.getElementById('pickFile'),dropzone=document.getElementById('dropzone');
+const fallback=document.getElementById('fallback'),turbo=document.getElementById('turboFallback');
+const grid=Array.from({length:8},()=>Array(16).fill(false));
+let ctx=null,buf=null,bpm=120,playing=false,timer=null,step=0,next=0,currentObjectUrl=null;
+function audio(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}
+function setStatus(text){status.textContent=text}
+function flash(i){const x=pads.querySelector('[data-i="'+i+'"]');if(!x)return;x.classList.add('hit');setTimeout(()=>x.classList.remove('hit'),90)}
+function noise(d=.12){const b=ctx.createBuffer(1,Math.max(1,Math.floor(ctx.sampleRate*d)),ctx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;return b}
 function hit(i,t){audio();t=t??ctx.currentTime;const g=ctx.createGain();g.connect(ctx.destination);if(i===0){const o=ctx.createOscillator();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);g.gain.setValueAtTime(.8,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);o.start(t);o.stop(t+.2)}else{const n=ctx.createBufferSource();n.buffer=noise(i===2?.07:.15);const f=ctx.createBiquadFilter();f.type=i===2?'highpass':'bandpass';f.frequency.value=i===2?5500:1500;n.connect(f);f.connect(g);g.gain.setValueAtTime(.28,t);g.gain.exponentialRampToValueAtTime(.001,t+(i===2?.07:.14));n.start(t);n.stop(t+(i===2?.09:.17))}flash(i)}
-function renderPads(){pads.innerHTML='';names.forEach((n,i)=>{const b=document.createElement('button');b.className='pad';b.innerHTML='<strong>'+n+'</strong><small>Pad '+(i+1)+'</small>';b.dataset.i=i;b.onclick=()=>hit(i);pads.appendChild(b)})}function renderSeq(){seqEl.innerHTML='';const c=document.createElement('div');c.className='count';c.appendChild(document.createElement('div'));for(let s=0;s<16;s++){const d=document.createElement('div');d.textContent=s+1;c.appendChild(d)}seqEl.appendChild(c);for(let r=0;r<8;r++){const row=document.createElement('div');row.className='srow';const l=document.createElement('div');l.className='lane';l.textContent=names[r];row.appendChild(l);for(let s=0;s<16;s++){const b=document.createElement('button');b.className='step'+(grid[r][s]?' on':'')+(playing&&s===((step+15)%16)?' now':'');b.onclick=()=>{grid[r][s]=!grid[r][s];renderSeq()};row.appendChild(b)}seqEl.appendChild(row)}}
-load.onclick=async()=>{const url=document.getElementById('url').value.trim();if(!url)return;load.disabled=true;analyze.disabled=true;status.textContent='正在讀取 YouTube…';try{const r=await fetch('/api/youtube-audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url})});if(!r.ok){let m='讀取失敗';try{const j=await r.json();m=j.detail||m}catch{}throw Error(m)}const ab=await r.arrayBuffer();audio();buf=await ctx.decodeAudioData(ab.slice(0));player.src=URL.createObjectURL(new Blob([ab],{type:'audio/wav'}));let c='';try{c=decodeURIComponent(r.headers.get('X-Canonical-Url')||'')}catch{}status.textContent='音訊已載入'+(c?'；已正規化為 '+c:'')+'。按「分析節奏」。';analyze.disabled=false}catch(e){status.textContent=(e.message||'YouTube 讀取失敗')+'；可改用 TurboScribe 手動備援。'}finally{load.disabled=false}};
+function renderPads(){pads.innerHTML='';names.forEach((n,i)=>{const b=document.createElement('button');b.type='button';b.className='pad';b.innerHTML='<strong>'+n+'</strong><small>Pad '+(i+1)+'</small>';b.dataset.i=i;b.onclick=()=>hit(i);pads.appendChild(b)})}
+function renderSeq(){seqEl.innerHTML='';const c=document.createElement('div');c.className='count';c.appendChild(document.createElement('div'));for(let s=0;s<16;s++){const d=document.createElement('div');d.textContent=s+1;c.appendChild(d)}seqEl.appendChild(c);for(let r=0;r<8;r++){const row=document.createElement('div');row.className='srow';const l=document.createElement('div');l.className='lane';l.textContent=names[r];row.appendChild(l);for(let s=0;s<16;s++){const b=document.createElement('button');b.type='button';b.className='step'+(grid[r][s]?' on':'')+(playing&&s===((step+15)%16)?' now':'');b.onclick=()=>{grid[r][s]=!grid[r][s];renderSeq()};row.appendChild(b)}seqEl.appendChild(row)}}
+function resetMetrics(){for(const id of ['bpm','kick','snare','hat'])document.getElementById(id).textContent='—'}
+function isAudioFile(file){if(file.type&&file.type.startsWith('audio/'))return true;return /\.(mp3|wav|m4a|aac|ogg|opus|webm)$/i.test(file.name||'')}
+async function loadLocalFile(file,autoAnalyze=true){if(!file)return;if(!isAudioFile(file)){setStatus('這個檔案看起來不是支援的音訊。請選 MP3 / WAV / M4A。');return}if(file.size>180*1024*1024){setStatus('檔案太大，目前請控制在 180 MB 內。');return}try{audio();analyze.disabled=true;resetMetrics();setStatus('正在讀取 '+file.name+'…');const ab=await file.arrayBuffer();buf=await ctx.decodeAudioData(ab.slice(0));if(currentObjectUrl)URL.revokeObjectURL(currentObjectUrl);currentObjectUrl=URL.createObjectURL(file);player.src=currentObjectUrl;fallback.classList.remove('show');analyze.disabled=false;setStatus('✅ 已載入 '+file.name+'（'+Math.round(buf.duration)+' 秒）。'+(autoAnalyze?'正在自動分析…':'可以開始分析。'));if(autoAnalyze)setTimeout(()=>analyze.click(),150)}catch(e){console.error(e);buf=null;analyze.disabled=true;setStatus('音訊解碼失敗。請確認檔案能正常播放，或改用 MP3 / WAV。')}}
+pickFile.onclick=()=>{fileInput.value='';fileInput.click()};
+fileInput.onchange=()=>loadLocalFile(fileInput.files&&fileInput.files[0],true);
+for(const name of ['dragenter','dragover'])dropzone.addEventListener(name,e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('drag')});
+for(const name of ['dragleave','drop'])dropzone.addEventListener(name,e=>{e.preventDefault();e.stopPropagation();dropzone.classList.remove('drag')});
+dropzone.addEventListener('drop',e=>{const files=e.dataTransfer&&e.dataTransfer.files;if(files&&files.length)loadLocalFile(files[0],true)});
+dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pickFile.click()}});
+turbo.onclick=async()=>{const u=urlInput.value.trim();if(u&&navigator.clipboard){try{await navigator.clipboard.writeText(u)}catch(_){}}window.open('https://turboscribe.ai/zh-TW/downloader/youtube/mp3/free','_blank','noopener,noreferrer');setStatus('已開啟 TurboScribe；YouTube 網址已嘗試複製。轉好 MP3 後回來直接丟進虛線框。')};
+load.onclick=async()=>{const url=urlInput.value.trim();if(!url)return;load.disabled=true;analyze.disabled=true;fallback.classList.remove('show');resetMetrics();setStatus('正在讀取 YouTube…');try{const r=await fetch('/api/youtube-audio',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url})});if(!r.ok){let m='讀取失敗';try{const j=await r.json();m=j.detail||m}catch{}throw Error(m)}const ab=await r.arrayBuffer();audio();buf=await ctx.decodeAudioData(ab.slice(0));if(currentObjectUrl)URL.revokeObjectURL(currentObjectUrl);currentObjectUrl=URL.createObjectURL(new Blob([ab],{type:'audio/wav'}));player.src=currentObjectUrl;let c='';try{c=decodeURIComponent(r.headers.get('X-Canonical-Url')||'')}catch{}setStatus('✅ YouTube 音訊已載入'+(c?'；已正規化為 '+c:'')+'。按「分析節奏」。');analyze.disabled=false}catch(e){const m=e.message||'YouTube 讀取失敗';setStatus(m);if(/YOUTUBE_AUTH_REQUIRED|not a bot|sign in to confirm|登入驗證|bot check/i.test(m))fallback.classList.add('show')}finally{load.disabled=false}};
 sens.oninput=()=>sv.textContent=sens.value+'%';
-function env(data,hop){const n=Math.ceil(data.length/hop),e=new Float32Array(n),v=new Float32Array(n);for(let i=0;i<n;i++){let q=0,a=i*hop,z=Math.min(data.length,a+hop);for(let j=a;j<z;j++)q+=data[j]*data[j];e[i]=Math.sqrt(q/Math.max(1,z-a))}for(let i=2;i<n;i++)v[i]=Math.max(0,Math.log1p(e[i]*80)-Math.log1p(((e[i-1]+e[i-2])/2)*80));return v}function pct(a,p){const x=Array.from(a).sort((a,b)=>a-b);return x[Math.floor((x.length-1)*p)]||0}function peaks(e,p,g){const th=pct(e,p),o=[];let last=-99;for(let i=2;i<e.length-2;i++)if(e[i]>=th&&e[i]>e[i-1]&&e[i]>=e[i+1]&&i-last>=g){o.push(i);last=i}return o}function estBpm(e,dt){let bb=120,bs=-1;for(let b=70;b<=180;b++){const lag=(60/b)/dt;let s=0,n=0;for(let i=Math.ceil(lag)+2;i<e.length;i+=2){const j=Math.round(i-lag);if(j>=0){s+=e[i]*e[j];n++}}s/=Math.max(1,n);if(s>bs){bs=s;bb=b}}return bb}
+function env(data,hop){const n=Math.ceil(data.length/hop),e=new Float32Array(n),v=new Float32Array(n);for(let i=0;i<n;i++){let q=0,a=i*hop,z=Math.min(data.length,a+hop);for(let j=a;j<z;j++)q+=data[j]*data[j];e[i]=Math.sqrt(q/Math.max(1,z-a))}for(let i=2;i<n;i++)v[i]=Math.max(0,Math.log1p(e[i]*80)-Math.log1p(((e[i-1]+e[i-2])/2)*80));return v}
+function pct(a,p){const x=Array.from(a).sort((a,b)=>a-b);return x[Math.floor((x.length-1)*p)]||0}
+function peaks(e,p,g){const th=pct(e,p),o=[];let last=-99;for(let i=2;i<e.length-2;i++)if(e[i]>=th&&e[i]>e[i-1]&&e[i]>=e[i+1]&&i-last>=g){o.push(i);last=i}return o}
+function estBpm(e,dt){let bb=120,bs=-1;for(let b=70;b<=180;b++){const lag=(60/b)/dt;let s=0,n=0;for(let i=Math.ceil(lag)+2;i<e.length;i+=2){const j=Math.round(i-lag);if(j>=0){s+=e[i]*e[j];n++}}s/=Math.max(1,n);if(s>bs){bs=s;bb=b}}return bb}
 async function band(type,freq){const sr=11025,d=Math.min(180,buf.duration),off=new OfflineAudioContext(1,Math.ceil(d*sr),sr),src=off.createBufferSource(),f=off.createBiquadFilter();src.buffer=buf;f.type=type;f.frequency.value=freq;src.connect(f);f.connect(off.destination);src.start(0,0,d);return off.startRendering()}
-analyze.onclick=async()=>{if(!buf)return;analyze.disabled=true;status.textContent='分析中…';try{const [lo,mid,hi]=await Promise.all([band('lowpass',190),band('bandpass',1500),band('highpass',4800)]),hop=256,dt=hop/11025,el=env(lo.getChannelData(0),hop),em=env(mid.getChannelData(0),hop),eh=env(hi.getChannelData(0),hop);bpm=estBpm(el.map((x,i)=>x+em[i]*.7+eh[i]*.3),dt);const p=.72+(Number(sens.value)/100)*.22,k=peaks(el,p,4),s=peaks(em,p,4),h=peaks(eh,Math.min(.95,p+.05),2);document.getElementById('bpm').textContent=bpm;document.getElementById('kick').textContent=k.length;document.getElementById('snare').textContent=s.length;document.getElementById('hat').textContent=h.length;for(const r of grid)r.fill(false);const stepSec=60/bpm/4;for(const [arr,row] of [[k,0],[s,1],[h,2]])for(const i of arr){const st=Math.round(i*dt/stepSec);if(st>=0&&st<16)grid[row][st]=true}renderSeq();status.textContent='完成：已把歌曲開頭第一個小節映射到打點板。'}catch(e){status.textContent='分析失敗：'+e.message}finally{analyze.disabled=false}};
-function sched(){if(!playing)return;while(next<ctx.currentTime+.1){const s=step;for(let r=0;r<3;r++)if(grid[r][s])hit(r,next);next+=60/bpm/4;step=(step+1)%16}renderSeq();timer=setTimeout(sched,25)}document.getElementById('playPattern').onclick=e=>{audio();if(playing){playing=false;clearTimeout(timer);step=0;e.target.textContent='▶ 播放 Pattern';renderSeq()}else{playing=true;next=ctx.currentTime+.05;e.target.textContent='■ 停止 Pattern';sched()}};document.getElementById('clear').onclick=()=>{for(const r of grid)r.fill(false);renderSeq()};renderPads();renderSeq()})();
-</script></main></body></html>
+analyze.onclick=async()=>{if(!buf)return;analyze.disabled=true;setStatus('分析中：正在估 BPM 與鼓點…');try{const [lo,mid,hi]=await Promise.all([band('lowpass',190),band('bandpass',1500),band('highpass',4800)]),hop=256,dt=hop/11025;const el=env(lo.getChannelData(0),hop),em=env(mid.getChannelData(0),hop),eh=env(hi.getChannelData(0),hop);const combined=Float32Array.from(el,(x,i)=>x+em[i]*.7+eh[i]*.3);bpm=estBpm(combined,dt);const p=.72+(Number(sens.value)/100)*.22,k=peaks(el,p,4),s=peaks(em,p,4),h=peaks(eh,Math.min(.95,p+.05),2);document.getElementById('bpm').textContent=bpm;document.getElementById('kick').textContent=k.length;document.getElementById('snare').textContent=s.length;document.getElementById('hat').textContent=h.length;for(const r of grid)r.fill(false);const stepSec=60/bpm/4;for(const [arr,row] of [[k,0],[s,1],[h,2]])for(const i of arr){const st=Math.round(i*dt/stepSec);if(st>=0&&st<16)grid[row][st]=true}renderSeq();setStatus('✅ 分析完成：已把歌曲開頭第一個小節映射到打點板。')}catch(e){console.error(e);setStatus('分析失敗：'+(e.message||'未知錯誤'))}finally{analyze.disabled=false}};
+function sched(){if(!playing)return;while(next<ctx.currentTime+.1){const s=step;for(let r=0;r<3;r++)if(grid[r][s])hit(r,next);next+=60/bpm/4;step=(step+1)%16}renderSeq();timer=setTimeout(sched,25)}
+document.getElementById('playPattern').onclick=e=>{audio();if(playing){playing=false;clearTimeout(timer);step=0;e.target.textContent='▶ 播放 Pattern';renderSeq()}else{playing=true;next=ctx.currentTime+.05;e.target.textContent='■ 停止 Pattern';sched()}};
+document.getElementById('clear').onclick=()=>{for(const r of grid)r.fill(false);renderSeq();resetMetrics();setStatus('Pattern 已清空。')};
+renderPads();renderSeq();
+fileInput.id='localFileInput';
+setTimeout(()=>{document.title='Qookey Beat Pad V0.4.4';const h=document.querySelector('h1');if(h)h.textContent='YouTube → Beat Pad V0.4.4'},0);
+})();
+</script>
+</main>
+</body>
+</html>
