@@ -53,6 +53,8 @@ if (dialog) {
     unknown: '狀態未知'
   };
 
+  const interactiveSelector = 'a, button, input, select, textarea, label, [contenteditable="true"]';
+
   let resources = [];
   let categories = [];
   let icons = {};
@@ -230,6 +232,19 @@ if (dialog) {
     return id ? resourceById.get(id) : null;
   }
 
+  function decorateCard(card) {
+    if (!(card instanceof HTMLElement)) return;
+    card.dataset.detailTrigger = 'true';
+    card.tabIndex = 0;
+    const name = card.querySelector('.name')?.textContent?.trim() || '這個資源';
+    card.setAttribute('aria-label', `查看 ${name} 的詳細資訊`);
+  }
+
+  function decorateCards(root = document) {
+    if (root instanceof Element && root.matches('.card')) decorateCard(root);
+    for (const card of root.querySelectorAll?.('.card') || []) decorateCard(card);
+  }
+
   const ready = Promise.all([
     loadJson('./data/resources.json'),
     loadJson('./data/categories.json'),
@@ -244,15 +259,41 @@ if (dialog) {
     console.warn('Resource detail data unavailable', error);
   });
 
+  const grid = document.querySelector('#resource-grid');
+  if (grid) {
+    decorateCards(grid);
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node instanceof Element) decorateCards(node);
+        }
+      }
+    });
+    observer.observe(grid, { childList: true });
+  }
+
   document.addEventListener('click', async (event) => {
-    const button = event.target.closest('.details');
-    if (!button) return;
+    const card = event.target.closest?.('.card[data-detail-trigger="true"]');
+    if (!card) return;
+    if (event.target.closest?.(interactiveSelector)) return;
 
     event.preventDefault();
     await ready;
-    const resource = findResourceForCard(button.closest('.card'));
+    const resource = findResourceForCard(card);
     if (!resource) return;
-    showDialog(resource, button);
+    showDialog(resource, card);
+  });
+
+  document.addEventListener('keydown', async (event) => {
+    if (!['Enter', ' '].includes(event.key)) return;
+    const card = event.target.closest?.('.card[data-detail-trigger="true"]');
+    if (!card || event.target !== card) return;
+
+    event.preventDefault();
+    await ready;
+    const resource = findResourceForCard(card);
+    if (!resource) return;
+    showDialog(resource, card);
   });
 
   for (const button of detailEls.closeButtons) {
