@@ -4,14 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#060a10" />
-  <title>Qookey Gesture HUD</title>
+  <title>Qookey Gesture HUD · Cute Fox Spirit</title>
   <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
-  <div class="app">
+  <div class="app" id="app">
     <video id="video" autoplay playsinline muted></video>
     <canvas id="stage"></canvas>
+    <canvas id="foxStage"></canvas>
     <canvas id="orbStage"></canvas>
+
+    <div class="fox-caption" id="foxCaption"><b>CUTE FOX SPIRIT</b>十指狐火 · 狐狸臉 · 毛皮身體</div>
     <div class="orb-caption" id="orbCaption"><b>ABSTRACT CORE</b>張開手掌讓球體展開</div>
     <div class="scanlines"></div><div class="vignette"></div>
 
@@ -20,16 +23,17 @@
       <div class="chips">
         <div class="chip">FPS <b id="fps">0</b></div>
         <div class="chip">Hands <b id="hands">0</b></div>
+        <div class="chip">10 Points <b id="fingerPoints">0/10</b></div>
         <div class="chip">Gesture <b id="gestureText">—</b></div>
-        <div class="chip">Orb <b id="orbState">CLOSED</b></div>
+        <button class="chip mode-chip" id="modeBtn" type="button">Mode <b id="modeText">FOX</b></button>
       </div>
     </div>
 
-    <div class="hint">張開手掌展開抽象球體 · 握拳收合 · 食指移動游標 · 捏合抓取面板</div>
+    <div class="hint">雙手十指撐開狐火膜 · 握拳蓄力 · 再張開爆發 · FOX / CORE 可切換</div>
 
     <section class="panel" id="panelA" data-draggable>
-      <div class="panel-head"><span class="panel-title">Hand Tracking</span><span class="status-dot"></span></div>
-      <div class="panel-body"><div class="big" id="trackingState">OFFLINE</div><div class="sub">MediaPipe Hand Landmarker 在瀏覽器端即時處理，不需要 API Key。</div></div>
+      <div class="panel-head"><span class="panel-title">Spirit Tracking</span><span class="status-dot"></span></div>
+      <div class="panel-body"><div class="big" id="trackingState">OFFLINE</div><div class="sub">Hand + Face + Pose Landmarker 在瀏覽器端即時追蹤。Cute Fox 模式會把狐狸 AR 疊在臉與身體上。</div></div>
     </section>
 
     <section class="panel" id="panelB" data-draggable>
@@ -39,6 +43,7 @@
         <span>Cursor X</span><b id="cursorX">—</b>
         <span>Cursor Y</span><b id="cursorY">—</b>
         <span>Latency</span><b id="latency">—</b>
+        <span>Fox tracking</span><b id="foxState">WAITING</b>
         <span>Sphere openness</span><b id="orbOpenVal">15%</b>
       </div></div>
     </section>
@@ -55,15 +60,17 @@
     </section>
 
     <div id="cursor" class="cursor"></div><div id="toast" class="toast">SWIPE</div>
+
     <div class="start" id="startOverlay"><div class="start-card">
-      <div class="brand" style="margin-bottom:18px"><span class="brand-dot"></span>Browser Prototype V2</div>
-      <h1>Gesture<br>Control HUD</h1>
-      <p>相機現在直接由最上層 HTTPS 頁面取得權限，不再放在 iframe。張開手掌會讓中央抽象球體展開，握拳收合；食指可移動游標，拇指＋食指捏合可拖曳 HUD 面板。</p>
-      <div class="start-actions"><button class="btn btn-primary" id="startBtn">啟動相機</button><button class="btn btn-ghost" id="demoBtn">沒有相機也先看介面</button></div>
-      <div class="notice" id="notice">第一次使用請允許此網站存取相機。Safari 若曾拒絕，可在「網站設定 → 相機」重新改成允許。</div>
+      <div class="brand" style="margin-bottom:18px"><span class="brand-dot fox-dot"></span>Fox Spirit Prototype V3</div>
+      <h1>Cute Fox<br>Spirit Mode</h1>
+      <p>啟動相機後會同時追蹤雙手、臉與身體。臉會出現可愛狐狸耳朵、鼻口、腮紅與鬍鬚；上半身與四肢會加上橘白毛皮效果。雙手 10 個指尖會成為狐火控制點，兩手張開時在手上撐出一張會變形的能量膜。</p>
+      <div class="start-actions"><button class="btn btn-primary fox-primary" id="startBtn">啟動狐狸模式</button><button class="btn btn-ghost" id="demoBtn">沒有相機也先看介面</button></div>
+      <div class="notice" id="notice">第一次使用請允許此網站存取相機。Face / Pose 模型首次載入會比原本手勢版多幾秒。</div>
     </div></div>
   </div>
   <script type="module" src="./core.js"></script>
+  <script type="module" src="./fox.js"></script>
   <script type="module" src="./orb.js"></script>
 </body>
 </html>
