@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-08-31",
+  "updated_at": "2026-09-01",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -173,6 +173,18 @@
     "raymondhou0917-speak-human-tw": {
       "url": "https://github.com/Raymondhou0917.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "lulu930128-github-profile": {
+      "url": "https://github.com/lulu930128.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "diegosouzapw-omniroute": {
+      "url": "https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/public/icon-512.png",
+      "source": "official-repository-app-icon-512"
+    },
+    "thu-maic-openmaic": {
+      "url": "https://raw.githubusercontent.com/THU-MAIC/OpenMAIC/main/public/openmaic-mark.png",
+      "source": "official-repository-project-mark-png"
     }
   }
 }

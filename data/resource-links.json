@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-08-31",
+  "updated_at": "2026-09-01",
   "links": {
     "tt-a1i-archify": [
       {
@@ -346,6 +346,34 @@
         "kind": "documentation",
         "url": "https://github.com/phileiny/h3-storyboard-skill/blob/main/skills/h3-storyboard/SOURCES.md",
         "description": "官方證據與來源文件，區分 controlled comparison、partly verified 與 inferred 規則，方便判斷各項建議的驗證程度。"
+      }
+    ],
+    "diegosouzapw-omniroute": [
+      {
+        "label": "OmniRoute 官方網站",
+        "kind": "website",
+        "url": "https://omniroute.online",
+        "description": "Repository 官方 homepage 指向的 OmniRoute 網站，可查看 Gateway、安裝與產品入口。"
+      },
+      {
+        "label": "OmniRoute 最新版本下載",
+        "kind": "download",
+        "url": "https://github.com/diegosouzapw/OmniRoute/releases/latest",
+        "description": "官方 GitHub 最新 Release，可查看目前穩定版本與 Desktop 平台安裝檔。"
+      }
+    ],
+    "thu-maic-openmaic": [
+      {
+        "label": "OpenMAIC Live Demo",
+        "kind": "demo",
+        "url": "https://open.maic.chat/",
+        "description": "官方 README 指定的線上 Demo，可直接體驗 OpenMAIC 多 Agent 互動課堂與課程生成流程。"
+      },
+      {
+        "label": "OpenMAIC 最新版本",
+        "kind": "download",
+        "url": "https://github.com/THU-MAIC/OpenMAIC/releases/latest",
+        "description": "官方 GitHub 最新 Release 與版本說明入口；目前已驗證 v1.0.0。"
       }
     ]
   }
