@@ -4,73 +4,69 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#060a10" />
-  <title>Qookey Gesture HUD · Cute Fox Spirit</title>
+  <title>Qookey Gesture Cube</title>
   <link rel="stylesheet" href="./app.css" />
 </head>
 <body>
   <div class="app" id="app">
     <video id="video" autoplay playsinline muted></video>
     <canvas id="stage"></canvas>
-    <canvas id="foxStage"></canvas>
-    <canvas id="orbStage"></canvas>
-
-    <div class="fox-caption" id="foxCaption"><b>CUTE FOX SPIRIT</b>十指狐火 · 狐狸臉 · 毛皮身體</div>
-    <div class="orb-caption" id="orbCaption"><b>ABSTRACT CORE</b>張開手掌讓球體展開</div>
+    <canvas id="cubeStage"></canvas>
     <div class="scanlines"></div><div class="vignette"></div>
 
     <div class="topbar">
-      <div class="brand"><span class="brand-dot"></span>Qookey Gesture HUD</div>
+      <div class="brand"><span class="brand-dot"></span>Qookey Gesture Cube</div>
       <div class="chips">
         <div class="chip">FPS <b id="fps">0</b></div>
         <div class="chip">Hands <b id="hands">0</b></div>
         <div class="chip">10 Points <b id="fingerPoints">0/10</b></div>
         <div class="chip">Gesture <b id="gestureText">—</b></div>
-        <button class="chip mode-chip" id="modeBtn" type="button">Mode <b id="modeText">FOX</b></button>
+        <div class="chip">Moves <b id="moveCount">0</b></div>
       </div>
     </div>
 
-    <div class="hint">雙手十指撐開狐火膜 · 握拳蓄力 · 再張開爆發 · FOX / CORE 可切換</div>
+    <div class="hint">食指瞄準 · 🤏 捏住方塊表面後拖動轉 90° · 另一隻張開手旋轉整顆 · 雙手張開控制大小</div>
 
-    <section class="panel" id="panelA" data-draggable>
-      <div class="panel-head"><span class="panel-title">Spirit Tracking</span><span class="status-dot"></span></div>
-      <div class="panel-body"><div class="big" id="trackingState">OFFLINE</div><div class="sub">Hand + Face + Pose Landmarker 在瀏覽器端即時追蹤。Cute Fox 模式會把狐狸 AR 疊在臉與身體上。</div></div>
+    <section class="panel" id="panelA">
+      <div class="panel-head"><span class="panel-title">Gesture Cube</span><span class="status-dot"></span></div>
+      <div class="panel-body">
+        <div class="big" id="trackingState">OFFLINE</div>
+        <div class="sub">MediaPipe 只追蹤雙手。第一隻手負責選面與轉面；第二隻張開手可旋轉整顆魔術方塊。</div>
+      </div>
     </section>
 
-    <section class="panel" id="panelB" data-draggable>
-      <div class="panel-head"><span class="panel-title">Telemetry</span><span class="status-dot"></span></div>
+    <section class="panel" id="panelB">
+      <div class="panel-head"><span class="panel-title">Cube Telemetry</span><span class="status-dot"></span></div>
       <div class="panel-body"><div class="kv">
         <span>Pinch distance</span><b id="pinchVal">—</b>
-        <span>Cursor X</span><b id="cursorX">—</b>
-        <span>Cursor Y</span><b id="cursorY">—</b>
+        <span>Selected face</span><b id="selectedFace">—</b>
+        <span>Cube state</span><b id="cubeState">READY</b>
         <span>Latency</span><b id="latency">—</b>
-        <span>Fox tracking</span><b id="foxState">WAITING</b>
-        <span>Sphere openness</span><b id="orbOpenVal">15%</b>
       </div></div>
     </section>
 
-    <section class="panel" id="panelC" data-draggable>
-      <div class="panel-head"><span class="panel-title">Gesture Palette</span><span class="status-dot"></span></div>
-      <div class="panel-body"><div class="gesture-grid">
-        <div class="gesture" data-gesture="POINT"><span class="icon">☝️</span><small>POINT</small></div>
-        <div class="gesture" data-gesture="PINCH"><span class="icon">🤏</span><small>PINCH</small></div>
-        <div class="gesture" data-gesture="OPEN"><span class="icon">🖐️</span><small>OPEN</small></div>
-        <div class="gesture" data-gesture="FIST"><span class="icon">✊</span><small>FIST</small></div>
-        <div class="gesture" data-gesture="SWIPE"><span class="icon">👋</span><small>SWIPE</small></div>
-      </div></div>
+    <section class="panel controls" id="panelC">
+      <div class="panel-head"><span class="panel-title">Cube Controls</span><span class="status-dot"></span></div>
+      <div class="panel-body control-body">
+        <div class="control-copy"><b>TURN</b><span>Pinch + Drag</span></div>
+        <div class="control-copy"><b>ORBIT</b><span>Open Hand</span></div>
+        <div class="control-copy"><b>SCALE</b><span>Two Open Hands</span></div>
+        <button class="mini-btn" id="scrambleBtn" type="button">打亂</button>
+        <button class="mini-btn" id="resetBtn" type="button">重置</button>
+      </div>
     </section>
 
-    <div id="cursor" class="cursor"></div><div id="toast" class="toast">SWIPE</div>
+    <div id="cursor" class="cursor"></div><div id="toast" class="toast">TURN</div>
 
     <div class="start" id="startOverlay"><div class="start-card">
-      <div class="brand" style="margin-bottom:18px"><span class="brand-dot fox-dot"></span>Fox Spirit Prototype V3</div>
-      <h1>Cute Fox<br>Spirit Mode</h1>
-      <p>啟動相機後會同時追蹤雙手、臉與身體。臉會出現可愛狐狸耳朵、鼻口、腮紅與鬍鬚；上半身與四肢會加上橘白毛皮效果。雙手 10 個指尖會成為狐火控制點，兩手張開時在手上撐出一張會變形的能量膜。</p>
-      <div class="start-actions"><button class="btn btn-primary fox-primary" id="startBtn">啟動狐狸模式</button><button class="btn btn-ghost" id="demoBtn">沒有相機也先看介面</button></div>
-      <div class="notice" id="notice">第一次使用請允許此網站存取相機。Face / Pose 模型首次載入會比原本手勢版多幾秒。</div>
+      <div class="brand" style="margin-bottom:18px"><span class="brand-dot"></span>Gesture Cube V4</div>
+      <h1>Play a Cube<br>with Your Hands</h1>
+      <p>啟動相機後，只追蹤雙手，不再載入狐狸、臉部或身體特效。用食指瞄準魔術方塊，拇指＋食指捏合後拖動即可轉動目前選到的那一面。</p>
+      <div class="start-actions"><button class="btn btn-primary" id="startBtn">啟動手勢魔術方塊</button><button class="btn btn-ghost" id="demoBtn">先看方塊</button></div>
+      <div class="notice" id="notice">第一次使用請允許相機。建議讓兩隻手都能完整進入畫面。</div>
     </div></div>
   </div>
   <script type="module" src="./core.js"></script>
-  <script type="module" src="./fox.js"></script>
-  <script type="module" src="./orb.js"></script>
+  <script type="module" src="./cube.js"></script>
 </body>
 </html>
