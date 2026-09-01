@@ -1,13 +1,13 @@
 # Project Status
 
-Status date: 2026-08-31 (Asia/Taipei)
+Status date: 2026-09-01 (Asia/Taipei)
 
 ## Project
 
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 4 + Icon Quality Batch 4 audit**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 5 + Icon Quality Batch 4 audit + Requested Resources 2026-09-01**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -24,9 +24,14 @@ Status date: 2026-08-31 (Asia/Taipei)
 - The official-links registry is initially seeded with Archify's Project Page, Scenario Guide and Proof Lab plus ABYSSAL's official GitHub Pages Live Demo.
 - Official Links Batch 3 adds **9 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: World Monitor website/documentation/OpenAPI, Pi website/documentation, VoiceStudio website/latest release, and DSH Desktop website/latest release. PR #30 was merged as `9b71c4f90b22817e186797a2922978ccd42d371f` after Resource Health PR validation and Frontend Interaction Regression passed.
 - Official Links Batch 4 adds **8 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: Skills For Designers and Engineers skills.sh/core Skill, Hallmark Live Demo/Recipes, IP as Logo website/SKILL.md, and reverse-skill project website/online tutorial. PR #32 was merged as `51403b5a04f43e546d62a542a23ec41de1990eac` after Resource Health PR validation and Frontend Interaction Regression passed.
+- Official Links Batch 5 adds **8 verified supplemental official links across 4 existing resources** without changing canonical identities or primary URLs: MoneyPrinterTurbo latest release/Agent Skill, Skills For Real Engineers skills.sh/setup Skill, Agent-Native documentation/Apps Gallery, and H3 Storyboard SKILL.md/SOURCES.md. PR #35 was merged as `4d4490411fe90ac617b8fcc530d83805ab223227`; its main Pages (`33379967221`), Frontend Interaction Regression (`33379967145`) and Resource Health (`33379967284`) all completed successfully.
+- Requested Resources 2026-09-01 added **3 verified non-duplicate resources** from the user-supplied batch: Lulu — AI Agent / Automation Projects as a GitHub developer/project collection profile, OmniRoute as an MIT multi-provider AI Gateway, and OpenMAIC as an MIT multi-agent interactive classroom platform. MetalForge and `Raymondhou0917/speak-human-tw` were already present and were intentionally not duplicated. PR #36 was merged as `e65c85757efe219e05098e3eae8fc50656358b04`.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
-- Catalog now contains **43 verified resources**.
+- Catalog now contains **46 verified resources**.
 - `說人話 speak-human-tw` added as an active MIT-licensed Traditional Chinese proofreading / de-AI-writing Agent Skill. Catalog metadata records its 38 AI-writing trace checks, Taiwan-usage normalization, two-stage confirmation workflow, prompt-injection boundary and the official 42-case synthetic benchmark; SKILL.md and benchmark are stored as verified supplemental links rather than duplicate resources.
+- Lulu — AI Agent / Automation Projects added as a verified GitHub developer/project collection profile for `lulu930128`; its metadata explicitly preserves that the profile is a collection of separate projects rather than a single package or shared license.
+- OmniRoute added as an active MIT-licensed multi-provider AI Gateway with an OpenAI-compatible endpoint, quota-aware routing/fallback, coding-agent integrations, MCP/A2A, CLI, Desktop/PWA options, an official project icon, website and latest-release link.
+- OpenMAIC added as an active MIT-licensed Multi-Agent Interactive Classroom platform with course generation, Agent Workbench, slides/quizzes/simulations/PBL, whiteboard/TTS, provider-neutral model integration, an official project mark, Live Demo and latest-release link.
 - Anime.js added as an active MIT-licensed JavaScript animation library resource.
 - World Monitor added as an active AGPL-3.0-only global intelligence / OSINT dashboard resource with MCP, REST API, CLI and SDK access.
 - Pi Agent Harness added as an active MIT-licensed AI agent toolkit with unified multi-provider LLM API, agent runtime, TUI and coding-agent CLI.
@@ -147,24 +152,24 @@ First V0.2 full-run evidence:
 
 Latest full-run evidence:
 
-- Workflow run: `33377553303`
-- Commit: `51403b5a04f43e546d62a542a23ec41de1990eac`
+- Workflow run: `33474334214`
+- Commit: `e65c85757efe219e05098e3eae8fc50656358b04`
 - Result: PASS
-- Total: 43
-- Clean: 38
+- Total: 46
+- Clean: 41
 - Expected variance: 5
 - Review required: 0
 - Broken resources: 0
 - Errors: 0
-- Raw reachable: 41
+- Raw reachable: 44
 - Raw restricted: 2
 - Raw redirected: 2
-- GitHub metadata checked: 27
+- GitHub metadata checked: 29
 - Automatic catalog mutations: 0
 
 ## Current catalog
 
-- Total resources: 43
+- Total resources: 46
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -183,9 +188,9 @@ Latest full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Official Links Batch 4 run `33377553317`, completed successfully on 2026-08-31.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Official Links Batch 4 run `33377553393`, completed successfully on 2026-08-31. Playwright remains test-only and is not shipped in the production frontend.
-- Full Resource Health V0.2 latest confirmed main run is `33377553303`, completed successfully with 43 total resources, 38 clean, 5 expected variances and 0 review-required items; raw evidence contains 0 broken resources and 0 errors.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Requested Resources 2026-09-01 run `33474334208`, completed successfully on 2026-09-01.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Requested Resources 2026-09-01 run `33474334225`, completed successfully on 2026-09-01. Playwright remains test-only and is not shipped in the production frontend.
+- Full Resource Health V0.2 latest confirmed main run is `33474334214`, completed successfully with 46 total resources, 41 clean, 5 expected variances and 0 review-required items; raw evidence contains 44 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
@@ -232,4 +237,4 @@ Latest full-run evidence:
 
 ## Next step
 
-Continue Discovery V1.4 with Official Links Batch 5 across remaining resources that have clearly verifiable official documentation, demo, release or Skill entry points. Keep icon quality work opportunistic: replace a favicon only when a clearly better stable official project mark is verified, otherwise preserve the current verified fallback. In parallel, continue production AI recommender monitoring and verified user-supplied resource ingestion without changing canonical resource identity rules.
+Continue Discovery V1.4 with Official Links Batch 6 across remaining resources that have clearly verifiable official documentation, demo, release or Skill entry points. Keep icon quality work opportunistic: replace a favicon only when a clearly better stable official project mark is verified, otherwise preserve the current verified fallback. Continue verified user-supplied resource ingestion with duplicate checks first, and keep production AI recommender monitoring in parallel without changing canonical resource identity rules.
