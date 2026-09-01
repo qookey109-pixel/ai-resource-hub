@@ -1,0 +1,219 @@
+name: Temporary requested resource ingestion
+
+on:
+  push:
+    branches:
+      - data/add-requested-resources-20260901
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: data/add-requested-resources-20260901
+          fetch-depth: 1
+
+      - name: Add verified resources without duplicates
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          DATE = "2026-09-01"
+          resources_path = Path("data/resources.json")
+          icons_path = Path("data/resource-icons.json")
+          links_path = Path("data/resource-links.json")
+          categories_path = Path("data/categories.json")
+
+          resources_data = json.loads(resources_path.read_text(encoding="utf-8"))
+          icons_data = json.loads(icons_path.read_text(encoding="utf-8"))
+          links_data = json.loads(links_path.read_text(encoding="utf-8"))
+          categories_data = json.loads(categories_path.read_text(encoding="utf-8"))
+
+          resources = resources_data["resources"]
+          valid_categories = {item["name"] for item in categories_data["categories"]}
+
+          # Explicit duplicate guard for URLs supplied by the user that already exist.
+          by_url = {item["url"].rstrip("/"): item for item in resources}
+          assert "https://metalforge.xyz/editor" in by_url, "Expected existing MetalForge resource"
+          assert "https://github.com/Raymondhou0917/speak-human-tw" in by_url, "Expected existing speak-human-tw resource"
+
+          additions = [
+              {
+                  "id": "lulu930128-github-profile",
+                  "name": "Lulu — AI Agent / Automation Projects",
+                  "type": "website",
+                  "url": "https://github.com/lulu930128",
+                  "categories": ["MCP / Agent Frameworks", "Automation / Workflow", "Data / Analytics", "Developer Tools"],
+                  "tags": ["github-profile", "ai-agents", "automation", "market-intelligence", "fastapi", "nextjs", "data-pipelines", "llm-apps"],
+                  "summary": "Lulu 的公開 GitHub 開發者與專案集合頁，聚焦 AI Agent、桌面助理 Runtime、自動化系統、市場情報資料管線與 Next.js 實驗專案。",
+                  "use_cases": [
+                      "追蹤同一位開發者公開的 AI Agent、Automation 與資料工具專案",
+                      "研究桌面 AI Assistant 的 Memory、Emotion 與 Tool Orchestration 架構方向",
+                      "參考 FastAPI、市場情報資料管線與 Next.js 專案的公開實作"
+                  ],
+                  "pricing": "free",
+                  "open_source": None,
+                  "license": None,
+                  "difficulty": "unknown",
+                  "status": "active",
+                  "rating": None,
+                  "added_at": DATE,
+                  "last_checked": DATE,
+                  "notes": "這是 GitHub 開發者／專案集合頁，不是單一套件。Profile README 目前列出 Desktop Agent Runtime、Open Market Intelligence、LuluLab Site 等正在建置的方向；各 Repository 的授權、成熟度、依賴與部署方式必須分別確認，不能把 Profile 本身視為所有專案的共同授權。"
+              },
+              {
+                  "id": "diegosouzapw-omniroute",
+                  "name": "OmniRoute",
+                  "type": "github",
+                  "url": "https://github.com/diegosouzapw/OmniRoute",
+                  "categories": ["AI / LLM", "AI Coding", "MCP / Agent Frameworks", "Developer Tools", "Automation / Workflow"],
+                  "tags": ["omniroute", "ai-gateway", "llm-gateway", "model-routing", "auto-fallback", "quota-aware", "codex", "claude-code", "cursor", "mcp", "a2a", "openai-compatible", "typescript"],
+                  "summary": "MIT 開源的多供應商 AI Gateway，以單一 OpenAI-compatible 端點整合大量 LLM Provider 與模型，並提供配額感知路由、自動 Fallback、Token 壓縮、MCP／A2A、CLI、Desktop 與 PWA 工作流。",
+                  "use_cases": [
+                      "讓 Codex、Claude Code、Cursor、Cline 等工具透過同一個 Gateway 切換不同模型供應商",
+                      "依 Provider 配額、可用性與策略自動路由或 Fallback，降低單一服務中斷造成的工作中止",
+                      "集中管理多模型 API、OpenAI-compatible Endpoint、MCP／A2A 與 Coding Agent 使用方式",
+                      "透過 npm、Docker、Desktop App 或自架方式部署 AI Gateway"
+                  ],
+                  "pricing": "open-source",
+                  "open_source": True,
+                  "license": "MIT",
+                  "difficulty": "advanced",
+                  "status": "active",
+                  "rating": 5,
+                  "added_at": DATE,
+                  "last_checked": DATE,
+                  "notes": "GitHub 於 2026-09-01 顯示 Repository 公開、MIT、未封存且持續更新。README 目前標示 352 providers、150+ free providers／tiers 與 1,300+ chat model IDs，這些數字會隨版本與供應商政策變動。所謂免費額度仍受各 Provider 的帳號資格、Rate Limit、服務條款與風險政策約束；不應把 OmniRoute 當成繞過供應商限制或使用條款的工具。"
+              },
+              {
+                  "id": "thu-maic-openmaic",
+                  "name": "OpenMAIC",
+                  "type": "github",
+                  "url": "https://github.com/THU-MAIC/OpenMAIC",
+                  "categories": ["AI / LLM", "MCP / Agent Frameworks", "App / Full-stack Development", "Learning / Documentation", "Automation / Workflow"],
+                  "tags": ["openmaic", "multi-agent", "interactive-classroom", "ai-learning", "course-generation", "agent-workbench", "langgraph", "nextjs", "tts", "whiteboard", "quiz", "pbl", "openclaw"],
+                  "summary": "MIT 開源的 Multi-Agent Interactive Classroom 平台，可把主題或教材轉成由 AI 老師與同學共同參與的互動課程，生成投影片、Quiz、模擬、PBL、白板與語音內容，並提供可持續編修整門課程的 Agent Workbench。",
+                  "use_cases": [
+                      "把文件、主題或影音素材轉成多 Agent 互動式學習課程",
+                      "由 Agent Workbench 規劃課綱、建立與反覆修改 Slides、Quiz、Interactive 與 PBL 內容",
+                      "匯出可編輯 PPTX 或互動 HTML，建立教學、培訓與自主學習素材",
+                      "自行部署並串接 OpenAI、Anthropic、Gemini、DeepSeek、Ollama、Lemonade 等雲端或本機模型供應商"
+                  ],
+                  "pricing": "open-source",
+                  "open_source": True,
+                  "license": "MIT",
+                  "difficulty": "advanced",
+                  "status": "active",
+                  "rating": 5,
+                  "added_at": DATE,
+                  "last_checked": DATE,
+                  "notes": "OpenMAIC v1.0.0 於 2026-08-27 發布；Repository 公開、MIT、未封存且近期持續更新。官方提供 Live Demo 與自架方式；Self-hosted 通常需至少一個模型 Provider，亦支援 Ollama／Lemonade 等本機選項。AI 產生的課程、引用、測驗與教學內容仍應由使用者依主題重要性核對事實，不應把生成結果直接視為權威教材。"
+              }
+          ]
+
+          existing_ids = {item["id"] for item in resources}
+          existing_urls = {item["url"].rstrip("/") for item in resources}
+          added_ids = []
+          for item in additions:
+              normalized_url = item["url"].rstrip("/")
+              if normalized_url in existing_urls:
+                  print(f"skip duplicate URL: {item['url']}")
+                  continue
+              if item["id"] in existing_ids:
+                  raise SystemExit(f"ID collision with different URL: {item['id']}")
+              unknown_categories = set(item["categories"]) - valid_categories
+              if unknown_categories:
+                  raise SystemExit(f"Unknown categories for {item['id']}: {sorted(unknown_categories)}")
+              resources.append(item)
+              existing_ids.add(item["id"])
+              existing_urls.add(normalized_url)
+              added_ids.append(item["id"])
+
+          expected_added = {"lulu930128-github-profile", "diegosouzapw-omniroute", "thu-maic-openmaic"}
+          if set(added_ids) != expected_added:
+              raise SystemExit(f"Unexpected ingestion set: {added_ids}")
+
+          resources_data["updated_at"] = DATE
+
+          icons_data["updated_at"] = DATE
+          icons = icons_data["icons"]
+          icons["lulu930128-github-profile"] = {
+              "url": "https://github.com/lulu930128.png?size=256",
+              "source": "github-owner-avatar-256"
+          }
+          icons["diegosouzapw-omniroute"] = {
+              "url": "https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/public/icon-512.png",
+              "source": "official-repository-app-icon-512"
+          }
+          icons["thu-maic-openmaic"] = {
+              "url": "https://raw.githubusercontent.com/THU-MAIC/OpenMAIC/main/public/openmaic-mark.png",
+              "source": "official-repository-project-mark-png"
+          }
+
+          links_data["updated_at"] = DATE
+          links = links_data["links"]
+          links["diegosouzapw-omniroute"] = [
+              {
+                  "label": "OmniRoute 官方網站",
+                  "kind": "website",
+                  "url": "https://omniroute.online",
+                  "description": "Repository 官方 homepage 指向的 OmniRoute 網站，可查看 Gateway、安裝與產品入口。"
+              },
+              {
+                  "label": "OmniRoute 最新版本下載",
+                  "kind": "download",
+                  "url": "https://github.com/diegosouzapw/OmniRoute/releases/latest",
+                  "description": "官方 GitHub 最新 Release，可查看目前穩定版本與 Desktop 平台安裝檔。"
+              }
+          ]
+          links["thu-maic-openmaic"] = [
+              {
+                  "label": "OpenMAIC Live Demo",
+                  "kind": "demo",
+                  "url": "https://open.maic.chat/",
+                  "description": "官方 README 指定的線上 Demo，可直接體驗 OpenMAIC 多 Agent 互動課堂與課程生成流程。"
+              },
+              {
+                  "label": "OpenMAIC 最新版本",
+                  "kind": "download",
+                  "url": "https://github.com/THU-MAIC/OpenMAIC/releases/latest",
+                  "description": "官方 GitHub 最新 Release 與版本說明入口；目前已驗證 v1.0.0。"
+              }
+          ]
+
+          # Final structural duplicate and parent checks.
+          ids = [item["id"] for item in resources]
+          urls = [item["url"].rstrip("/") for item in resources]
+          if len(ids) != len(set(ids)):
+              raise SystemExit("Duplicate resource IDs detected")
+          if len(urls) != len(set(urls)):
+              raise SystemExit("Duplicate canonical resource URLs detected")
+          resource_id_set = set(ids)
+          orphan_links = sorted(set(links) - resource_id_set)
+          if orphan_links:
+              raise SystemExit(f"Orphan resource-links entries: {orphan_links}")
+          orphan_icons = sorted(set(icons) - resource_id_set)
+          if orphan_icons:
+              raise SystemExit(f"Orphan icon entries: {orphan_icons}")
+
+          resources_path.write_text(json.dumps(resources_data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+          icons_path.write_text(json.dumps(icons_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          links_path.write_text(json.dumps(links_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          print(f"Catalog now has {len(resources)} resources; added {added_ids}")
+          PY
+
+          python scripts/resource_links_validate.py
+
+          git config user.name "qookey-resource-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/_tmp-ingest-requested-resources.yml
+          git add data/resources.json data/resource-icons.json data/resource-links.json
+          git commit -m "Add requested verified resources"
+          git push origin HEAD:data/add-requested-resources-20260901
