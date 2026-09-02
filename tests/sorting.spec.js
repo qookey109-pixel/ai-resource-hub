@@ -52,33 +52,51 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#resource-grid .card').first()).toBeVisible();
   await expect(page.locator('.resource-click-count').first()).toBeVisible();
-  await expect(page.locator('#sort-filter')).toBeVisible();
+  await expect(page.locator('.hero-sort-button')).toHaveCount(2);
+  await expect(page.locator('#sort-filter')).toBeHidden();
 });
 
-test('sorting control stays usable on mobile', async ({ page }) => {
+test('sorting uses exactly two buttons beside search and defaults to newest first', async ({ page }) => {
+  const added = page.locator('#sort-added-button');
+  const clicks = page.locator('#sort-clicks-button');
+
+  await expect(added).toBeVisible();
+  await expect(clicks).toBeVisible();
+  await expect(added).toHaveAttribute('aria-pressed', 'true');
+  await expect(added.locator('[data-sort-direction]')).toHaveText('新→舊');
+  await expect(clicks.locator('[data-sort-direction]')).toHaveText('多→少');
+  await expect.poll(async () => isMonotonic(await cardDates(page), 'desc')).toBe(true);
+});
+
+test('sorting buttons stay usable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  const sort = page.locator('#sort-filter');
-  await expect(sort).toBeVisible();
-  await sort.selectOption('newest');
-  await expect(sort).toHaveValue('newest');
+  await expect(page.locator('#sort-added-button')).toBeVisible();
+  await expect(page.locator('#sort-clicks-button')).toBeVisible();
 });
 
-test('sorts by join date in both directions', async ({ page }) => {
-  const sort = page.locator('#sort-filter');
+test('join-date button toggles newest and oldest', async ({ page }) => {
+  const added = page.locator('#sort-added-button');
 
-  await sort.selectOption('newest');
   await expect.poll(async () => isMonotonic(await cardDates(page), 'desc')).toBe(true);
 
-  await sort.selectOption('oldest');
+  await added.click();
+  await expect(added.locator('[data-sort-direction]')).toHaveText('舊→新');
   await expect.poll(async () => isMonotonic(await cardDates(page), 'asc')).toBe(true);
+
+  await added.click();
+  await expect(added.locator('[data-sort-direction]')).toHaveText('新→舊');
+  await expect.poll(async () => isMonotonic(await cardDates(page), 'desc')).toBe(true);
 });
 
-test('sorts by click count in both directions', async ({ page }) => {
-  const sort = page.locator('#sort-filter');
+test('click-count button toggles descending and ascending', async ({ page }) => {
+  const clicks = page.locator('#sort-clicks-button');
 
-  await sort.selectOption('clicks-desc');
+  await clicks.click();
+  await expect(clicks).toHaveAttribute('aria-pressed', 'true');
+  await expect(clicks.locator('[data-sort-direction]')).toHaveText('多→少');
   await expect.poll(async () => isMonotonic(await cardNumbers(page, 'clickCount'), 'desc')).toBe(true);
 
-  await sort.selectOption('clicks-asc');
+  await clicks.click();
+  await expect(clicks.locator('[data-sort-direction]')).toHaveText('少→多');
   await expect.poll(async () => isMonotonic(await cardNumbers(page, 'clickCount'), 'asc')).toBe(true);
 });
