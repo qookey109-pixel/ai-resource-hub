@@ -3,45 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#140805" />
+  <meta name="theme-color" content="#0d0a07" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Qookey Accordion Play V10.1</title>
-  <link rel="stylesheet" href="./app.css?v=10.1.0" />
+  <title>Qookey Noodle Pull V8.2</title>
+  <link rel="stylesheet" href="./app.css?v=8.2.0" />
 </head>
 <body>
   <div class="app" id="app">
     <video id="video" autoplay playsinline muted></video>
     <canvas id="stage"></canvas>
-    <canvas id="accordionStage"></canvas>
+    <canvas id="noodleStage"></canvas>
 
     <div class="topbar">
-      <div class="brand"><span class="brand-dot"></span>Qookey Accordion Play <small style="opacity:.65">V10.1</small></div>
+      <div class="brand"><span class="brand-dot"></span>Qookey Noodle Pull <small style="opacity:.65">V8.2</small></div>
       <div class="chips">
         <div class="chip">FPS <b id="fps">0</b></div>
         <div class="chip">Hands <b id="hands">0</b></div>
         <div class="chip">Mode <b id="gestureText">WAIT</b></div>
-        <div class="chip">Stretch <b id="accordionStretch">0%</b></div>
+        <div class="chip">Length <b id="noodleLength">0%</b></div>
       </div>
     </div>
 
-    <div class="hint">雙手自動抓住手風琴 · 拉開展開風箱 · 靠近壓縮 · 動作越快聲音越有力</div>
+    <div class="hint">雙手自動抓住麵條 · 左右拉伸 · 上下甩動有明顯回彈 · 拉到最開也不會斷</div>
 
     <section class="panel" id="panelA">
-      <div class="panel-head"><span class="panel-title">Accordion Play</span><span class="status-dot"></span></div>
+      <div class="panel-head"><span class="panel-title">Noodle Pull</span><span class="status-dot"></span></div>
       <div class="panel-body">
         <div class="big" id="trackingState">OFFLINE</div>
-        <div class="sub">不用捏、不用握拳。兩隻手就是手風琴左右兩端；拉開、收回就能直接控制風箱，手的位置也會讓整台手風琴跟著傾斜。</div>
+        <div class="sub">不用捏、不用握拳。雙手就是麵條兩端；手往上、往下會把整束麵帶起來，中央會延遲、回彈並形成 Q 彈波浪。</div>
       </div>
     </section>
 
     <section class="panel" id="panelB">
-      <div class="panel-head"><span class="panel-title">演奏狀態</span><span class="status-dot"></span></div>
+      <div class="panel-head"><span class="panel-title">麵條狀態</span><span class="status-dot"></span></div>
       <div class="panel-body"><div class="kv">
-        <span>雙手距離</span><b id="distanceVal">—</b>
-        <span>音高</span><b id="noteVal">—</b>
-        <span>音量</span><b id="volumeVal">0%</b>
+        <span>拉伸距離</span><b id="distanceVal">—</b>
+        <span>麵條粗細</span><b id="thicknessVal">—</b>
+        <span>拉力</span><b id="tensionVal">—</b>
         <span>動作</span><b id="actionState">等待雙手</b>
         <span>Latency</span><b id="latency">—</b>
       </div></div>
@@ -50,24 +50,24 @@
     <section class="panel controls" id="panelC">
       <div class="panel-head"><span class="panel-title">玩法</span><span class="status-dot"></span></div>
       <div class="panel-body control-body">
-        <div class="control-copy"><b>1</b><span>雙手進畫面，自動抓住手風琴</span></div>
-        <div class="control-copy"><b>2</b><span>左右拉開或壓回，控制風箱</span></div>
-        <div class="control-copy"><b>3</b><span>拉得越快，聲音越有力</span></div>
-        <button class="mini-btn" id="resetBtn" type="button">重置手風琴</button>
+        <div class="control-copy"><b>1</b><span>雙手進畫面，自動抓麵</span></div>
+        <div class="control-copy"><b>2</b><span>上下甩動，看 Q 彈回彈</span></div>
+        <div class="control-copy"><b>3</b><span>左右拉到極限，再收回來</span></div>
+        <button class="mini-btn" id="resetBtn" type="button">重置麵條</button>
       </div>
     </section>
 
-    <div id="toast" class="toast">PLAY 🪗</div>
+    <div id="toast" class="toast">Q彈甩麵！</div>
 
     <div class="start" id="startOverlay"><div class="start-card">
-      <div class="brand" style="margin-bottom:18px"><span class="brand-dot"></span>Accordion Play V10.1</div>
-      <h1>Pull, Push<br>& Play 🪗</h1>
-      <p>兩隻手一進鏡頭就會自動抓住手風琴。拉開風箱、再壓回去就能演奏；雙手距離會切換音高，拉伸速度會改變音量，完全不需要額外按鍵。</p>
-      <div class="start-actions"><button class="btn btn-primary" id="startBtn">開始演奏</button><button class="btn btn-ghost" id="demoBtn">先看 Demo</button></div>
-      <div class="notice" id="notice">第一次使用請允許相機。聲音由瀏覽器 Web Audio 即時產生，不需要外部音訊檔；仍只使用雙手追蹤。</div>
+      <div class="brand" style="margin-bottom:18px"><span class="brand-dot"></span>Noodle Pull V8.2</div>
+      <h1>Pull & Bounce<br>Forever 🍜</h1>
+      <p>兩隻手一進鏡頭就會自動抓住麵條。左右拉開會變長變細；上下甩動會產生明顯的延遲與 Q 彈波浪。保留不斷裂設定，拉到最開也只會進入極限拉伸，不會斷掉。</p>
+      <div class="start-actions"><button class="btn btn-primary" id="startBtn">開始拉麵</button><button class="btn btn-ghost" id="demoBtn">先看 Demo</button></div>
+      <div class="notice" id="notice">第一次使用請允許相機。只需要雙手追蹤，不會載入臉部或身體模型。</div>
     </div></div>
   </div>
-  <script type="module" src="./core.js?v=10.1.0"></script>
-  <script type="module" src="./accordion.js?v=10.1.0"></script>
+  <script type="module" src="./core.js?v=8.2.0"></script>
+  <script type="module" src="./noodle.js?v=8.2.0"></script>
 </body>
 </html>
