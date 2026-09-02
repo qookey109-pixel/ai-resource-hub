@@ -1,0 +1,54 @@
+name: Temporary ChatGPT Web for Codex status receipt
+
+on:
+  push:
+    branches:
+      - chore/codex-chatgpt-web-receipt-20260902
+    paths:
+      - .github/workflows/_tmp-codex-chatgpt-web-receipt.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: chore/codex-chatgpt-web-receipt-20260902
+      - name: Record verified ingestion receipt
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('PROJECT_STATUS.md')
+          text = p.read_text(encoding='utf-8')
+
+          replacements = [
+            ('Status date: 2026-09-01 (Asia/Taipei)', 'Status date: 2026-09-02 (Asia/Taipei)'),
+            ('+ Requested Resources 2026-09-01**', '+ Requested Resources 2026-09-01 + ChatGPT Web for Codex**'),
+            ('- Requested Resources 2026-09-01 added **3 verified non-duplicate resources** from the user-supplied batch: Lulu — AI Agent / Automation Projects as a GitHub developer/project collection profile, OmniRoute as an MIT multi-provider AI Gateway, and OpenMAIC as an MIT multi-agent interactive classroom platform. MetalForge and `Raymondhou0917/speak-human-tw` were already present and were intentionally not duplicated. PR #36 was merged as `e65c85757efe219e05098e3eae8fc50656358b04`.', '- Requested Resources 2026-09-01 added **3 verified non-duplicate resources** from the user-supplied batch: Lulu — AI Agent / Automation Projects as a GitHub developer/project collection profile, OmniRoute as an MIT multi-provider AI Gateway, and OpenMAIC as an MIT multi-agent interactive classroom platform. MetalForge and `Raymondhou0917/speak-human-tw` were already present and were intentionally not duplicated. PR #36 was merged as `e65c85757efe219e05098e3eae8fc50656358b04`.\n- ChatGPT Web for Codex added as an active MIT-licensed third-party Codex ↔ ChatGPT Web bridge. PR #50 was merged as `e858b79f283b81656dfd246d0b52442ba090dcbc` with the official launcher SVG plus latest-release, Architecture and Security Model links. Catalog notes explicitly preserve that it is not an OpenAI API or official Codex integration, that browser-session state is sensitive, that Full Harness can request current Codex-task tools and must remain behind connector permissions/sandbox/approvals, and that ChatGPT UI drift or unsigned platform packages can affect operation.'),
+            ('- Catalog now contains **46 verified resources**.', '- Catalog now contains **47 verified resources**.'),
+            ('- Workflow run: `33474334214`\n- Commit: `e65c85757efe219e05098e3eae8fc50656358b04`\n- Result: PASS\n- Total: 46\n- Clean: 41\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 44\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 29\n- Automatic catalog mutations: 0', '- Workflow run: `33581688764`\n- Commit: `e858b79f283b81656dfd246d0b52442ba090dcbc`\n- Result: PASS\n- Total: 47\n- Clean: 42\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 45\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 30\n- Automatic catalog mutations: 0'),
+            ('- Total resources: 46', '- Total resources: 47'),
+            ('- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Requested Resources 2026-09-01 run `33474334208`, completed successfully on 2026-09-01.', '- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is ChatGPT Web for Codex run `33581688865`, completed successfully on 2026-09-02.'),
+            ('- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Requested Resources 2026-09-01 run `33474334225`, completed successfully on 2026-09-01. Playwright remains test-only and is not shipped in the production frontend.', '- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is ChatGPT Web for Codex run `33581688771`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.'),
+            ('- Full Resource Health V0.2 latest confirmed main run is `33474334214`, completed successfully with 46 total resources, 41 clean, 5 expected variances and 0 review-required items; raw evidence contains 44 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.', '- Full Resource Health V0.2 latest confirmed main run is `33581688764`, completed successfully with 47 total resources, 42 clean, 5 expected variances and 0 review-required items; raw evidence contains 45 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.'),
+          ]
+
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'Expected status text not found: {old[:100]}')
+              text = text.replace(old, new, 1)
+
+          p.write_text(text, encoding='utf-8')
+          Path('.github/workflows/_tmp-codex-chatgpt-web-receipt.yml').unlink()
+          PY
+      - name: Commit receipt
+        run: |
+          git config user.name "qookey-resource-bot"
+          git config user.email "qookey-resource-bot@users.noreply.github.com"
+          git add PROJECT_STATUS.md .github/workflows/_tmp-codex-chatgpt-web-receipt.yml
+          git commit -m "Record ChatGPT Web for Codex deployment receipt"
+          git push origin HEAD:chore/codex-chatgpt-web-receipt-20260902
