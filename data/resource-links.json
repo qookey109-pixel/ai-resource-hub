@@ -409,6 +409,26 @@
         "url": "https://github.com/firekou/aitokenking_developerskill/blob/claude/ai-token-king-dev-skills-hs56n1/.claude/skills/vibe-to-ship/SKILL.md",
         "description": "官方主入口 Skill 定義，涵蓋執行前置、乾跑路線、扣費與修改程式碼邊界，以及 L1–L5 的完整編排流程。"
       }
+    ],
+    "yanliudesign-mono-color-skill": [
+      {
+        "label": "SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/SKILL.md",
+        "description": "官方 Skill 主入口，定義單色／雙色印刷視覺規則、輸入解析、配色、留白、版式、原創性邊界與輸出格式。"
+      },
+      {
+        "label": "繁體／中文 README",
+        "kind": "documentation",
+        "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/README.zh.md",
+        "description": "官方中文說明，可查看用途、色票、雙色配方、安裝方式、範例、驗證流程與設計系統。"
+      },
+      {
+        "label": "Visual Asset License",
+        "kind": "documentation",
+        "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/ASSET-LICENSE.md",
+        "description": "官方視覺素材授權說明；examples/ 內範例作品不包含在 MIT License，商用或重用前必須遵守作者另行保留的權利。"
+      }
     ]
   }
 }
