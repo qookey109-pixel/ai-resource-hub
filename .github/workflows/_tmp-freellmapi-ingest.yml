@@ -1,0 +1,138 @@
+name: Temporary FreeLLMAPI catalog ingestion
+
+on:
+  push:
+    branches:
+      - data/add-freellmapi-20260902
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Add verified FreeLLMAPI resource metadata
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          resource_id = "tashfeenahmed-freellmapi"
+          canonical_url = "https://github.com/tashfeenahmed/freellmapi"
+
+          resources_path = Path("data/resources.json")
+          resources = json.loads(resources_path.read_text(encoding="utf-8"))
+          existing = resources["resources"]
+          if not any(r.get("id") == resource_id or r.get("url") == canonical_url for r in existing):
+              existing.append({
+                  "id": resource_id,
+                  "name": "FreeLLMAPI",
+                  "type": "github",
+                  "url": canonical_url,
+                  "categories": [
+                      "AI / LLM",
+                      "AI Coding",
+                      "MCP / Agent Frameworks",
+                      "Developer Tools",
+                      "Automation / Workflow"
+                  ],
+                  "tags": [
+                      "freellmapi",
+                      "llm-gateway",
+                      "openai-compatible",
+                      "free-tier",
+                      "model-routing",
+                      "automatic-failover",
+                      "quota-tracking",
+                      "codex",
+                      "claude-code",
+                      "mcp",
+                      "self-hosted",
+                      "typescript"
+                  ],
+                  "summary": "MIT 開源的多供應商 LLM Gateway，把多家免費方案與自訂 OpenAI-compatible 端點整合到單一 /v1 API，提供智慧路由、配額追蹤、自動 Failover、加密金鑰，以及 Codex、Claude Code 等 Coding Agent／CLI 整合。",
+                  "use_cases": [
+                      "把多個 LLM Provider 的免費額度與 API Key 集中到一個自架 OpenAI-compatible Gateway",
+                      "讓 Codex、Claude Code、Aider、Cline、OpenCode 等工具透過單一 Endpoint 使用多家模型並自動切換",
+                      "依各 Provider 的 RPM、RPD、TPM、TPD 配額與可用性進行智慧路由、Key Rotation 與 Failover",
+                      "把 Ollama、llama.cpp、LM Studio、vLLM 或其他自訂 OpenAI-compatible Endpoint 加入同一個模型池",
+                      "在個人實驗與原型階段透過聊天、Responses、Embedding、圖片、影片與語音等相容 API 測試不同模型能力"
+                  ],
+                  "pricing": "freemium",
+                  "open_source": True,
+                  "license": "MIT",
+                  "difficulty": "advanced",
+                  "status": "active",
+                  "rating": 5,
+                  "added_at": "2026-09-02",
+                  "last_checked": "2026-09-02",
+                  "notes": "2026-09-02 檢查時 Repository 公開、未封存、default branch 為 main，最新正式 Release 為 v0.9.2，GitHub 約 2.36 萬顆 Stars。README 當下列出約 34 個免費 LLM Provider、474 個模型家族、635 個免費 Endpoint 與約 74 億 tokens／月的理論聚合額度；這些數字與實際可用量會隨各 Provider 的免費方案、帳號資格、區域、Rate Limit 與條款變動。作者明確將 FreeLLMAPI 定位為個人實驗與學習用途，而非 production inference；各上游 Provider 的 ToS 仍然生效，部分免費方案只允許 evaluation、experimentation 或 prototyping，且免費池沒有 SLA。Router 軟體本身採 MIT 並維持免費；官方另提供更新較即時的 Premium live catalog，README 當下標示 US$19／年或 US$49 一次買斷，Free 安裝則使用約延後 30 天的月度 catalog snapshot。Provider API Keys 會以 AES-256-GCM 加密保存；正式環境必須妥善保存 ENCRYPTION_KEY，遺失後已儲存金鑰無法復原。"
+              })
+          resources["updated_at"] = "2026-09-02"
+          resources_path.write_text(json.dumps(resources, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+          icons_path = Path("data/resource-icons.json")
+          icons = json.loads(icons_path.read_text(encoding="utf-8"))
+          icons["icons"].setdefault(resource_id, {
+              "url": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/main/client/public/favicon.svg",
+              "source": "official-repo-brand-favicon-svg"
+          })
+          icons["updated_at"] = "2026-09-02"
+          icons_path.write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          links_path = Path("data/resource-links.json")
+          links = json.loads(links_path.read_text(encoding="utf-8"))
+          links["links"].setdefault(resource_id, [
+              {
+                  "label": "FreeLLMAPI 官方網站",
+                  "kind": "website",
+                  "url": "https://freellmapi.co/",
+                  "description": "官方網站，可查看目前模型目錄、產品說明與 Premium live catalog 資訊。"
+              },
+              {
+                  "label": "API Reference",
+                  "kind": "api",
+                  "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/api/01-rest-api.md",
+                  "description": "官方 API 文件，涵蓋 OpenAI-compatible、Anthropic Messages、Gemini、Ollama、圖片、影片、語音、Embedding、Fusion 與路由介面。"
+              },
+              {
+                  "label": "Clients & Coding Agents",
+                  "kind": "documentation",
+                  "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/clients/01-agent-clients.md",
+                  "description": "官方 Client 與 Coding Agent 整合指南，包含 Codex、Claude Code、OpenAI-compatible Client、Gemini、Ollama 與 MCP。"
+              },
+              {
+                  "label": "Security & Key Handling",
+                  "kind": "documentation",
+                  "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/env/02-security-and-keys.md",
+                  "description": "官方安全文件，說明 ENCRYPTION_KEY、AES-256-GCM Provider Key 加密、備份與資料目錄保護。"
+              },
+              {
+                  "label": "Provider ToS Review",
+                  "kind": "documentation",
+                  "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/architecture.md#terms-of-service-review",
+                  "description": "作者整理的免費 Provider 條款風險檢查；實際使用仍需以各 Provider 當下正式條款為準。"
+              },
+              {
+                  "label": "FreeLLMAPI 最新 Release",
+                  "kind": "download",
+                  "url": "https://github.com/tashfeenahmed/freellmapi/releases/latest",
+                  "description": "官方 GitHub 最新發行頁，可查看版本更新並下載支援的平台安裝檔。"
+              }
+          ])
+          links["updated_at"] = "2026-09-02"
+          links_path.write_text(json.dumps(links, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+      - name: Commit catalog data
+        run: |
+          git config user.name "qookey109-pixel"
+          git config user.email "qookey109@gmail.com"
+          git add data/resources.json data/resource-icons.json data/resource-links.json
+          if git diff --cached --quiet; then
+            echo "No catalog changes required."
+          else
+            git commit -m "Add FreeLLMAPI resource"
+            git push
+          fi
