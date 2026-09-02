@@ -1,0 +1,113 @@
+name: Temporary add ChatGPT Web for Codex
+
+on:
+  push:
+    branches:
+      - data/add-codex-chatgpt-web-20260902
+    paths:
+      - .github/workflows/_tmp-add-codex-chatgpt-web.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: data/add-codex-chatgpt-web-20260902
+      - name: Add verified resource metadata
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resource_id = "miuuyy-codex-chatgpt-web"
+          canonical_url = "https://github.com/miuuyy/codex-chatgpt-web"
+          checked = "2026-09-02"
+
+          resources_path = Path("data/resources.json")
+          resources = json.loads(resources_path.read_text(encoding="utf-8"))
+          existing_ids = {item["id"] for item in resources["resources"]}
+          existing_urls = {item["url"].rstrip("/") for item in resources["resources"]}
+          if resource_id in existing_ids or canonical_url.rstrip("/") in existing_urls:
+              raise SystemExit("Resource already exists; refusing to duplicate")
+
+          resources["resources"].append({
+              "id": resource_id,
+              "name": "ChatGPT Web for Codex",
+              "type": "github",
+              "url": canonical_url,
+              "categories": ["AI Coding", "MCP / Agent Frameworks", "Developer Tools", "Automation / Workflow"],
+              "tags": ["codex", "chatgpt-web", "browser-automation", "mcp", "responses-api", "playwright", "electron", "typescript", "llm-bridge", "coding-agent"],
+              "summary": "MIT 開源的第三方 Codex ↔ ChatGPT Web 橋接工具，透過本機 Responses bridge 與嵌入式瀏覽器，把已登入 ChatGPT 帳號可用的 Web 模型帶進 Codex 原生模型選擇與任務介面，並支援上下文、串流、圖片，以及可選的 MCP Full Harness。",
+              "use_cases": [
+                  "在 Codex 原生模型選擇器中使用已登入 ChatGPT 帳號可用的 Web 模型",
+                  "保留 Codex task context、streaming、images 與既有任務介面，同時把選定模型回合交由 ChatGPT Web 執行",
+                  "在 Full Harness 模式透過 MCP 把 ChatGPT tool calls 回接目前 Codex task 的檔案系統、Shell、Patch 與已設定工具",
+                  "研究 Responses bridge、瀏覽器自動化、MCP tunnel 與 Coding Agent harness 的整合架構"
+              ],
+              "pricing": "open-source",
+              "open_source": True,
+              "license": "MIT",
+              "difficulty": "advanced",
+              "status": "active",
+              "rating": 5,
+              "added_at": checked,
+              "last_checked": checked,
+              "notes": "這是獨立第三方專案，README 明確說明並非 OpenAI 官方 API 或官方 Codex 整合。它使用本機嵌入式瀏覽器與 ChatGPT Web Session，因此 Browser Profile／登入狀態屬敏感資料；Full Harness 會讓模型能請求目前 Codex task 的工具，應搭配 Connector 權限、Codex Sandbox 與 Approval 控制。ChatGPT UI 改版可能使瀏覽器自動化失效。2026-09-02 檢查時 Repository 公開、MIT、未封存且近期持續更新，最新 Release 為 v4.0.8；官方也提醒目前發行包尚未做平台簽章，macOS Gatekeeper 或 Windows SmartScreen 可能警告。實際可用模型與能力依登入帳號方案與工作區政策而定，並應遵守適用的 OpenAI 使用條款。"
+          })
+          resources["updated_at"] = checked
+          resources_path.write_text(json.dumps(resources, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+          icons_path = Path("data/resource-icons.json")
+          icons = json.loads(icons_path.read_text(encoding="utf-8"))
+          icons["icons"][resource_id] = {
+              "url": "https://raw.githubusercontent.com/miuuyy/codex-chatgpt-web/main/launcher/assets/icon.svg",
+              "source": "official-repository-launcher-icon-svg"
+          }
+          icons["updated_at"] = checked
+          icons_path.write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          links_path = Path("data/resource-links.json")
+          links = json.loads(links_path.read_text(encoding="utf-8"))
+          links["links"][resource_id] = [
+              {
+                  "label": "最新版下載",
+                  "kind": "download",
+                  "url": "https://github.com/miuuyy/codex-chatgpt-web/releases/latest",
+                  "description": "官方 GitHub 最新 Release，可取得 macOS、Windows 與 Linux 的 Launcher／Runtime 發行檔與校驗資訊。"
+              },
+              {
+                  "label": "Architecture",
+                  "kind": "documentation",
+                  "url": "https://github.com/miuuyy/codex-chatgpt-web/blob/main/docs/architecture.md",
+                  "description": "官方架構文件，說明 Responses bridge、嵌入式瀏覽器、Codex task lifecycle、MCP 與 Full Harness 的資料流。"
+              },
+              {
+                  "label": "Security Model",
+                  "kind": "documentation",
+                  "url": "https://github.com/miuuyy/codex-chatgpt-web/blob/main/docs/security-model.md",
+                  "description": "官方安全模型，說明 Browser Session、Loopback listener、Tunnel、Connector 權限、Sandbox 與工具核准邊界。"
+              }
+          ]
+          links["updated_at"] = checked
+          links_path.write_text(json.dumps(links, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          Path(".github/workflows/_tmp-add-codex-chatgpt-web.yml").unlink()
+          PY
+      - name: Validate JSON and catalog
+        run: |
+          python -m json.tool data/resources.json >/dev/null
+          python -m json.tool data/resource-icons.json >/dev/null
+          python -m json.tool data/resource-links.json >/dev/null
+          python scripts/resource_health.py --validate-only
+          python scripts/resource_links_validate.py
+      - name: Commit generated catalog update
+        run: |
+          git config user.name "qookey-resource-bot"
+          git config user.email "qookey-resource-bot@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json data/resource-links.json .github/workflows/_tmp-add-codex-chatgpt-web.yml
+          git commit -m "Add ChatGPT Web for Codex resource"
+          git push origin HEAD:data/add-codex-chatgpt-web-20260902
