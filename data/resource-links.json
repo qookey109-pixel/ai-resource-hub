@@ -467,6 +467,26 @@
         "url": "https://github.com/tashfeenahmed/freellmapi/releases/latest",
         "description": "官方 GitHub 最新發行頁，可查看版本更新並下載支援的平台安裝檔。"
       }
+    ],
+    "slidefirm-nesa-slide": [
+      {
+        "label": "NESA-SLIDE 官方 Demo",
+        "kind": "demo",
+        "url": "https://slidefirm.github.io/NESA-SLIDE/",
+        "description": "Repository 官方 GitHub Pages，可瀏覽圖片式、HTML 與 PPTX 簡報範例。"
+      },
+      {
+        "label": "ppt-builder SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/slidefirm/NESA-SLIDE/blob/main/.agents/skills/ppt-builder/SKILL.md",
+        "description": "原生可編輯 PPTX／PowerPoint 的官方 Skill 定義與製作流程。"
+      },
+      {
+        "label": "slide-outline-planner SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/slidefirm/NESA-SLIDE/blob/main/.agents/skills/slide-outline-planner/SKILL.md",
+        "description": "官方簡報內容規劃 Skill，可先建立逐頁大綱、講稿與版面建議，再交給其他輸出 Skill。"
+      }
     ]
   }
 }
