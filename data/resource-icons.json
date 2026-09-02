@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-01",
+  "updated_at": "2026-09-02",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -185,6 +185,10 @@
     "thu-maic-openmaic": {
       "url": "https://raw.githubusercontent.com/THU-MAIC/OpenMAIC/main/public/openmaic-mark.png",
       "source": "official-repository-project-mark-png"
+    },
+    "miuuyy-codex-chatgpt-web": {
+      "url": "https://raw.githubusercontent.com/miuuyy/codex-chatgpt-web/main/launcher/assets/icon.svg",
+      "source": "official-repository-launcher-icon-svg"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-01",
+  "updated_at": "2026-09-02",
   "links": {
     "tt-a1i-archify": [
       {
@@ -374,6 +374,26 @@
         "kind": "download",
         "url": "https://github.com/THU-MAIC/OpenMAIC/releases/latest",
         "description": "官方 GitHub 最新 Release 與版本說明入口；目前已驗證 v1.0.0。"
+      }
+    ],
+    "miuuyy-codex-chatgpt-web": [
+      {
+        "label": "最新版下載",
+        "kind": "download",
+        "url": "https://github.com/miuuyy/codex-chatgpt-web/releases/latest",
+        "description": "官方 GitHub 最新 Release，可取得 macOS、Windows 與 Linux 的 Launcher／Runtime 發行檔與校驗資訊。"
+      },
+      {
+        "label": "Architecture",
+        "kind": "documentation",
+        "url": "https://github.com/miuuyy/codex-chatgpt-web/blob/main/docs/architecture.md",
+        "description": "官方架構文件，說明 Responses bridge、嵌入式瀏覽器、Codex task lifecycle、MCP 與 Full Harness 的資料流。"
+      },
+      {
+        "label": "Security Model",
+        "kind": "documentation",
+        "url": "https://github.com/miuuyy/codex-chatgpt-web/blob/main/docs/security-model.md",
+        "description": "官方安全模型，說明 Browser Session、Loopback listener、Tunnel、Connector 權限、Sandbox 與工具核准邊界。"
       }
     ]
   }
