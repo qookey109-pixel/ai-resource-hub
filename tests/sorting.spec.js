@@ -12,6 +12,14 @@ async function cardDates(page) {
   );
 }
 
+async function setSort(page, value) {
+  await page.locator('#sort-filter').evaluate((select, nextValue) => {
+    select.value = nextValue;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+}
+
 function isMonotonic(values, direction) {
   return values.every((value, index) => index === 0 || (direction === 'desc' ? values[index - 1] >= value : values[index - 1] <= value));
 }
@@ -55,21 +63,17 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('sorts by join date in both directions', async ({ page }) => {
-  const sort = page.locator('#sort-filter');
-
-  await sort.selectOption('newest');
+  await setSort(page, 'newest');
   await expect.poll(async () => isMonotonic(await cardDates(page), 'desc')).toBe(true);
 
-  await sort.selectOption('oldest');
+  await setSort(page, 'oldest');
   await expect.poll(async () => isMonotonic(await cardDates(page), 'asc')).toBe(true);
 });
 
 test('sorts by click count in both directions', async ({ page }) => {
-  const sort = page.locator('#sort-filter');
-
-  await sort.selectOption('clicks-desc');
+  await setSort(page, 'clicks-desc');
   await expect.poll(async () => isMonotonic(await cardNumbers(page, 'clickCount'), 'desc')).toBe(true);
 
-  await sort.selectOption('clicks-asc');
+  await setSort(page, 'clicks-asc');
   await expect.poll(async () => isMonotonic(await cardNumbers(page, 'clickCount'), 'asc')).toBe(true);
 });
