@@ -1,0 +1,62 @@
+name: Temporary AI Token King status receipt
+
+on:
+  push:
+    branches:
+      - chore/aitokenking-resource-receipt-20260902
+
+permissions:
+  contents: write
+
+jobs:
+  receipt:
+    if: github.event.head_commit.message == 'Stage AI Token King status receipt'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: chore/aitokenking-resource-receipt-20260902
+      - name: Update PROJECT_STATUS receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("PROJECT_STATUS.md")
+          text = path.read_text(encoding="utf-8")
+
+          replacements = [
+            (
+              "- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 5 + Icon Quality Batch 4 audit + Requested Resources 2026-09-01 + ChatGPT Web for Codex**",
+              "- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 5 + Icon Quality Batch 4 audit + Requested Resources 2026-09-01 + ChatGPT Web for Codex + AI Token King Developer Skills**"
+            ),
+            (
+              "- ChatGPT Web for Codex added as an active MIT-licensed third-party Codex ↔ ChatGPT Web bridge. PR #50 was merged as `e858b79f283b81656dfd246d0b52442ba090dcbc` with the official launcher SVG plus latest-release, Architecture and Security Model links. Catalog notes explicitly preserve that it is not an OpenAI API or official Codex integration, that browser-session state is sensitive, that Full Harness can request current Codex-task tools and must remain behind connector permissions/sandbox/approvals, and that ChatGPT UI drift or unsigned platform packages can affect operation.\n- Browser-local favorites",
+              "- ChatGPT Web for Codex added as an active MIT-licensed third-party Codex ↔ ChatGPT Web bridge. PR #50 was merged as `e858b79f283b81656dfd246d0b52442ba090dcbc` with the official launcher SVG plus latest-release, Architecture and Security Model links. Catalog notes explicitly preserve that it is not an OpenAI API or official Codex integration, that browser-session state is sensitive, that Full Harness can request current Codex-task tools and must remain behind connector permissions/sandbox/approvals, and that ChatGPT UI drift or unsigned platform packages can affect operation.\n- AI Token King Developer Skills added as an active early-stage MIT-licensed Claude Code / MCP engineering Skill cluster. PR #52 was merged as `b2f2eb01cfcf1ecf61d02a39879fd41d40896ccc`; the catalog includes the official Architecture and `/vibe-to-ship` Skill entry points plus a verified GitHub-owner avatar fallback because no dedicated project mark was found. Notes preserve the early-stage default-branch state, billable model-call boundary, `AITK_API_KEY` environment-secret handling, repo-mutation behavior in `/vibe-to-ship` / `tdd-enforce`, the recommended dry-run path, optional OpenAI-compatible gateway replacement, and the fact that upstream research/effect claims are not independent Qookey validation.\n- Browser-local favorites"
+            ),
+            ("- Catalog now contains **47 verified resources**.", "- Catalog now contains **48 verified resources**."),
+            ("- Workflow run: `33581688764`\n- Commit: `e858b79f283b81656dfd246d0b52442ba090dcbc`\n- Result: PASS\n- Total: 47\n- Clean: 42\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 45\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 30\n- Automatic catalog mutations: 0",
+             "- Workflow run: `33584249320`\n- Commit: `b2f2eb01cfcf1ecf61d02a39879fd41d40896ccc`\n- Result: PASS\n- Total: 48\n- Clean: 43\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 46\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 31\n- Automatic catalog mutations: 0"),
+            ("- Total resources: 47", "- Total resources: 48"),
+            ("- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is ChatGPT Web for Codex run `33581688865`, completed successfully on 2026-09-02.",
+             "- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is AI Token King Developer Skills run `33584249313`, completed successfully on 2026-09-02."),
+            ("- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is ChatGPT Web for Codex run `33581688771`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.",
+             "- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is AI Token King Developer Skills run `33584249346`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend."),
+            ("- Full Resource Health V0.2 latest confirmed main run is `33581688764`, completed successfully with 47 total resources, 42 clean, 5 expected variances and 0 review-required items; raw evidence contains 45 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.",
+             "- Full Resource Health V0.2 latest confirmed main run is `33584249320`, completed successfully with 48 total resources, 43 clean, 5 expected variances and 0 review-required items; raw evidence contains 46 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.")
+          ]
+
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f"expected status text not found: {old[:100]!r}")
+              text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          git diff --check
+          git config user.name qookey-resource-bot
+          git config user.email qookey-resource-bot@users.noreply.github.com
+          git add PROJECT_STATUS.md
+          git commit -m "Record AI Token King resource deployment receipt"
+          git push origin HEAD:chore/aitokenking-resource-receipt-20260902
