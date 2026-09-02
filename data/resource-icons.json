@@ -205,6 +205,10 @@
     "tashfeenahmed-freellmapi": {
       "url": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/main/client/public/favicon.svg",
       "source": "official-repo-brand-favicon-svg"
+    },
+    "slidefirm-nesa-slide": {
+      "url": "https://github.com/slidefirm.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
