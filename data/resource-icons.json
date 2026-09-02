@@ -50,6 +50,10 @@
       "url": "https://github.com/mistralai.png?size=256",
       "source": "github-organization-avatar-256"
     },
+    "groqcloud-console": {
+      "url": "https://github.com/groq.png?size=256",
+      "source": "official-github-organization-avatar-256"
+    },
     "capafy-ai": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
       "source": "domain-favicon-128"
