@@ -22,6 +22,42 @@ test('card hit target opens detail and Escape closes through history', async ({ 
   await expect(hitTarget).toHaveAttribute('aria-expanded', 'false');
 });
 
+test('opening a detail card increments the shared click counter once', async ({ page }) => {
+  let detailPosts = 0;
+
+  await page.route('**/api/resource-clicks', async (route) => {
+    const request = route.request();
+    if (request.method() === 'GET') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true, counts: {} })
+      });
+      return;
+    }
+
+    if (request.method() === 'POST') {
+      detailPosts += 1;
+      const body = request.postDataJSON();
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true, resource_id: body.resource_id, count: detailPosts })
+      });
+      return;
+    }
+
+    await route.continue();
+  });
+
+  await page.goto('/');
+  await expect(page.locator('.resource-click-count').first()).toBeVisible();
+
+  await page.locator('.card-detail-hit').first().click();
+  await expect(page.locator('#resource-detail-dialog')).toBeVisible();
+  await expect.poll(() => detailPosts).toBe(1);
+});
+
 test('external open and favorite controls do not open the detail dialog', async ({ page }) => {
   await page.goto('/');
 
