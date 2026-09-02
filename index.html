@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <meta name="qookey-build" content="20260831-icon-reliability-v1" />
+  <meta name="qookey-build" content="20260902-resource-sorting-v1" />
   <meta name="description" content="Qookey AI Resource Hub — 收藏、分類、搜尋 AI、Agent、設計、開發與雲端資源。" />
   <meta name="theme-color" content="#fbfbfa" />
   <title>Qookey AI Resource Hub</title>
@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="./css/search-clean.css?v=20260828-3" />
   <link rel="stylesheet" href="./css/resource-detail.css?v=20260831-3" />
   <link rel="stylesheet" href="./css/resource-links.css?v=20260831-1" />
+  <link rel="stylesheet" href="./css/sorting.css?v=20260902-1" />
 </head>
 <body>
   <div id="sliced-waves-background" aria-hidden="true"></div>
@@ -65,7 +66,20 @@
           <label class="sr-only" for="compact-search">搜尋資源</label>
           <input id="compact-search" type="search" placeholder="搜尋資源、分類、Demo 或文件…" autocomplete="off" tabindex="-1" enterkeyhint="search" />
         </div>
-        <div id="quick-categories" class="quick-categories" aria-label="資源分類"></div>
+        <div class="toolbar-nav-row">
+          <div id="quick-categories" class="quick-categories" aria-label="資源分類"></div>
+          <label class="toolbar-sort" for="sort-filter">
+            <span class="toolbar-sort-text">排序</span>
+            <select id="sort-filter" aria-label="排序方式">
+              <option value="rating">推薦優先</option>
+              <option value="newest">加入日期：新 → 舊</option>
+              <option value="oldest">加入日期：舊 → 新</option>
+              <option value="clicks-desc">點擊次數：多 → 少</option>
+              <option value="clicks-asc">點擊次數：少 → 多</option>
+              <option value="name">名稱 A–Z</option>
+            </select>
+          </label>
+        </div>
       </div>
     </section>
 
@@ -86,7 +100,6 @@
           <label><span class="sr-only">資源類型</span><select id="type-filter"><option value="">全部類型</option></select></label>
           <label class="check"><input id="free-filter" type="checkbox" /> 免費 / 開源</label>
           <label class="check"><input id="open-source-filter" type="checkbox" /> 僅開源</label>
-          <label class="sort-label"><span class="sr-only">排序方式</span><select id="sort-filter"><option value="rating">推薦優先</option><option value="newest">最新加入</option><option value="name">名稱 A–Z</option></select></label>
           <button id="reset-filters" class="reset" type="button">清除</button>
         </div>
       </div>
@@ -185,7 +198,7 @@
   <script type="module" src="./js/sliced-waves-background.js?v=20260828-2"></script>
   <script type="module" src="./js/icon-reliability.js?v=20260831-1"></script>
   <script type="module" src="./js/app.js?v=20260831-1"></script>
-  <script type="module" src="./js/favorites.js?v=20260827-3"></script>
+  <script type="module" src="./js/favorites.js?v=20260902-1"></script>
   <script type="module" src="./js/resource-detail.js?v=20260831-3"></script>
   <script type="module" src="./js/resource-links.js?v=20260831-1"></script>
 </body>
