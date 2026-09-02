@@ -1,0 +1,88 @@
+/* Visible resource sorting while the legacy catalog head stays intentionally hidden. */
+.toolbar-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.toolbar-nav-row .quick-categories {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.toolbar-sort {
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  color: #83837e;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.toolbar-sort select {
+  min-height: 34px;
+  max-width: 190px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: #fff;
+  color: #555551;
+  padding: 0 28px 0 10px;
+  outline: 0;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.toolbar-sort select:hover,
+.toolbar-sort select:focus-visible {
+  border-color: #ffad88;
+}
+
+.resource-click-count {
+  color: #8d8d87;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .toolbar-nav-row {
+    gap: 7px;
+  }
+
+  .toolbar-sort-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .toolbar-sort select {
+    min-height: 32px;
+    max-width: 154px;
+    padding-left: 8px;
+    font-size: 9.5px;
+  }
+}
+
+@media (max-width: 430px) {
+  .toolbar-nav-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .toolbar-sort {
+    justify-content: flex-end;
+  }
+
+  .toolbar-sort select {
+    width: 100%;
+    max-width: none;
+  }
+}
