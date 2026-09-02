@@ -193,6 +193,10 @@
     "firekou-aitokenking-developerskill": {
       "url": "https://github.com/firekou.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "yanliudesign-mono-color-skill": {
+      "url": "https://github.com/yanliudesign.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
