@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "enabled": false,
-  "endpoint": "",
+  "enabled": true,
+  "endpoint": "https://qookey-resource-clicks.q-oo109.workers.dev/api/resource-clicks",
   "updated_at": "2026-09-02"
 }
