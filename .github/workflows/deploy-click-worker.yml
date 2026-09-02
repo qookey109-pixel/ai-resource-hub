@@ -59,10 +59,18 @@ jobs:
           BASE_URL: ${{ steps.deploy.outputs.base_url }}
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error "$BASE_URL/health" | jq -e '.ok == true and .service == "qookey-resource-clicks"' >/dev/null
+          # A freshly deployed workers.dev route can briefly return 404 while
+          # Cloudflare propagates the deployment. Retry before treating that
+          # transient state as a failed release.
           curl --fail --silent --show-error \
+            --retry 10 --retry-delay 2 --retry-all-errors --retry-max-time 30 \
+            "$BASE_URL/health" \
+            | jq -e '.ok == true and .service == "qookey-resource-clicks"' >/dev/null
+          curl --fail --silent --show-error \
+            --retry 10 --retry-delay 2 --retry-all-errors --retry-max-time 30 \
             -H 'origin: https://qookey109-pixel.github.io' \
-            "$BASE_URL/api/resource-clicks" | jq -e '.ok == true and (.counts | type == "object")' >/dev/null
+            "$BASE_URL/api/resource-clicks" \
+            | jq -e '.ok == true and (.counts | type == "object")' >/dev/null
 
       - name: Activate frontend click endpoint
         shell: bash
