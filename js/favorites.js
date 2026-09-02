@@ -152,8 +152,8 @@ function ensureClickBadge(card, id) {
   if (clickCountsLoaded) {
     const count = clickCount(id);
     badge.textContent = `↗ ${count.toLocaleString('zh-TW')}`;
-    badge.title = `累積前往資源點擊：${count.toLocaleString('zh-TW')}`;
-    badge.setAttribute('aria-label', `累積點擊 ${count.toLocaleString('zh-TW')} 次`);
+    badge.title = `累積互動點擊：${count.toLocaleString('zh-TW')}`;
+    badge.setAttribute('aria-label', `累積互動點擊 ${count.toLocaleString('zh-TW')} 次`);
   }
 }
 
@@ -355,6 +355,14 @@ function resourceIdForOutboundLink(link) {
   return resourceIdByUrl.get(normaliseUrl(link.href)) || null;
 }
 
+function resourceIdForDetailHit(hitTarget) {
+  const card = hitTarget?.closest?.('.card');
+  const cardId = card?.dataset?.resourceId;
+  if (cardId) return cardId;
+  const href = card?.querySelector?.('a.visit')?.href;
+  return href ? resourceIdByUrl.get(normaliseUrl(href)) || null : null;
+}
+
 async function recordResourceClick(resourceId) {
   if (!resourceId || !clickEndpoint) return;
 
@@ -379,9 +387,18 @@ async function recordResourceClick(resourceId) {
 function bindClickTracking() {
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
-    const link = target?.closest('a.visit, a.resource-detail-visit, .resource-detail-links a');
-    if (!link) return;
-    const resourceId = resourceIdForOutboundLink(link);
+    if (!target) return;
+
+    const link = target.closest('a.visit, a.resource-detail-visit, .resource-detail-links a');
+    if (link) {
+      const resourceId = resourceIdForOutboundLink(link);
+      if (resourceId) void recordResourceClick(resourceId);
+      return;
+    }
+
+    const detailHit = target.closest('.card-detail-hit');
+    if (!detailHit) return;
+    const resourceId = resourceIdForDetailHit(detailHit);
     if (resourceId) void recordResourceClick(resourceId);
   }, { capture: true });
 }
