@@ -7,7 +7,7 @@ Status date: 2026-09-02 (Asia/Taipei)
 - Name: Qookey AI Resource Hub
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
-- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 5 + Icon Quality Batch 4 audit + Requested Resources 2026-09-01 + ChatGPT Web for Codex + AI Token King Developer Skills + Monocolor Editorial Print**
+- Current version: **V0.5 live AI recommendation + Resource Health V0.2 + V0.4.1 marketplace baseline + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + Icon Quality Batch 3 + Official Links Batch 5 + Icon Quality Batch 4 audit + Requested Resources 2026-09-01 + ChatGPT Web for Codex + AI Token King Developer Skills + Monocolor Editorial Print + FreeLLMAPI**
 - GitHub Pages target: `https://qookey109-pixel.github.io/ai-resource-hub/`
 
 ## Completed
@@ -30,7 +30,8 @@ Status date: 2026-09-02 (Asia/Taipei)
 - AI Token King Developer Skills added as an active early-stage MIT-licensed Claude Code / MCP engineering Skill cluster. PR #52 was merged as `b2f2eb01cfcf1ecf61d02a39879fd41d40896ccc`; the catalog includes the official Architecture and `/vibe-to-ship` Skill entry points plus a verified GitHub-owner avatar fallback because no dedicated project mark was found. Notes preserve the early-stage default-branch state, billable model-call boundary, `AITK_API_KEY` environment-secret handling, repo-mutation behavior in `/vibe-to-ship` / `tdd-enforce`, the recommended dry-run path, optional OpenAI-compatible gateway replacement, and the fact that upstream research/effect claims are not independent Qookey validation.
 - Browser-local favorites are implemented through `js/favorites.js` + `css/favorites.css`, including localStorage persistence, favorite-first ordering and recent-use ordering for favorited resources.
 - Monocolor Editorial Print added as an active MIT-licensed one-ink / controlled two-ink editorial image Agent Skill. PR #54 was merged as `efb56a60c8465af09befe982fb1adfa95ea49a78`; the catalog stores the canonical GitHub URL without the `ref=aiposthub.com` tracking parameter, uses the verified GitHub-owner avatar fallback because no dedicated project mark was established, and links the official `SKILL.md`, Chinese README and `ASSET-LICENSE.md`. Core code, Skill instructions and scripts are MIT, while `examples/` visual artwork is explicitly outside the MIT grant and remains demonstration/reference-only unless the author gives prior written permission. The catalog also records the prompt-only fallback when no image-generation capability is available and the originality boundary against reconstructing source posters, logos, artwork or signatures.
-- Catalog now contains **49 verified resources**.
+- FreeLLMAPI added as an active MIT-licensed multi-provider LLM Gateway and a distinct project identity from the existing OmniRoute entry. PR #56 was merged as `86b9fdefad7f50d386c5cca47fff575e81680214`; the catalog records the official `client/public/favicon.svg` brand mark plus the official website, API reference, Clients & Coding Agents guide, Security & Key Handling guide, Provider ToS review and latest-release page. Upstream currently advertises about 34 free providers, 474 model families, 635 free endpoints and roughly 7.4B tokens/month, but those figures are provider-, account-, region-, quota- and policy-dependent rather than guaranteed capacity. The upstream README explicitly positions the free-provider pool for personal experimentation and learning rather than production, preserves each provider's own ToS and no-SLA boundary, and recommends a paid provider for production reliability. The router software remains MIT/open source; the optional live catalog is freemium, with the README currently listing US$19/year or US$49 lifetime while free installs receive a roughly 30-day-delayed monthly catalog snapshot. Stored provider keys are documented as AES-256-GCM encrypted, and production operators must preserve `ENCRYPTION_KEY` because losing it makes stored keys unrecoverable.
+- Catalog now contains **50 verified resources**.
 - `說人話 speak-human-tw` added as an active MIT-licensed Traditional Chinese proofreading / de-AI-writing Agent Skill. Catalog metadata records its 38 AI-writing trace checks, Taiwan-usage normalization, two-stage confirmation workflow, prompt-injection boundary and the official 42-case synthetic benchmark; SKILL.md and benchmark are stored as verified supplemental links rather than duplicate resources.
 - Lulu — AI Agent / Automation Projects added as a verified GitHub developer/project collection profile for `lulu930128`; its metadata explicitly preserves that the profile is a collection of separate projects rather than a single package or shared license.
 - OmniRoute added as an active MIT-licensed multi-provider AI Gateway with an OpenAI-compatible endpoint, quota-aware routing/fallback, coding-agent integrations, MCP/A2A, CLI, Desktop/PWA options, an official project icon, website and latest-release link.
@@ -155,24 +156,24 @@ First V0.2 full-run evidence:
 
 Latest full-run evidence:
 
-- Workflow run: `33585516370`
-- Commit: `efb56a60c8465af09befe982fb1adfa95ea49a78`
+- Workflow run: `33589079095`
+- Commit: `86b9fdefad7f50d386c5cca47fff575e81680214`
 - Result: PASS
-- Total: 49
-- Clean: 44
+- Total: 50
+- Clean: 45
 - Expected variance: 5
 - Review required: 0
 - Broken resources: 0
 - Errors: 0
-- Raw reachable: 47
+- Raw reachable: 48
 - Raw restricted: 2
 - Raw redirected: 2
-- GitHub metadata checked: 32
+- GitHub metadata checked: 33
 - Automatic catalog mutations: 0
 
 ## Current catalog
 
-- Total resources: 49
+- Total resources: 50
 - Resource authority: `data/resources.json`
 - Category authority: `data/categories.json`
 - Resource icon authority: `data/resource-icons.json`
@@ -191,9 +192,9 @@ Latest full-run evidence:
 
 ## Deployment state
 
-- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Monocolor Editorial Print run `33585516484`, completed successfully on 2026-09-02.
-- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Monocolor Editorial Print run `33585516427`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.
-- Full Resource Health V0.2 latest confirmed main run is `33585516370`, completed successfully with 49 total resources, 44 clean, 5 expected variances and 0 review-required items; raw evidence contains 47 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.
+- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is FreeLLMAPI run `33589079079`, completed successfully on 2026-09-02.
+- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is FreeLLMAPI run `33589079161`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.
+- Full Resource Health V0.2 latest confirmed main run is `33589079095`, completed successfully with 50 total resources, 45 clean, 5 expected variances and 0 review-required items; raw evidence contains 48 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.
 - Cloudflare Worker deployment is managed separately through `.github/workflows/deploy-ai-worker.yml`.
 - The Worker is configured and activated in `data/ai-config.json` with the production `/api/recommend` endpoint.
 - Future Worker code changes require the existing Cloudflare deployment credentials in GitHub Secrets; credentials must never be written into repository files.
