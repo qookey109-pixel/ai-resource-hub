@@ -189,6 +189,10 @@
     "miuuyy-codex-chatgpt-web": {
       "url": "https://raw.githubusercontent.com/miuuyy/codex-chatgpt-web/main/launcher/assets/icon.svg",
       "source": "official-repository-launcher-icon-svg"
+    },
+    "firekou-aitokenking-developerskill": {
+      "url": "https://github.com/firekou.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }
