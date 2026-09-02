@@ -395,6 +395,20 @@
         "url": "https://github.com/miuuyy/codex-chatgpt-web/blob/main/docs/security-model.md",
         "description": "官方安全模型，說明 Browser Session、Loopback listener、Tunnel、Connector 權限、Sandbox 與工具核准邊界。"
       }
+    ],
+    "firekou-aitokenking-developerskill": [
+      {
+        "label": "Developer Skills Architecture",
+        "kind": "documentation",
+        "url": "https://github.com/firekou/aitokenking_developerskill/blob/claude/ai-token-king-dev-skills-hs56n1/ARCHITECTURE.md",
+        "description": "官方架構文件，說明 L0–L5 Skill 分層、Handoff 契約、Gate、可變更範圍與整體需求到合併流程。"
+      },
+      {
+        "label": "vibe-to-ship SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/firekou/aitokenking_developerskill/blob/claude/ai-token-king-dev-skills-hs56n1/.claude/skills/vibe-to-ship/SKILL.md",
+        "description": "官方主入口 Skill 定義，涵蓋執行前置、乾跑路線、扣費與修改程式碼邊界，以及 L1–L5 的完整編排流程。"
+      }
     ]
   }
 }
