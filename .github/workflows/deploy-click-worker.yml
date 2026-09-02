@@ -1,0 +1,100 @@
+name: Deploy Resource Click Worker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "worker-clicks/**"
+      - ".github/workflows/deploy-click-worker.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-resource-click-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Verify Cloudflare credentials
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test "${#CLOUDFLARE_ACCOUNT_ID}" -eq 32
+
+      - name: Deploy click counter Worker
+        id: deploy
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_NAME: qookey-resource-clicks
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4.125.0 deploy --config worker-clicks/wrangler.jsonc
+
+          account_subdomain_json="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain")"
+          account_subdomain="$(echo "$account_subdomain_json" | jq -r '.result.subdomain // empty')"
+          test -n "$account_subdomain"
+          base_url="https://$WORKER_NAME.$account_subdomain.workers.dev"
+          echo "base_url=$base_url" >> "$GITHUB_OUTPUT"
+
+      - name: Verify click API
+        shell: bash
+        env:
+          BASE_URL: ${{ steps.deploy.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$BASE_URL/health" | jq -e '.ok == true and .service == "qookey-resource-clicks"' >/dev/null
+          curl --fail --silent --show-error \
+            -H 'origin: https://qookey109-pixel.github.io' \
+            "$BASE_URL/api/resource-clicks" | jq -e '.ok == true and (.counts | type == "object")' >/dev/null
+
+      - name: Activate frontend click endpoint
+        shell: bash
+        env:
+          BASE_URL: ${{ steps.deploy.outputs.base_url }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path('data/click-config.json')
+          config = {
+              'schema_version': '0.1',
+              'enabled': True,
+              'endpoint': os.environ['BASE_URL'].rstrip('/') + '/api/resource-clicks',
+              'updated_at': '2026-09-02',
+          }
+          path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit click endpoint activation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/click-config.json; then
+            echo "Click endpoint already active."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/click-config.json
+          git commit -m "Activate resource click counter"
+          git push origin HEAD:main
