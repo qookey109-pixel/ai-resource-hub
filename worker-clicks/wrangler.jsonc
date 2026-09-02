@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "qookey-resource-clicks",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-02",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://qookey109-pixel.github.io"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "RESOURCE_CLICK_COUNTER",
+        "class_name": "ResourceClickCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["ResourceClickCounter"]
+    }
+  ]
+}
