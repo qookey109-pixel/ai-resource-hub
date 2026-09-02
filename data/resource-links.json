@@ -429,6 +429,44 @@
         "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/ASSET-LICENSE.md",
         "description": "官方視覺素材授權說明；examples/ 內範例作品不包含在 MIT License，商用或重用前必須遵守作者另行保留的權利。"
       }
+    ],
+    "tashfeenahmed-freellmapi": [
+      {
+        "label": "FreeLLMAPI 官方網站",
+        "kind": "website",
+        "url": "https://freellmapi.co/",
+        "description": "官方網站，可查看目前模型目錄、產品說明與 Premium live catalog 資訊。"
+      },
+      {
+        "label": "API Reference",
+        "kind": "api",
+        "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/api/01-rest-api.md",
+        "description": "官方 API 文件，涵蓋 OpenAI-compatible、Anthropic Messages、Gemini、Ollama、圖片、影片、語音、Embedding、Fusion 與路由介面。"
+      },
+      {
+        "label": "Clients & Coding Agents",
+        "kind": "documentation",
+        "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/clients/01-agent-clients.md",
+        "description": "官方 Client 與 Coding Agent 整合指南，包含 Codex、Claude Code、OpenAI-compatible Client、Gemini、Ollama 與 MCP。"
+      },
+      {
+        "label": "Security & Key Handling",
+        "kind": "documentation",
+        "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/env/02-security-and-keys.md",
+        "description": "官方安全文件，說明 ENCRYPTION_KEY、AES-256-GCM Provider Key 加密、備份與資料目錄保護。"
+      },
+      {
+        "label": "Provider ToS Review",
+        "kind": "documentation",
+        "url": "https://github.com/tashfeenahmed/freellmapi/blob/main/docs/architecture.md#terms-of-service-review",
+        "description": "作者整理的免費 Provider 條款風險檢查；實際使用仍需以各 Provider 當下正式條款為準。"
+      },
+      {
+        "label": "FreeLLMAPI 最新 Release",
+        "kind": "download",
+        "url": "https://github.com/tashfeenahmed/freellmapi/releases/latest",
+        "description": "官方 GitHub 最新發行頁，可查看版本更新並下載支援的平台安裝檔。"
+      }
     ]
   }
 }
