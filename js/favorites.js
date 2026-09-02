@@ -11,6 +11,8 @@ let clickCountsLoaded = false;
 let clickEndpoint = '';
 let applying = false;
 let scheduled = false;
+let dateSortMode = 'newest';
+let clickSortMode = 'clicks-desc';
 
 function loadFavorites() {
   try {
@@ -166,18 +168,41 @@ function bindRecentUse(link, id) {
   });
 }
 
+function updateSortButtons(sort) {
+  const addedButton = document.querySelector('#sort-added-button');
+  const clicksButton = document.querySelector('#sort-clicks-button');
+  if (!addedButton || !clicksButton) return;
+
+  if (DATE_SORTS.has(sort.value)) dateSortMode = sort.value;
+  if (CLICK_SORTS.has(sort.value)) clickSortMode = sort.value;
+
+  const dateActive = DATE_SORTS.has(sort.value);
+  const clickActive = CLICK_SORTS.has(sort.value);
+  addedButton.classList.toggle('is-active', dateActive);
+  clicksButton.classList.toggle('is-active', clickActive);
+  addedButton.setAttribute('aria-pressed', dateActive ? 'true' : 'false');
+  clicksButton.setAttribute('aria-pressed', clickActive ? 'true' : 'false');
+
+  const dateDirection = dateSortMode === 'newest' ? '新→舊' : '舊→新';
+  const clickDirection = clickSortMode === 'clicks-desc' ? '多→少' : '少→多';
+  addedButton.querySelector('[data-sort-direction]').textContent = dateDirection;
+  clicksButton.querySelector('[data-sort-direction]').textContent = clickDirection;
+  addedButton.setAttribute('aria-label', `加入日期：${dateSortMode === 'newest' ? '新到舊' : '舊到新'}`);
+  clicksButton.setAttribute('aria-label', `點擊次數：${clickSortMode === 'clicks-desc' ? '多到少' : '少到多'}`);
+}
+
 function setupSortOptions() {
   const sort = document.querySelector('#sort-filter');
-  if (!sort || sort.dataset.qookeySortV2 === 'true') return;
+  const addedButton = document.querySelector('#sort-added-button');
+  const clicksButton = document.querySelector('#sort-clicks-button');
+  if (!sort || !addedButton || !clicksButton || sort.dataset.qookeySortV3 === 'true') return;
 
-  const previousValue = sort.value || 'rating';
+  const previousValue = DATE_SORTS.has(sort.value) || CLICK_SORTS.has(sort.value) ? sort.value : 'newest';
   const options = [
-    ['rating', '推薦優先'],
     ['newest', '加入日期：新 → 舊'],
     ['oldest', '加入日期：舊 → 新'],
     ['clicks-desc', '點擊次數：多 → 少'],
-    ['clicks-asc', '點擊次數：少 → 多'],
-    ['name', '名稱 A–Z']
+    ['clicks-asc', '點擊次數：少 → 多']
   ];
 
   sort.replaceChildren(...options.map(([value, label]) => {
@@ -186,9 +211,43 @@ function setupSortOptions() {
     option.textContent = label;
     return option;
   }));
-  sort.value = options.some(([value]) => value === previousValue) ? previousValue : 'rating';
-  sort.dataset.qookeySortV2 = 'true';
-  sort.addEventListener('change', scheduleDecorateAndSort);
+  sort.value = options.some(([value]) => value === previousValue) ? previousValue : 'newest';
+  dateSortMode = DATE_SORTS.has(sort.value) ? sort.value : 'newest';
+  clickSortMode = CLICK_SORTS.has(sort.value) ? sort.value : 'clicks-desc';
+  sort.dataset.qookeySortV3 = 'true';
+
+  sort.addEventListener('change', () => {
+    updateSortButtons(sort);
+    scheduleDecorateAndSort();
+  });
+
+  addedButton.addEventListener('click', () => {
+    if (DATE_SORTS.has(sort.value)) {
+      dateSortMode = dateSortMode === 'newest' ? 'oldest' : 'newest';
+    }
+    sort.value = dateSortMode;
+    updateSortButtons(sort);
+    scheduleDecorateAndSort();
+  });
+
+  clicksButton.addEventListener('click', () => {
+    if (CLICK_SORTS.has(sort.value)) {
+      clickSortMode = clickSortMode === 'clicks-desc' ? 'clicks-asc' : 'clicks-desc';
+    }
+    sort.value = clickSortMode;
+    updateSortButtons(sort);
+    scheduleDecorateAndSort();
+  });
+
+  document.querySelector('#reset-filters')?.addEventListener('click', () => {
+    dateSortMode = 'newest';
+    clickSortMode = 'clicks-desc';
+    sort.value = 'newest';
+    updateSortButtons(sort);
+    scheduleDecorateAndSort();
+  });
+
+  updateSortButtons(sort);
 }
 
 function compareDate(a, b, newestFirst) {
@@ -229,7 +288,7 @@ function compareEntries(a, b, mode) {
     return ordered || compareRatingThenName(a, b) || a.originalIndex - b.originalIndex;
   }
 
-  return a.originalIndex - b.originalIndex;
+  return compareDate(a, b, true) || compareRatingThenName(a, b) || a.originalIndex - b.originalIndex;
 }
 
 function decorateAndSort() {
@@ -264,7 +323,7 @@ function decorateAndSort() {
     };
   });
 
-  const mode = document.querySelector('#sort-filter')?.value || 'rating';
+  const mode = document.querySelector('#sort-filter')?.value || 'newest';
   entries.sort((a, b) => compareEntries(a, b, mode));
 
   const orderChanged = entries.some((entry, index) => entry.card !== cards[index]);
