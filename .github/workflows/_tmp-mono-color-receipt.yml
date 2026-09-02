@@ -1,0 +1,65 @@
+name: Temporary Monocolor status receipt
+
+on:
+  push:
+    branches:
+      - chore/mono-color-resource-receipt-20260902
+
+permissions:
+  contents: write
+
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Update project status from verified main evidence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("PROJECT_STATUS.md")
+          text = path.read_text(encoding="utf-8")
+
+          replacements = [
+              (
+                  "+ AI Token King Developer Skills**",
+                  "+ AI Token King Developer Skills + Monocolor Editorial Print**",
+              ),
+              (
+                  "- Catalog now contains **48 verified resources**.",
+                  "- Monocolor Editorial Print added as an active MIT-licensed one-ink / controlled two-ink editorial image Agent Skill. PR #54 was merged as `efb56a60c8465af09befe982fb1adfa95ea49a78`; the catalog stores the canonical GitHub URL without the `ref=aiposthub.com` tracking parameter, uses the verified GitHub-owner avatar fallback because no dedicated project mark was established, and links the official `SKILL.md`, Chinese README and `ASSET-LICENSE.md`. Core code, Skill instructions and scripts are MIT, while `examples/` visual artwork is explicitly outside the MIT grant and remains demonstration/reference-only unless the author gives prior written permission. The catalog also records the prompt-only fallback when no image-generation capability is available and the originality boundary against reconstructing source posters, logos, artwork or signatures.\n- Catalog now contains **49 verified resources**.",
+              ),
+              (
+                  "- Workflow run: `33584249320`\n- Commit: `b2f2eb01cfcf1ecf61d02a39879fd41d40896ccc`\n- Result: PASS\n- Total: 48\n- Clean: 43\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 46\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 31\n- Automatic catalog mutations: 0",
+                  "- Workflow run: `33585516370`\n- Commit: `efb56a60c8465af09befe982fb1adfa95ea49a78`\n- Result: PASS\n- Total: 49\n- Clean: 44\n- Expected variance: 5\n- Review required: 0\n- Broken resources: 0\n- Errors: 0\n- Raw reachable: 47\n- Raw restricted: 2\n- Raw redirected: 2\n- GitHub metadata checked: 32\n- Automatic catalog mutations: 0",
+              ),
+              (
+                  "- Total resources: 48",
+                  "- Total resources: 49",
+              ),
+              (
+                  "- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is AI Token King Developer Skills run `33584249313`, completed successfully on 2026-09-02.\n- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is AI Token King Developer Skills run `33584249346`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.\n- Full Resource Health V0.2 latest confirmed main run is `33584249320`, completed successfully with 48 total resources, 43 clean, 5 expected variances and 0 review-required items; raw evidence contains 46 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.",
+                  "- GitHub Pages is deployed through `.github/workflows/pages.yml`; the latest confirmed content deployment is Monocolor Editorial Print run `33585516484`, completed successfully on 2026-09-02.\n- Browser interaction regression CI is defined at `.github/workflows/frontend-interaction.yml`; the latest confirmed main content run is Monocolor Editorial Print run `33585516427`, completed successfully on 2026-09-02. Playwright remains test-only and is not shipped in the production frontend.\n- Full Resource Health V0.2 latest confirmed main run is `33585516370`, completed successfully with 49 total resources, 44 clean, 5 expected variances and 0 review-required items; raw evidence contains 47 reachable, 2 restricted, 2 redirected, 0 broken resources and 0 errors.",
+              ),
+          ]
+
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected exactly one match, found {count}: {old[:80]!r}")
+              text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+      - name: Commit status receipt
+        run: |
+          git config user.name "qookey109-pixel"
+          git config user.email "qookey109@gmail.com"
+          git add PROJECT_STATUS.md
+          if git diff --cached --quiet; then
+            echo "No status changes required."
+          else
+            git commit -m "Record Monocolor resource deployment receipt"
+            git push
+          fi
