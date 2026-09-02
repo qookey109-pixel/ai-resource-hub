@@ -1,0 +1,117 @@
+name: Temporary mono-color catalog ingestion
+
+on:
+  push:
+    branches:
+      - data/add-mono-color-skill-20260902
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Add verified mono-color resource metadata
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          resource_id = "yanliudesign-mono-color-skill"
+          canonical_url = "https://github.com/yanliudesign/mono-color-skill"
+
+          resources_path = Path("data/resources.json")
+          resources = json.loads(resources_path.read_text(encoding="utf-8"))
+          existing = resources["resources"]
+          if not any(r.get("id") == resource_id or r.get("url") == canonical_url for r in existing):
+              existing.append({
+                  "id": resource_id,
+                  "name": "Monocolor Editorial Print",
+                  "type": "github",
+                  "url": canonical_url,
+                  "categories": [
+                      "Agent Skills",
+                      "Image Generation / Design AI",
+                      "UI / UX Design",
+                      "Learning / Documentation"
+                  ],
+                  "tags": [
+                      "mono-color",
+                      "agent-skill",
+                      "image-generation",
+                      "editorial-design",
+                      "risograph",
+                      "halftone",
+                      "duotone",
+                      "poster-design",
+                      "zine",
+                      "claude-code",
+                      "prompt-engineering"
+                  ],
+                  "summary": "MIT 開源的單色／受控雙色編輯印刷影像 Agent Skill，可把主題、句子、物件、文章概念或照片轉成海報、zine、包裝與編輯視覺，核心規則包含最多兩個印刷色版、主動留白、網點／risograph 顆粒與受控字體層級。",
+                  "use_cases": [
+                      "讓 Claude Code 或其他可讀取 SKILL.md 的 Agent 依固定視覺語法生成單色或受控雙色海報、zine 與編輯設計",
+                      "把人物、物件或照片轉成保留辨識度的 halftone、risograph、cyanotype 或 photocopy 類印刷視覺",
+                      "為活動、展覽、Podcast、品牌小物、邀請卡、包裝、刊物與社群封面建立一致的有限色印刷方向",
+                      "在有圖片生成能力時同時取得生成影像、production-ready prompt 與包含配色、版式、字體和印刷流程的 recipe"
+                  ],
+                  "pricing": "open-source",
+                  "open_source": True,
+                  "license": "MIT",
+                  "difficulty": "intermediate",
+                  "status": "active",
+                  "rating": 5,
+                  "added_at": "2026-09-02",
+                  "last_checked": "2026-09-02",
+                  "notes": "Repository 公開、未封存，README 目前標示 v1.2.0，並提供 GitHub Actions validation、design-system catalogs 與 evals。核心程式碼、Skill 指令與 scripts 採 MIT License；但 examples/ 內的視覺範例與 artwork 明確不在 MIT 範圍內，只供展示與參考，未經作者書面許可不得複製、修改、重新散布、出售、再授權或用於商業作品。Claude Code 可直接安裝；其他 Agent 可讀取 SKILL.md。若執行環境沒有圖片生成能力，Skill 只能回傳 production-ready prompt 並說明限制。其規則要求參考圖只作為視覺語法來源，不應重建原始海報、Logo、藝術作品或作者簽名。"
+              })
+          resources["updated_at"] = "2026-09-02"
+          resources_path.write_text(json.dumps(resources, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+          icons_path = Path("data/resource-icons.json")
+          icons = json.loads(icons_path.read_text(encoding="utf-8"))
+          icons["icons"].setdefault(resource_id, {
+              "url": "https://github.com/yanliudesign.png?size=256",
+              "source": "github-owner-avatar-256-fallback-no-project-logo"
+          })
+          icons["updated_at"] = "2026-09-02"
+          icons_path.write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          links_path = Path("data/resource-links.json")
+          links = json.loads(links_path.read_text(encoding="utf-8"))
+          links["links"].setdefault(resource_id, [
+              {
+                  "label": "SKILL.md",
+                  "kind": "documentation",
+                  "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/SKILL.md",
+                  "description": "官方 Skill 主入口，定義單色／雙色印刷視覺規則、輸入解析、配色、留白、版式、原創性邊界與輸出格式。"
+              },
+              {
+                  "label": "繁體／中文 README",
+                  "kind": "documentation",
+                  "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/README.zh.md",
+                  "description": "官方中文說明，可查看用途、色票、雙色配方、安裝方式、範例、驗證流程與設計系統。"
+              },
+              {
+                  "label": "Visual Asset License",
+                  "kind": "documentation",
+                  "url": "https://github.com/yanliudesign/mono-color-skill/blob/main/ASSET-LICENSE.md",
+                  "description": "官方視覺素材授權說明；examples/ 內範例作品不包含在 MIT License，商用或重用前必須遵守作者另行保留的權利。"
+              }
+          ])
+          links["updated_at"] = "2026-09-02"
+          links_path.write_text(json.dumps(links, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+      - name: Commit catalog data
+        run: |
+          git config user.name "qookey109-pixel"
+          git config user.email "qookey109@gmail.com"
+          git add data/resources.json data/resource-icons.json data/resource-links.json
+          if git diff --cached --quiet; then
+            echo "No catalog changes required."
+          else
+            git commit -m "Add Monocolor Editorial Print resource"
+            git push
+          fi
