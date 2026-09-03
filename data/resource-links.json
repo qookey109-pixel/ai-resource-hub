@@ -308,16 +308,22 @@
     ],
     "mattpocock-skills": [
       {
-        "label": "skills.sh 安裝與索引頁",
+        "label": "AI Hero Skills 官方頁",
         "kind": "website",
-        "url": "https://www.skills.sh/mattpocock/skills",
-        "description": "上游 README 指定的 Skills 索引與安裝入口，可瀏覽並選擇 Skills For Real Engineers 的各項工程 Skill。"
+        "url": "https://aihero.dev/skills",
+        "description": "Matt Pocock 官方 Skills 入口與完整介紹。"
       },
       {
-        "label": "setup-matt-pocock-skills Skill",
+        "label": "skills.sh 安裝與索引頁",
+        "kind": "website",
+        "url": "https://skills.sh/mattpocock/skills",
+        "description": "README 指定的 Skills 索引與安裝入口，可挑選需要的 Skill 安裝到 Codex 與其他 Agent。"
+      },
+      {
+        "label": "Engineering Skills 索引",
         "kind": "documentation",
-        "url": "https://github.com/mattpocock/skills/blob/main/skills/engineering/setup-matt-pocock-skills/SKILL.md",
-        "description": "官方初始化 Skill，協助設定 Issue Tracker、Triage 標籤與專案 Domain 文件位置，供其他工程 Skills 共用。"
+        "url": "https://github.com/mattpocock/skills/blob/main/skills/engineering/README.md",
+        "description": "官方工程 Skills 清單，區分 User-invoked 與 Model-invoked 能力。"
       }
     ],
     "builderio-agent-native": [
