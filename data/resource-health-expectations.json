@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-08-30",
+  "updated_at": "2026-09-03",
   "equivalent_license_pairs": [
     [
       "AGPL-3.0-only",
@@ -37,6 +37,13 @@
         "v2.auth.mistral.ai"
       ],
       "reason": "Unauthenticated Mistral Console access is expected to enter Mistral's authentication flow; generated login redirects are not a broken-resource signal by themselves."
+    },
+    "groqcloud-console": {
+      "allow_redirect": true,
+      "allowed_final_url_prefixes": [
+        "https://console.groq.com/home"
+      ],
+      "reason": "The public GroqCloud Console root currently normalizes to /home; keep the shorter console root as the canonical catalog URL unless Groq changes the product entry point materially."
     }
   }
 }

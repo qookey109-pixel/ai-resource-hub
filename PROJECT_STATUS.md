@@ -8,7 +8,7 @@ Status date: 2026-09-03 (Asia/Taipei)
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting**
+- Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting + production Worker monitoring + status consistency CI**
 - Current canonical catalog size: **65 resources**
 
 Repository `main` and the canonical data files below are authoritative. Historical commit/run details remain available in Git history and GitHub Actions; this file is intentionally maintained as the concise current operating baseline rather than an exhaustive changelog.
@@ -75,7 +75,10 @@ Repository `main` and the canonical data files below are authoritative. Historic
 - 401/403/429 are observations, not automatically treated as broken resources.
 - 404/410 are flagged as broken.
 - External observations do not silently modify verified pricing, license, summary, status, canonical URL or resource identity.
-- The latest previously documented full-run evidence covered 50 resources; the catalog has since grown to 65. The next full Resource Health run should be treated as the refreshed 65-resource health baseline rather than rewriting older evidence retroactively.
+- The refreshed 65-resource baseline was captured by GitHub Actions run `33762653338` against catalog authority `f28d1394ea558d76c64faedc19984c97dacb43b6`; the temporary workflow was the only branch-only file.
+- Baseline raw triage: **59 clean, 4 expected variances, 2 review required, 0 broken (404/410)**. Evidence artifact: `resource-health-65-baseline-33762653338`, SHA-256 `ea73b238facf10e85ac146f7f0a7c15c26e891c62b2666e28ace589d10066efd`.
+- `groqcloud-console` root → `/home` normalization has now been reviewed as an expected redirect while keeping the shorter stable console root as canonical.
+- `mistral-studio` remains review-required because one unauthenticated probe reached Mistral's generated login flow and ended in HTTP 500. Do not whitelist generic 500 responses or change the canonical URL from this single transient observation.
 
 ### Icons
 
@@ -84,13 +87,17 @@ Repository `main` and the canonical data files below are authoritative. Historic
 - Category icons remain the last fallback, not the preferred resource identity.
 - Do not replace an existing verified icon merely for novelty; upgrade only when a clearly better stable official project asset is verified.
 
-### Testing and deployment
+### Testing, monitoring and deployment
 
 - Production frontend remains dependency-free.
 - Playwright is test-only and covers resource-detail interactions, favorites/external-link separation, history/deep links, supplemental-link search and shared detail-click counting.
 - GitHub Pages deployment remains managed by `.github/workflows/pages.yml`.
 - Frontend regressions remain managed by `.github/workflows/frontend-interaction.yml`.
 - Resource Health remains managed by its existing workflow and scripts.
+- `scripts/project_status_consistency.py` + `.github/workflows/project-status-consistency.yml` verify that the status catalog count matches `data/resources.json` and that the status date is not older than canonical data updates.
+- `scripts/production_worker_monitor.py` + `.github/workflows/production-worker-monitor.yml` provide recurring production checks. The scheduled run is daily at `02:43 UTC` (`10:43 Asia/Taipei`) and can also be dispatched manually.
+- Production monitoring checks both Worker `/health` endpoints, performs a real semantic AI recommendation regression against the live current catalog, validates returned IDs against catalog authority, and reads the shared click API with GET only.
+- Production monitoring never POSTs a synthetic click and therefore must never increment or reset shared interaction counts.
 - Cloudflare AI recommender deployment remains separate from catalog-only changes.
 - Catalog-only additions do not require an AI Worker redeploy because the recommender reads the current public catalog authority.
 
@@ -116,6 +123,13 @@ The following current resources were added or refreshed after the older 50-resou
 
 `mattpocock/skills` is a particularly important duplicate-prevention example: repository search may fail to surface a minified JSON entry, so the canonical catalog itself must be read/checked before concluding a resource is absent.
 
+## Recent verified maintenance baseline
+
+- **Official Links Batch 6** is complete on `main`; links were materialized by commit `0569cee962b089b16aacda22c9bc5819e21fe91b`, and the temporary ingestion workflow was removed by `f28d1394ea558d76c64faedc19984c97dacb43b6`.
+- The 65-resource Resource Health baseline run `33762653338` completed successfully with no broken 404/410 resources.
+- Project-status consistency CI is now part of the maintained workflow set so resource-count/date drift is caught before being treated as current authority.
+- Production Worker monitoring is now part of the maintained workflow set; click-counter monitoring remains strictly read-only.
+
 ## Pending ingestion
 
 - Threads post `@cyesuta.lee / DcWAmV-iScT`: not cataloged because the supplied media URL could not be reliably verified; a screenshot, post text or underlying resource URL is still required.
@@ -124,7 +138,6 @@ The following current resources were added or refreshed after the older 50-resou
 ## Not yet completed
 
 - Wider verified official-link coverage across resources that still have clearly verifiable official docs/demo/release/Skill entry points.
-- Automated recurring production AI Worker health / semantic regression monitoring.
 - Semantic/vector search if catalog size eventually makes current structured search insufficient.
 - Automated metadata-refresh PR generation; Resource Health remains evidence-only today.
 - GitHub Stars/activity synchronization into verified catalog metadata.
@@ -154,7 +167,8 @@ The following current resources were added or refreshed after the older 50-resou
 15. Website reconstruction/cloning resources must be framed for authorized migration, recovery, learning or other lawful use, not deceptive impersonation or unauthorized brand copying.
 16. Shared interaction counts are aggregate behavior signals, not unique-user analytics; UI changes must preserve existing counter data and counting semantics.
 17. Frontend interaction/discovery changes must pass the existing browser regression suite before being treated as complete.
+18. Production click-counter monitoring is GET-only. Synthetic monitoring must never POST a click or mutate production interaction counts.
 
 ## Next step
 
-Proceed with **Official Links Batch 6** across existing resources that still have clearly verifiable official documentation, demos, release pages or Skill entry points. Before adding any supplemental link, confirm that it belongs to the same canonical resource ID and is not a separate product. Keep icon-quality work opportunistic only. In parallel, the next scheduled/full Resource Health run should establish a fresh health baseline for the current 65-resource catalog.
+Proceed with **Official Links Batch 7** across existing resources that still have clearly verifiable official documentation, demos, release pages or Skill entry points. Before adding any supplemental link, confirm that it belongs to the same canonical resource ID and is not a separate product. Keep icon-quality work opportunistic only. Keep `mistral-studio` under review until a later health observation confirms the transient login-flow HTTP 500 has cleared; do not broaden the expected-variance policy to generic server errors.
