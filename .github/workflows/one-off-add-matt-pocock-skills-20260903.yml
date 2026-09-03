@@ -1,0 +1,144 @@
+name: One-off Add Matt Pocock Skills 2026-09-03
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-off-add-matt-pocock-skills-20260903.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Add Matt Pocock Skills
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          today = "2026-09-03"
+          rid = "mattpocock-skills"
+          url = "https://github.com/mattpocock/skills"
+
+          resources_path = Path("data/resources.json")
+          icons_path = Path("data/resource-icons.json")
+          links_path = Path("data/resource-links.json")
+
+          resources_doc = json.loads(resources_path.read_text(encoding="utf-8"))
+          icons_doc = json.loads(icons_path.read_text(encoding="utf-8"))
+          links_doc = json.loads(links_path.read_text(encoding="utf-8"))
+
+          existing_ids = {r.get("id") for r in resources_doc.get("resources", [])}
+          existing_urls = {str(r.get("url", "")).rstrip("/").lower() for r in resources_doc.get("resources", [])}
+          assert rid not in existing_ids, f"duplicate id: {rid}"
+          assert url.rstrip("/").lower() not in existing_urls, f"duplicate url: {url}"
+
+          item = {
+            "id": rid,
+            "name": "Matt Pocock Skills",
+            "type": "github",
+            "url": url,
+            "categories": ["Agent Skills", "AI Coding", "Architecture / System Design", "Testing / QA", "Automation / Workflow"],
+            "tags": ["matt-pocock", "agent-skills", "software-engineering", "codex", "claude-code", "tdd", "code-review", "debugging", "domain-modeling", "architecture", "spec", "tickets", "handoff", "skills.sh"],
+            "summary": "為真正軟體工程工作設計的可組合 Agent Skills。把需求釐清、Domain Modeling、Spec、Ticket 拆解、TDD、除錯、Code Review、架構改善、Merge Conflict、Research 與 Handoff 等成熟工程紀律變成 Codex、Claude Code 等 Coding Agent 可重複使用的能力。",
+            "use_cases": [
+              "用 grill-with-docs、to-spec、to-tickets 與 wayfinder 把模糊需求整理成可執行的規格與工作圖",
+              "用 tdd、diagnosing-bugs、code-review 與 resolving-merge-conflicts 建立有 feedback loop 的實作與品質流程",
+              "用 domain-modeling、codebase-design、improve-codebase-architecture 維持一致術語、清楚模組邊界與可演進架構",
+              "用 handoff、research、teach、wait-what 等 Productivity Skills 延續長任務、研究與跨 Agent 工作",
+              "透過 Claude Code 官方 Plugin 或 skills.sh / npx 安裝到 Codex 與其他支援 Agent Skills 的工具"
+            ],
+            "pricing": "open-source",
+            "open_source": True,
+            "license": "MIT",
+            "difficulty": "intermediate",
+            "status": "active",
+            "rating": 5,
+            "added_at": today,
+            "last_checked": today,
+            "notes": "2026-09-03 檢查時 Repository 公開、MIT、未封存，約 246k Stars。作者定位為『Skills for Real Engineers』：偏向小型、可調整、可組合的工程能力，而不是由單一框架接管整個開發流程。README 明確支援 Claude Code Plugin，也可用 npx skills@latest add mattpocock/skills 安裝到 Codex 與其他 Agent。部分 Skills 會讀寫專案文件、Issue Tracker、Git 狀態或 Agent 設定；setup-matt-pocock-skills 本身是 prompt-driven 流程，會先探索並向使用者確認後才寫入，因此仍應依專案權限與既有規範審查變更。"
+          }
+          resources_doc["resources"].append(item)
+
+          assert rid not in icons_doc.get("icons", {}), f"duplicate icon: {rid}"
+          icons_doc["icons"][rid] = {
+            "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://aihero.dev",
+            "source": "official-aihero-domain-favicon-128"
+          }
+
+          assert rid not in links_doc.get("links", {}), f"duplicate links: {rid}"
+          links_doc["links"][rid] = [
+            {
+              "label": "AI Hero Skills 官方頁",
+              "kind": "website",
+              "url": "https://aihero.dev/skills",
+              "description": "Matt Pocock 官方 Skills 入口與介紹頁。"
+            },
+            {
+              "label": "skills.sh 安裝頁",
+              "kind": "website",
+              "url": "https://skills.sh/mattpocock/skills",
+              "description": "透過 skills.sh 選擇並安裝所需 Skills 到 Codex 與其他 Agent。"
+            },
+            {
+              "label": "Engineering Skills 索引",
+              "kind": "documentation",
+              "url": "https://github.com/mattpocock/skills/blob/main/skills/engineering/README.md",
+              "description": "官方工程 Skills 清單，區分 User-invoked 與 Model-invoked 能力。"
+            }
+          ]
+
+          resources_doc["updated_at"] = today
+          icons_doc["updated_at"] = today
+          links_doc["updated_at"] = today
+
+          resources_path.write_text(json.dumps(resources_doc, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+          icons_path.write_text(json.dumps(icons_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          links_path.write_text(json.dumps(links_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          matches = [r for r in resources_doc["resources"] if r.get("id") == rid]
+          assert len(matches) == 1
+          assert matches[0]["url"] == url
+          print("Added and verified:", rid)
+          PY
+
+      - name: Validate catalog and secondary links
+        run: |
+          python scripts/resource_health.py --validate-only
+          python scripts/resource_links_validate.py
+          python scripts/resource_health_triage.py --validate-only
+
+      - name: Install browser test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run frontend interaction regression
+        run: npm run test:browser
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json data/resource-links.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Add Matt Pocock engineering skills resource"
+          git push origin HEAD:main
