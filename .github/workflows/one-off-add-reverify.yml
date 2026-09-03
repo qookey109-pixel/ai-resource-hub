@@ -1,0 +1,135 @@
+name: One-off Add Reverify
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-off-add-reverify.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add Reverify catalog records
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resource_id = "2akouwu-reverify"
+          today = "2026-09-03"
+
+          resources_path = Path("data/resources.json")
+          icons_path = Path("data/resource-icons.json")
+          links_path = Path("data/resource-links.json")
+
+          resources_doc = json.loads(resources_path.read_text(encoding="utf-8"))
+          icons_doc = json.loads(icons_path.read_text(encoding="utf-8"))
+          links_doc = json.loads(links_path.read_text(encoding="utf-8"))
+
+          resource = {
+              "id": resource_id,
+              "name": "Reverify",
+              "type": "github",
+              "url": "https://github.com/2akouwu/reverify",
+              "categories": [
+                  "Security / Reverse Engineering",
+                  "MCP / Agent Frameworks",
+                  "Agent Skills",
+                  "Developer Tools"
+              ],
+              "tags": [
+                  "reverify",
+                  "reverse-engineering",
+                  "binary-analysis",
+                  "verified-ai",
+                  "deterministic-tools",
+                  "mcp",
+                  "codex",
+                  "disassembly",
+                  "cpu-emulation",
+                  "frida",
+                  "malware-analysis",
+                  "ctf",
+                  "pe",
+                  "elf",
+                  "mach-o",
+                  "python"
+              ],
+              "summary": "MIT 開源的 AI 輔助逆向工程工具，讓模型先提出 Binary 分析假設，再由 deterministic tools 對實際 bytes 進行解析、反組譯、Pattern Scan 或 CPU Emulation 驗證，將結果標記為 VERIFIED、REFUTED 或 INCONCLUSIVE，降低 AI 在逆向工程中的幻覺與錯誤推測。",
+              "use_cases": [
+                  "讓 Codex、Claude Code、Cursor 等支援 MCP 的 Agent 對 Binary 分析假設進行工具驗證，而不是只依模型推測",
+                  "解析 PE、ELF、Mach-O，進行 x86/x64/ARM/ARM64 反組譯、字串、AOB Pattern Scan 與 CPU Emulation",
+                  "在合法授權的 Malware Analysis、CTF、互通性或漏洞研究中建立可重複驗證的 Reverse Engineering 流程",
+                  "透過 CLI 或 MCP Server 把 Binary Analysis、Protobuf/TLV、Frida Hook Generation 與 Verify Loop 接進 Agent 工作流"
+              ],
+              "pricing": "open-source",
+              "open_source": True,
+              "license": "MIT",
+              "difficulty": "advanced",
+              "status": "active",
+              "rating": 5,
+              "added_at": today,
+              "last_checked": today,
+              "notes": "2026-09-03 檢查時 Repository 公開、MIT、未封存且持續更新，約 549 Stars、113 Forks；README 目前標示 v0.3.0、PyPI 可直接安裝，並稱有 96 個 unit tests。Reverify 的特色是以 deterministic tools 對 Binary 實際 bytes 驗證模型提出的 claims，但 VERIFIED 只代表通過所選工具與 claim 條件，不應視為完整程式語意或安全性的絕對證明。SECURITY.md 明確限制於已授權的逆向工程、Malware Analysis、CTF、互通性與漏洞研究，禁止未授權存取、繞過他人軟體授權／啟用機制、惡意軟體與資料竊取用途。"
+          }
+
+          resources = resources_doc.setdefault("resources", [])
+          resources[:] = [item for item in resources if item.get("id") != resource_id]
+          resources.append(resource)
+          resources_doc["updated_at"] = today
+
+          icons_doc.setdefault("icons", {})[resource_id] = {
+              "url": "https://github.com/2akouwu.png?size=256",
+              "source": "github-owner-avatar-256-fallback-no-project-logo"
+          }
+          icons_doc["updated_at"] = today
+
+          links_doc.setdefault("links", {})[resource_id] = [
+              {
+                  "label": "Reverify PyPI",
+                  "kind": "website",
+                  "url": "https://pypi.org/project/reverify/",
+                  "description": "官方 PyPI 套件頁，可查看目前發布版本並使用 pip install reverify 安裝。"
+              },
+              {
+                  "label": "Security Policy",
+                  "kind": "documentation",
+                  "url": "https://github.com/2akouwu/reverify/blob/main/SECURITY.md",
+                  "description": "官方安全與可接受使用範圍，明確要求僅用於已授權的逆向工程、Malware Analysis、CTF、互通性與漏洞研究。"
+              }
+          ]
+          links_doc["updated_at"] = today
+
+          resources_path.write_text(json.dumps(resources_doc, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+          icons_path.write_text(json.dumps(icons_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          links_path.write_text(json.dumps(links_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          # Parse the exact files again after writing to fail safely on invalid JSON.
+          for path in (resources_path, icons_path, links_path):
+              json.loads(path.read_text(encoding="utf-8"))
+          PY
+
+          git diff --check
+          git diff -- data/resources.json data/resource-icons.json data/resource-links.json
+
+      - name: Commit catalog update
+        shell: bash
+        run: |
+          if git diff --quiet -- data/resources.json data/resource-icons.json data/resource-links.json; then
+            echo "Catalog already contains Reverify."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/resources.json data/resource-icons.json data/resource-links.json
+          git commit -m "Add Reverify verified reverse-engineering resource"
+          git push origin HEAD:main
