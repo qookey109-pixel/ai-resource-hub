@@ -1,0 +1,81 @@
+name: Production Worker Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 2 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "data/ai-config.json"
+      - "data/click-config.json"
+      - "data/resources.json"
+      - "scripts/production_worker_monitor.py"
+      - ".github/workflows/production-worker-monitor.yml"
+  pull_request:
+    paths:
+      - "data/ai-config.json"
+      - "data/click-config.json"
+      - "data/resources.json"
+      - "scripts/production_worker_monitor.py"
+      - ".github/workflows/production-worker-monitor.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-worker-monitor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate monitor configuration and semantic fixture
+        run: python scripts/production_worker_monitor.py --validate-only
+
+  monitor:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Check production Workers and AI semantic recommendation
+        run: python scripts/production_worker_monitor.py --timeout 20
+
+      - name: Publish production monitor report to workflow summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f reports/production-workers/production-worker-monitor.md ]; then
+            cat reports/production-workers/production-worker-monitor.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Production worker monitor report was not generated." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload production monitor evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-worker-monitor-${{ github.run_id }}
+          path: reports/production-workers/
+          if-no-files-found: warn
+          retention-days: 30
