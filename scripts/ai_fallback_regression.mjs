@@ -37,11 +37,39 @@ assert.ok(
   `expected meshy-ai recovery, got ${JSON.stringify(recovered)}`
 );
 
+const voiceIntent = fallbackIntent('我要在本機做語音複製和配音，不想依賴雲端訂閱服務');
+for (const concept of ['本機', '語音', '複製', '配音']) {
+  assert.ok(
+    voiceIntent.search_concepts.includes(concept),
+    `expected positive voice concept ${concept}, got ${JSON.stringify(voiceIntent.search_concepts)}`
+  );
+}
+for (const negativeConcept of ['雲端', '訂閱']) {
+  assert.ok(
+    !voiceIntent.search_concepts.includes(negativeConcept),
+    `negative preference ${negativeConcept} must not be scored positively: ${JSON.stringify(voiceIntent.search_concepts)}`
+  );
+}
+
+const voiceRecovered = fallbackRecommendations(voiceIntent, catalog);
+assert.equal(
+  voiceRecovered[0]?.id,
+  'voice-studio',
+  `expected voice-studio as top fallback recovery, got ${JSON.stringify(voiceRecovered)}`
+);
+
 const generic = fallbackRecommendations(fallbackIntent('AI'), catalog);
 assert.equal(
   generic.length,
   0,
   `generic AI query must not trigger deterministic fallback: ${JSON.stringify(generic)}`
+);
+
+const genericWrapped = fallbackRecommendations(fallbackIntent('我要找 AI 工具'), catalog);
+assert.equal(
+  genericWrapped.length,
+  0,
+  `generic wrapped AI query must not trigger deterministic fallback: ${JSON.stringify(genericWrapped)}`
 );
 
 const missing = fallbackRecommendations(
@@ -56,5 +84,6 @@ assert.equal(
 
 console.log(
   'AI fallback regression PASS:',
-  recovered.map((item) => item.id).join(', ') || 'none'
+  `3D=${recovered.map((item) => item.id).join(', ') || 'none'};`,
+  `voice=${voiceRecovered.map((item) => item.id).join(', ') || 'none'}`
 );
