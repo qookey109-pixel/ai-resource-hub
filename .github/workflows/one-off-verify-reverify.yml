@@ -1,0 +1,58 @@
+name: One-off Verify Reverify Integration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/one-off-verify-reverify.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate-catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate catalog structure
+        run: python scripts/resource_health.py --validate-only
+      - name: Validate secondary resource links
+        run: python scripts/resource_links_validate.py
+      - name: Validate reviewed health expectations
+        run: python scripts/resource_health_triage.py --validate-only
+      - name: Verify Reverify records
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rid = "2akouwu-reverify"
+          resources = json.loads(Path("data/resources.json").read_text(encoding="utf-8"))
+          icons = json.loads(Path("data/resource-icons.json").read_text(encoding="utf-8"))
+          links = json.loads(Path("data/resource-links.json").read_text(encoding="utf-8"))
+          matches = [x for x in resources["resources"] if x.get("id") == rid]
+          assert len(matches) == 1, f"expected exactly one {rid}, got {len(matches)}"
+          assert matches[0]["added_at"] == "2026-09-03"
+          assert matches[0]["license"] == "MIT"
+          assert rid in icons["icons"]
+          assert len(links["links"].get(rid, [])) >= 2
+          print("Reverify catalog integration verified")
+          PY
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install test dependency
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run resource detail regressions
+        run: npm run test:browser
