@@ -18,6 +18,8 @@ on:
       - "data/ai-config.json"
       - "data/click-config.json"
       - "data/resources.json"
+      - "worker/src/index.js"
+      - "scripts/ai_fallback_regression.mjs"
       - "scripts/production_worker_monitor.py"
       - ".github/workflows/production-worker-monitor.yml"
 
@@ -43,6 +45,9 @@ jobs:
 
       - name: Validate monitor configuration and semantic fixture
         run: python scripts/production_worker_monitor.py --validate-only
+
+      - name: Validate deterministic AI fallback regression
+        run: node scripts/ai_fallback_regression.mjs
 
   monitor:
     if: github.event_name != 'pull_request'
