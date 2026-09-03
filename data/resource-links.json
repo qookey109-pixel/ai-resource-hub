@@ -501,6 +501,96 @@
         "url": "https://github.com/2akouwu/reverify/blob/main/SECURITY.md",
         "description": "官方安全與可接受使用範圍，明確要求僅用於已授權的逆向工程、Malware Analysis、CTF、互通性與漏洞研究。"
       }
+    ],
+    "larashero3-lieflat-charts": [
+      {
+        "label": "Force Graph 互動 Demo",
+        "kind": "demo",
+        "url": "https://larashero3-dotcom.github.io/lieflat-charts/templates/big-force.html",
+        "description": "README 官方提供的 GitHub Pages 範例，可直接體驗 Force Graph 的拖曳與縮放。"
+      },
+      {
+        "label": "Lieflat Charts SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/larashero3-dotcom/lieflat-charts/blob/main/SKILL.md",
+        "description": "完整 Agent Skill 定義、資料契約、視覺規則與生成流程。"
+      }
+    ],
+    "addyosmani-agent-skills": [
+      {
+        "label": "Agent Skills 官方網站",
+        "kind": "website",
+        "url": "https://skills.addy.ie/",
+        "description": "Addy Osmani Agent Skills 的官方瀏覽與介紹入口。"
+      },
+      {
+        "label": "Getting Started",
+        "kind": "documentation",
+        "url": "https://github.com/addyosmani/agent-skills/blob/main/docs/getting-started.md",
+        "description": "官方入門文件，說明 Skills 安裝、選擇與多種 Agent 的整合方式。"
+      }
+    ],
+    "boundaryml-baml": [
+      {
+        "label": "Explore BAML",
+        "kind": "website",
+        "url": "https://www.boundaryml.com/explore",
+        "description": "BoundaryML 官方互動式 BAML 介紹、範例與功能入口。"
+      },
+      {
+        "label": "BAML Quickstart",
+        "kind": "documentation",
+        "url": "https://boundaryml.com/quickstart",
+        "description": "官方 Quickstart，從安裝 BAML 到建立第一個 Agent-oriented function。"
+      }
+    ],
+    "getlayers-ai": [
+      {
+        "label": "GetLayers Docs",
+        "kind": "documentation",
+        "url": "https://www.getlayers.ai/docs",
+        "description": "官方文件，說明 Prompt、Source Code、方案、商用授權與工作流。"
+      },
+      {
+        "label": "GetLayers MCP",
+        "kind": "documentation",
+        "url": "https://www.getlayers.ai/mcp",
+        "description": "官方 MCP 入口，讓支援 MCP 的 AI Assistant 搜尋與導入 GetLayers Library。"
+      },
+      {
+        "label": "GetLayers Pricing",
+        "kind": "website",
+        "url": "https://www.getlayers.ai/pricing",
+        "description": "Free、Unlimited 與 Full Stack 的最新價格、授權與 Fair-use 條件。"
+      }
+    ],
+    "curated-design": [
+      {
+        "label": "Curated Inspiration",
+        "kind": "gallery",
+        "url": "https://curated.design/inspiration/",
+        "description": "依產業、Style 與 Tag 瀏覽人工挑選的已上線網站。"
+      },
+      {
+        "label": "Curated Pricing",
+        "kind": "website",
+        "url": "https://curated.design/pricing/",
+        "description": "Free 與 Pro 的最新功能、Section Library、Bookmark 與 Export 方案。"
+      }
+    ],
+    "60fps-design": [
+      {
+        "label": "60fps MCP",
+        "kind": "documentation",
+        "url": "https://60fps.design/mcp",
+        "description": "官方 MCP 設定與工具說明，可讓 Agent 搜尋 Shot、分析 Motion Breakdown 與取得支援的 Motion Code。"
+      },
+      {
+        "label": "60fps PRO",
+        "kind": "website",
+        "url": "https://60fps.design/pro",
+        "description": "官方 PRO 方案、價格與完整功能說明。"
+      }
     ]
   }
 }
