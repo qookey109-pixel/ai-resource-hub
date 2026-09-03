@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-02",
+  "updated_at": "2026-09-03",
   "links": {
     "tt-a1i-archify": [
       {
@@ -486,6 +486,20 @@
         "kind": "documentation",
         "url": "https://github.com/slidefirm/NESA-SLIDE/blob/main/.agents/skills/slide-outline-planner/SKILL.md",
         "description": "官方簡報內容規劃 Skill，可先建立逐頁大綱、講稿與版面建議，再交給其他輸出 Skill。"
+      }
+    ],
+    "2akouwu-reverify": [
+      {
+        "label": "Reverify PyPI",
+        "kind": "website",
+        "url": "https://pypi.org/project/reverify/",
+        "description": "官方 PyPI 套件頁，可查看目前發布版本並使用 pip install reverify 安裝。"
+      },
+      {
+        "label": "Security Policy",
+        "kind": "documentation",
+        "url": "https://github.com/2akouwu/reverify/blob/main/SECURITY.md",
+        "description": "官方安全與可接受使用範圍，明確要求僅用於已授權的逆向工程、Malware Analysis、CTF、互通性與漏洞研究。"
       }
     ]
   }

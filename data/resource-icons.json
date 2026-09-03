@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-02",
+  "updated_at": "2026-09-03",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -208,6 +208,10 @@
     },
     "slidefirm-nesa-slide": {
       "url": "https://github.com/slidefirm.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "2akouwu-reverify": {
+      "url": "https://github.com/2akouwu.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
