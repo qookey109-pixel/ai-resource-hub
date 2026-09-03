@@ -1,0 +1,64 @@
+name: Temporary 65-resource Health Baseline
+
+on:
+  push:
+    branches:
+      - ops/resource-health-65-baseline-20260903
+    paths:
+      - ".github/workflows/_tmp-resource-health-65-baseline.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout baseline branch
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Validate catalog structure
+        run: python scripts/resource_health.py --validate-only
+
+      - name: Validate secondary resource links
+        run: python scripts/resource_links_validate.py
+
+      - name: Validate reviewed health expectations
+        run: python scripts/resource_health_triage.py --validate-only
+
+      - name: Check all resource URLs and GitHub metadata
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/resource_health.py --timeout 12
+
+      - name: Triage raw observations against reviewed expectations
+        run: python scripts/resource_health_triage.py
+
+      - name: Publish reviewed report to workflow summary
+        if: always()
+        shell: bash
+        run: |
+          echo "Baseline source main SHA: f28d1394ea558d76c64faedc19984c97dacb43b6" >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          if [ -f reports/resource-health/resource-health-review.md ]; then
+            cat reports/resource-health/resource-health-review.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ -f reports/resource-health/resource-health.md ]; then
+            cat reports/resource-health/resource-health.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Resource health report was not generated." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload 65-resource baseline evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resource-health-65-baseline-${{ github.run_id }}
+          path: reports/resource-health/
+          if-no-files-found: error
+          retention-days: 30
