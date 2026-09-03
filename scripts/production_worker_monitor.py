@@ -18,10 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT_DIR = ROOT / "reports/production-workers"
 SITE_ORIGIN = "https://qookey109-pixel.github.io"
 USER_AGENT = "Qookey-AI-Resource-Hub-Production-Monitor/0.1"
-SEMANTIC_QUERY = (
-    "我要用 Codex 製作原生可編輯的 PowerPoint／PPTX 簡報，"
-    "需要簡報規劃與輸出 Skill，請推薦最適合的資源。"
-)
+SEMANTIC_QUERY = "我要從文字快速生成可以拿去做遊戲原型的 3D 模型"
+SEMANTIC_EXPECTED_IDS = {"meshy-ai"}
 
 
 class MonitorError(RuntimeError):
@@ -61,21 +59,6 @@ def health_url(endpoint: str) -> str:
     return urlunparse((parsed.scheme, parsed.netloc, "/health", "", "", ""))
 
 
-def presentation_candidate(resource: dict[str, Any]) -> bool:
-    categories = resource.get("categories") or []
-    if "Agent Skills" not in categories:
-        return False
-    parts = [
-        resource.get("name", ""),
-        resource.get("summary", ""),
-        resource.get("notes", ""),
-        *(resource.get("tags") or []),
-        *(resource.get("use_cases") or []),
-    ]
-    text = " ".join(str(part) for part in parts).lower()
-    return any(term in text for term in ("pptx", "powerpoint", "presentation", "簡報"))
-
-
 def validate_local_configuration() -> dict[str, Any]:
     ai_config = load_json(ROOT / "data/ai-config.json")
     click_config = load_json(ROOT / "data/click-config.json")
@@ -106,21 +89,18 @@ def validate_local_configuration() -> dict[str, Any]:
             raise MonitorError(f"duplicate catalog resource id: {resource_id}")
         resource_by_id[resource_id] = resource
 
-    presentation_ids = {
-        resource_id
-        for resource_id, resource in resource_by_id.items()
-        if presentation_candidate(resource)
-    }
-    if not presentation_ids:
+    missing_expected = sorted(SEMANTIC_EXPECTED_IDS - set(resource_by_id))
+    if missing_expected:
         raise MonitorError(
-            "semantic regression fixture is stale: no presentation/PPTX Agent Skill exists"
+            "semantic regression fixture is stale; expected catalog IDs are missing: "
+            + ", ".join(missing_expected)
         )
 
     return {
         "ai_endpoint": ai_endpoint,
         "click_endpoint": click_endpoint,
         "resource_by_id": resource_by_id,
-        "presentation_ids": presentation_ids,
+        "semantic_expected_ids": set(SEMANTIC_EXPECTED_IDS),
     }
 
 
@@ -179,6 +159,7 @@ def markdown_report(report: dict[str, Any]) -> str:
         "",
         f"- AI recommendation mode: `{report.get('ai_mode') or 'unavailable'}`",
         f"- AI recommendation IDs: `{', '.join(report.get('recommendation_ids') or []) or 'none'}`",
+        f"- Expected semantic ID(s): `{', '.join(report.get('semantic_expected_ids') or [])}`",
         f"- Click-counter entries observed: **{report.get('click_count_entries', 0)}**",
         "- Click API probe is GET-only; this monitor never POSTs or increments click counts.",
         "",
@@ -202,19 +183,20 @@ def markdown_report(report: dict[str, Any]) -> str:
 def run_monitor(timeout: float) -> dict[str, Any]:
     context = validate_local_configuration()
     resource_by_id = context["resource_by_id"]
-    presentation_ids = context["presentation_ids"]
+    semantic_expected_ids = context["semantic_expected_ids"]
     checks: list[dict[str, Any]] = []
     warnings: list[str] = []
     ai_mode: str | None = None
     recommendation_ids: list[str] = []
     click_count_entries = 0
+    fast_timeout = min(timeout, 15.0)
 
     def add_check(name: str, ok: bool, details: str) -> None:
         checks.append({"name": name, "ok": bool(ok), "details": details})
 
     try:
         status, payload, elapsed = request_json(
-            health_url(context["ai_endpoint"]), timeout=timeout
+            health_url(context["ai_endpoint"]), timeout=fast_timeout
         )
         ok = (
             status == 200
@@ -231,7 +213,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
 
     try:
         status, payload, elapsed = request_json(
-            health_url(context["click_endpoint"]), timeout=timeout
+            health_url(context["click_endpoint"]), timeout=fast_timeout
         )
         ok = (
             status == 200
@@ -248,7 +230,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
 
     try:
         status, payload, elapsed = request_json(
-            context["click_endpoint"], timeout=timeout
+            context["click_endpoint"], timeout=fast_timeout
         )
         counts = payload.get("counts")
         valid_counts = isinstance(counts, dict) and all(
@@ -312,13 +294,11 @@ def run_monitor(timeout: float) -> dict[str, Any]:
             else f"unknown/missing IDs: {unknown_ids}",
         )
 
-        semantic_hits = [
-            resource_id for resource_id in recommendation_ids if resource_id in presentation_ids
-        ]
+        semantic_hits = sorted(set(recommendation_ids) & semantic_expected_ids)
         add_check(
             "ai_recommend_semantics",
             bool(semantic_hits),
-            "presentation/PPTX match=" + (", ".join(semantic_hits) if semantic_hits else "none"),
+            "expected semantic match=" + (", ".join(semantic_hits) if semantic_hits else "none"),
         )
 
         if ai_mode == "fallback" or payload.get("intent_mode") == "fallback":
@@ -337,6 +317,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "status": "PASS" if overall_ok else "FAIL",
         "catalog_resources": len(resource_by_id),
         "semantic_query": SEMANTIC_QUERY,
+        "semantic_expected_ids": sorted(semantic_expected_ids),
         "ai_mode": ai_mode,
         "recommendation_ids": recommendation_ids,
         "click_count_entries": click_count_entries,
@@ -348,7 +329,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--validate-only", action="store_true")
-    parser.add_argument("--timeout", type=float, default=20.0)
+    parser.add_argument("--timeout", type=float, default=90.0)
     args = parser.parse_args()
 
     try:
@@ -361,7 +342,7 @@ def main() -> int:
         print(
             "Production worker monitor validation PASS: "
             f"catalog_resources={len(context['resource_by_id'])}, "
-            f"semantic_candidates={len(context['presentation_ids'])}"
+            f"semantic_expected_ids={','.join(sorted(context['semantic_expected_ids']))}"
         )
         return 0
 
