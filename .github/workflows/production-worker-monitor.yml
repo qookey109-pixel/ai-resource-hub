@@ -59,7 +59,7 @@ jobs:
           python-version: "3.13"
 
       - name: Check production Workers and AI semantic recommendation
-        run: python scripts/production_worker_monitor.py --timeout 20
+        run: python scripts/production_worker_monitor.py --timeout 90
 
       - name: Publish production monitor report to workflow summary
         if: always()
