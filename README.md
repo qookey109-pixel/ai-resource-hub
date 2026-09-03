@@ -12,7 +12,7 @@ The repository includes a GitHub Actions Pages workflow at `.github/workflows/pa
 
 ## Current version
 
-**V0.5 — live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4**
+**V0.5 — live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + shared interaction counts**
 
 Current capabilities:
 
@@ -21,9 +21,11 @@ Current capabilities:
 - Verified link-aware discovery, so terms such as `Proof Lab` or `Scenario Guide` can resolve the parent catalog resource without creating duplicate cards
 - Category and resource-type filters
 - Free/open-source filters
-- Recommendation, newest, and name sorting
+- Search-side sort buttons for added date and shared interaction counts, with remembered ascending/descending direction per sort family
+- Default newest-first ordering
 - Popular-category shortcuts
 - Browser-local favorites with favorite-first ordering
+- Shared Cloudflare Durable Object interaction counter: opening a resource detail card records one interaction, and following an outbound resource/official link records a separate interaction
 - Responsive per-resource detail dialog opened from the whole resource card
 - Native accessible card hit target with dialog metadata and keyboard behavior
 - Shareable resource-detail URLs using stable `?resource=<id>` query parameters
@@ -48,6 +50,8 @@ Current capabilities:
 
 `data/resource-links.json` is a supplemental registry for verified secondary public links. It does not create new resources or override the canonical primary URL. Discovery V1.4 may index its verified labels, descriptions, kinds and stable public URL components for search, but it does not promote those links into separate resources.
 
+`data/click-config.json` configures the public shared interaction-count endpoint. The counter is aggregate interaction data rather than unique-visitor analytics and must not redefine resource identity.
+
 Repository `main` is the project authority unless a later versioned governance rule changes this.
 
 ## Ingestion rule
@@ -62,6 +66,7 @@ Before adding a resource:
 6. Use `unknown` / `null` instead of guessing.
 7. Keep existing verified resource metadata unless newer source evidence justifies an update.
 8. Store extra official pages, demos, docs or galleries in `data/resource-links.json` instead of creating duplicate catalog cards.
+9. Re-read current `main` immediately before ingestion writes so stale status/search results cannot create duplicate catalog entries.
 
 ## Project structure
 
@@ -88,6 +93,7 @@ Before adding a resource:
 ├── data/
 │   ├── ai-config.json
 │   ├── categories.json
+│   ├── click-config.json
 │   ├── resource-health-expectations.json
 │   ├── resource-icons.json
 │   ├── resource-links.json
@@ -95,6 +101,7 @@ Before adding a resource:
 ├── tests/
 │   ├── resource-detail.spec.js
 │   └── search-discovery.spec.js
+├── worker-clicks/
 └── docs/
     ├── RESOURCE_LINKS.md
     └── RESOURCE_SCHEMA.md
@@ -110,7 +117,7 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-The tests cover card-to-detail interaction, favorite/external-link separation, deep-link opening, Back-button closing, resource-link copying, and verified secondary-link search discovery.
+The tests cover card-to-detail interaction, detail-card shared-click counting, favorite/external-link separation, deep-link opening, Back-button closing, resource-link copying, and verified secondary-link search discovery.
 
 ## Roadmap
 
