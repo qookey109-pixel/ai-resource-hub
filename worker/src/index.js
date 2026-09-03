@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.0';
+const RECOMMENDER_VERSION = '0.3.1';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -252,7 +252,7 @@ async function rankResources(intent, resources, env) {
 }
 
 function fallbackRecommendations(intent, resources) {
-  const concepts = [
+  const concepts = [...new Set([
     ...intent.search_concepts,
     ...intent.must_have,
     ...intent.preferences,
@@ -260,7 +260,7 @@ function fallbackRecommendations(intent, resources) {
     intent.desired_output
   ]
     .map((value) => String(value || '').toLowerCase().trim())
-    .filter((value) => value.length >= 2);
+    .filter((value) => value.length >= 2))];
 
   const scored = resources.map((resource) => {
     const haystack = [
@@ -273,16 +273,20 @@ function fallbackRecommendations(intent, resources) {
     ].join(' ').toLowerCase();
 
     let score = 0;
+    let matches = 0;
     for (const concept of concepts) {
-      if (haystack.includes(concept)) score += concept.length >= 4 ? 5 : 2;
+      if (!haystack.includes(concept)) continue;
+      score += concept.length >= 4 ? 5 : 2;
+      matches += 1;
     }
-    return { resource, score };
-  }).sort((a, b) => b.score - a.score);
+    return { resource, score, matches };
+  }).sort((a, b) => b.score - a.score || b.matches - a.matches);
 
-  if (!scored.length || scored[0].score < 5) return [];
-  const floor = Math.max(5, scored[0].score * 0.6);
+  const eligible = scored.filter((item) => item.score >= 5 || (item.score >= 4 && item.matches >= 2));
+  if (!eligible.length) return [];
+  const floor = Math.max(4, eligible[0].score * 0.6);
 
-  return scored
+  return eligible
     .filter((item) => item.score >= floor)
     .slice(0, 3)
     .map(({ resource, score }) => ({
@@ -372,6 +376,25 @@ export default {
 
     try {
       const ranked = await rankResources(intent, resources, env);
+      if (ranked.no_match && intentMode === 'fallback') {
+        const recommendations = fallbackRecommendations(intent, resources);
+        if (recommendations.length) {
+          return json({
+            ok: true,
+            mode: 'fallback',
+            version: RECOMMENDER_VERSION,
+            query,
+            intent_mode: intentMode,
+            intent,
+            intent_summary: ranked.intent_summary || intent.primary_goal,
+            no_match: false,
+            recommendations,
+            missing_capability: '',
+            diagnostic: 'intent_fallback_no_match_recovered'
+          }, 200, cors);
+        }
+      }
+
       return json({
         ok: true,
         mode: ranked.no_match ? 'no_match' : 'ai',

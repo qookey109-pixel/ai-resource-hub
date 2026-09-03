@@ -23,6 +23,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Validate deterministic AI fallback regression
+        run: node scripts/ai_fallback_regression.mjs
+
       - name: Verify Cloudflare credentials
         shell: bash
         env:
