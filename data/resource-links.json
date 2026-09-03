@@ -705,6 +705,68 @@
         "url": "https://onorca.dev/download",
         "description": "官方桌面版本下載入口。"
       }
+    ],
+    "groqcloud-console": [
+      {
+        "label": "Groq API Quickstart",
+        "kind": "documentation",
+        "url": "https://console.groq.com/docs/quickstart",
+        "description": "Groq 官方 API 入門文件，包含 API Key 環境變數、SDK 安裝與第一個請求範例。"
+      },
+      {
+        "label": "Groq 支援模型",
+        "kind": "documentation",
+        "url": "https://console.groq.com/docs/models",
+        "description": "官方目前可用 Production／Preview Models 與 Model ID、Context、價格及能力資訊。"
+      },
+      {
+        "label": "Groq Rate Limits",
+        "kind": "documentation",
+        "url": "https://console.groq.com/docs/rate-limits",
+        "description": "官方 Rate Limit 文件，說明 RPM、RPD、TPM、TPD 等限制與 429／Header 行為。"
+      }
+    ],
+    "oracle-cloud-free-tier": [
+      {
+        "label": "OCI Free Tier 官方文件",
+        "kind": "documentation",
+        "url": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier.htm",
+        "description": "Oracle 官方 Free Tier 文件，說明 Free Trial、Always Free、Home Region 與帳戶限制。"
+      },
+      {
+        "label": "OCI Always Free Resources",
+        "kind": "documentation",
+        "url": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm",
+        "description": "Oracle 官方 Always Free 資源清單與 Compute、Storage、Database、Networking 等額度說明。"
+      }
+    ],
+    "openstreetmap": [
+      {
+        "label": "OpenStreetMap API v0.6",
+        "kind": "api",
+        "url": "https://wiki.openstreetmap.org/wiki/Api06",
+        "description": "OpenStreetMap 官方 Wiki 的 Editing API v0.6 文件；大量唯讀資料用途應改用適合的下載或查詢服務。"
+      },
+      {
+        "label": "OSM Tile Usage Policy",
+        "kind": "documentation",
+        "url": "https://operations.osmfoundation.org/policies/tiles/",
+        "description": "OSMF 官方圖磚使用政策，涵蓋 attribution、User-Agent、快取、批次下載與服務限制。"
+      },
+      {
+        "label": "OSM Nominatim Usage Policy",
+        "kind": "documentation",
+        "url": "https://operations.osmfoundation.org/policies/nominatim/",
+        "description": "OSMF 官方地理編碼服務使用政策，說明公開 Nominatim 服務的流量與識別要求。"
+      }
+    ],
+    "anti-gambling-trader-tw": [
+      {
+        "label": "反詐投資王官方 GitHub Pages",
+        "kind": "demo",
+        "url": "https://mars-tw.github.io/anti-gambling-trader-tw/",
+        "description": "Repository metadata 指定的官方 GitHub Pages 入口，可快速查看專案功能與使用方式。"
+      }
     ]
   }
 }
