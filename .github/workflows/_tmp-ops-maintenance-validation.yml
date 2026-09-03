@@ -39,7 +39,7 @@ jobs:
         run: python scripts/production_worker_monitor.py --validate-only
 
       - name: Exercise production Workers read-only plus one AI semantic request
-        run: python scripts/production_worker_monitor.py --timeout 20
+        run: python scripts/production_worker_monitor.py --timeout 90
 
       - name: Publish production monitor summary
         if: always()
