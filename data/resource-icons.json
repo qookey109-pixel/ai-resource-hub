@@ -237,6 +237,30 @@
     "60fps-design": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://60fps.design",
       "source": "official-domain-favicon-128"
+    },
+    "trailhq-graft": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://graft.nanonets.ai",
+      "source": "official-site-domain-favicon-128"
+    },
+    "msitarzewski-agency-agents": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://agencyagents.app",
+      "source": "official-app-domain-favicon-128"
+    },
+    "deusdata-codebase-memory-mcp": {
+      "url": "https://github.com/DeusData.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "calesthio-openmontage": {
+      "url": "https://raw.githubusercontent.com/calesthio/OpenMontage/main/assets/monty-light.svg",
+      "source": "official-repository-mascot-svg"
+    },
+    "panniantong-agent-reach": {
+      "url": "https://github.com/Panniantong.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "stablyai-orca": {
+      "url": "https://raw.githubusercontent.com/stablyai/orca/main/resources/build/icon.png",
+      "source": "official-repository-app-icon"
     }
   }
 }
