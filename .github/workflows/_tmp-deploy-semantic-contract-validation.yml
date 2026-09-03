@@ -20,54 +20,108 @@ jobs:
         run: |
           set -euo pipefail
 
-          shorts_filter='\
-            .ok == true and\
-            (.mode == "ai" or .mode == "fallback") and\
-            (\
-              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")\
-              or\
-              (.intent_mode == "fallback")\
-            ) and\
-            any(.recommendations[]?; .id == "money-printer-turbo")\
-          '
+          printf '%s\n' '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' > /tmp/shorts-fallback.json
+          printf '%s\n' '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"end-to-end"},"recommendations":[{"id":"money-printer-turbo"}]}' > /tmp/shorts-ai.json
+          printf '%s\n' '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' > /tmp/shorts-invalid.json
 
-          voice_filter='\
-            .ok == true and\
-            (.mode == "ai" or .mode == "fallback") and\
-            (\
-              (\
-                .intent_mode == "ai" and\
-                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))\
-              )\
-              or\
-              (.intent_mode == "fallback")\
-            ) and\
-            any(.recommendations[]?; .id == "voice-studio")\
-          '
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "money-printer-turbo")
+          ' /tmp/shorts-fallback.json >/dev/null
 
-          model_filter='\
-            .ok == true and\
-            (.mode == "ai" or .mode == "fallback") and\
-            any(.recommendations[]?; .id == "meshy-ai")\
-          '
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "money-printer-turbo")
+          ' /tmp/shorts-ai.json >/dev/null
 
-          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null
-          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"end-to-end"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null
-
-          if jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null; then
+          if jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "money-printer-turbo")
+          ' /tmp/shorts-invalid.json >/dev/null; then
             echo 'AI Shorts payload without end-to-end intent should fail.' >&2
             exit 1
           fi
 
-          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"execution":[]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null
-          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["local"]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null
+          printf '%s\n' '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"execution":[]},"recommendations":[{"id":"voice-studio"}]}' > /tmp/voice-fallback.json
+          printf '%s\n' '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["local"]},"recommendations":[{"id":"voice-studio"}]}' > /tmp/voice-ai.json
+          printf '%s\n' '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["cloud"]},"recommendations":[{"id":"voice-studio"}]}' > /tmp/voice-invalid.json
 
-          if jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["cloud"]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null; then
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (
+                .intent_mode == "ai" and
+                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))
+              )
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "voice-studio")
+          ' /tmp/voice-fallback.json >/dev/null
+
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (
+                .intent_mode == "ai" and
+                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))
+              )
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "voice-studio")
+          ' /tmp/voice-ai.json >/dev/null
+
+          if jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (
+                .intent_mode == "ai" and
+                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))
+              )
+              or
+              (.intent_mode == "fallback")
+            ) and
+            any(.recommendations[]?; .id == "voice-studio")
+          ' /tmp/voice-invalid.json >/dev/null; then
             echo 'AI voice payload without local execution should fail.' >&2
             exit 1
           fi
 
-          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{},"recommendations":[{"id":"meshy-ai"}]}' '$p | '"$model_filter" >/dev/null
-          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{},"recommendations":[{"id":"meshy-ai"}]}' '$p | '"$model_filter" >/dev/null
+          printf '%s\n' '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{},"recommendations":[{"id":"meshy-ai"}]}' > /tmp/model-fallback.json
+          printf '%s\n' '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{},"recommendations":[{"id":"meshy-ai"}]}' > /tmp/model-ai.json
+
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            any(.recommendations[]?; .id == "meshy-ai")
+          ' /tmp/model-fallback.json >/dev/null
+
+          jq -e '
+            .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
+            any(.recommendations[]?; .id == "meshy-ai")
+          ' /tmp/model-ai.json >/dev/null
 
           echo 'Fallback-aware deployment semantic assertions PASS.'
