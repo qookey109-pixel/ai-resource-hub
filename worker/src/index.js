@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.1';
+const RECOMMENDER_VERSION = '0.3.2';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -167,16 +167,43 @@ async function understandIntent(query, env) {
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
 
+const FALLBACK_QUERY_STOPWORDS = new Set([
+  '我要', '我想', '我想要', '想要', '請', '請幫我', '幫我', '需要', '希望', '最好', '最好是',
+  '在', '從', '用', '做', '找', '可以', '能夠', '拿去', '的', '和', '與', '或', '以及', '並且',
+  '並', '而且', '一個', '一套', '工具', '服務', '直接', '完成'
+]);
+const FALLBACK_NEGATION = /(?:不要|不想|不需要|不用|避免|不希望|拒絕|排除)/u;
+
+function fallbackSearchConcepts(query) {
+  const positiveText = String(query)
+    .toLowerCase()
+    .split(/[，,。.!！？?；;\n]+/u)
+    .map((clause) => clause.split(FALLBACK_NEGATION, 1)[0].trim())
+    .filter(Boolean)
+    .join(' ');
+
+  let words;
+  if (typeof Intl === 'object' && typeof Intl.Segmenter === 'function') {
+    const segmenter = new Intl.Segmenter('zh-Hant', { granularity: 'word' });
+    words = [...segmenter.segment(positiveText)]
+      .filter((part) => part.isWordLike)
+      .map((part) => part.segment);
+  } else {
+    words = positiveText.split(/[^\p{L}\p{N}+#.-]+/u);
+  }
+
+  return [...new Set(words
+    .map((term) => String(term || '').toLowerCase().trim())
+    .filter((term) => term.length >= 2 && !FALLBACK_QUERY_STOPWORDS.has(term)))]
+    .slice(0, 12);
+}
+
 function fallbackIntent(query) {
   return normaliseIntent({
     primary_goal: query,
     desired_output: query,
     workflow_scope: 'unknown',
-    search_concepts: String(query)
-      .toLowerCase()
-      .split(/[^\p{L}\p{N}+#.-]+/u)
-      .filter((term) => term.length >= 2)
-      .slice(0, 10),
+    search_concepts: fallbackSearchConcepts(query),
     needs_clarification: false
   }, query);
 }
