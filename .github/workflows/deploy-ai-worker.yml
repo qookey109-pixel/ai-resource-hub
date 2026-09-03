@@ -142,20 +142,34 @@ jobs:
           recommend '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成' /tmp/short-video.json
           jq -e '
             .ok == true and
-            .intent.workflow_scope == "end-to-end" and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")
+              or
+              (.intent_mode == "fallback")
+            ) and
             any(.recommendations[]?; .id == "money-printer-turbo")
           ' /tmp/short-video.json >/dev/null
 
           recommend '我要在本機做語音複製和配音，不想依賴雲端訂閱服務' /tmp/local-voice.json
           jq -e '
             .ok == true and
-            ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機"))) and
+            (.mode == "ai" or .mode == "fallback") and
+            (
+              (
+                .intent_mode == "ai" and
+                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))
+              )
+              or
+              (.intent_mode == "fallback")
+            ) and
             any(.recommendations[]?; .id == "voice-studio")
           ' /tmp/local-voice.json >/dev/null
 
           recommend '我要從文字快速生成可以拿去做遊戲原型的 3D 模型' /tmp/3d.json
           jq -e '
             .ok == true and
+            (.mode == "ai" or .mode == "fallback") and
             any(.recommendations[]?; .id == "meshy-ai")
           ' /tmp/3d.json >/dev/null
 
