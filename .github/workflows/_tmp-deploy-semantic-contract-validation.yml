@@ -1,0 +1,73 @@
+name: Temporary Deploy Semantic Contract Validation
+
+on:
+  push:
+    branches:
+      - fix/deploy-semantic-fallback-20260904
+    paths:
+      - ".github/workflows/_tmp-deploy-semantic-contract-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Validate fallback-aware semantic assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          shorts_filter='\
+            .ok == true and\
+            (.mode == "ai" or .mode == "fallback") and\
+            (\
+              (.intent_mode == "ai" and .intent.workflow_scope == "end-to-end")\
+              or\
+              (.intent_mode == "fallback")\
+            ) and\
+            any(.recommendations[]?; .id == "money-printer-turbo")\
+          '
+
+          voice_filter='\
+            .ok == true and\
+            (.mode == "ai" or .mode == "fallback") and\
+            (\
+              (\
+                .intent_mode == "ai" and\
+                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))\
+              )\
+              or\
+              (.intent_mode == "fallback")\
+            ) and\
+            any(.recommendations[]?; .id == "voice-studio")\
+          '
+
+          model_filter='\
+            .ok == true and\
+            (.mode == "ai" or .mode == "fallback") and\
+            any(.recommendations[]?; .id == "meshy-ai")\
+          '
+
+          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null
+          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"end-to-end"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null
+
+          if jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"workflow_scope":"unknown"},"recommendations":[{"id":"money-printer-turbo"}]}' '$p | '"$shorts_filter" >/dev/null; then
+            echo 'AI Shorts payload without end-to-end intent should fail.' >&2
+            exit 1
+          fi
+
+          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{"execution":[]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null
+          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["local"]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null
+
+          if jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{"execution":["cloud"]},"recommendations":[{"id":"voice-studio"}]}' '$p | '"$voice_filter" >/dev/null; then
+            echo 'AI voice payload without local execution should fail.' >&2
+            exit 1
+          fi
+
+          jq -ne --argjson p '{"ok":true,"mode":"fallback","intent_mode":"fallback","intent":{},"recommendations":[{"id":"meshy-ai"}]}' '$p | '"$model_filter" >/dev/null
+          jq -ne --argjson p '{"ok":true,"mode":"ai","intent_mode":"ai","intent":{},"recommendations":[{"id":"meshy-ai"}]}' '$p | '"$model_filter" >/dev/null
+
+          echo 'Fallback-aware deployment semantic assertions PASS.'
