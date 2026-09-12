@@ -1,0 +1,142 @@
+name: Ingest God's Eye View (temporary)
+
+on:
+  push:
+    branches:
+      - codex/add-gods-eye-view-20260912
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add verified resource metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          DATE = "2026-09-12"
+          RESOURCE_ID = "bilawalsidhu-gods-eye-view"
+          RESOURCE_URL = "https://github.com/bilawalsidhu/gods-eye-view"
+
+          resources_path = Path("data/resources.json")
+          data = json.loads(resources_path.read_text())
+          resources = data["resources"]
+          if any(r.get("id") == RESOURCE_ID or r.get("url", "").rstrip("/") == RESOURCE_URL.rstrip("/") for r in resources):
+              raise SystemExit("God's Eye View already exists in canonical catalog")
+
+          resources.append({
+              "id": RESOURCE_ID,
+              "name": "God's Eye View",
+              "type": "github",
+              "url": RESOURCE_URL,
+              "categories": ["Maps / GIS", "OSINT / Intelligence", "3D / WebGL", "Data / Analytics"],
+              "tags": [
+                  "gods-eye-view", "geospatial-intelligence", "osint", "3d-globe", "cesium",
+                  "webgl", "flight-tracking", "ship-tracking", "satellite-tracking", "earthquakes",
+                  "public-cameras", "voice-agent", "openai", "javascript"
+              ],
+              "summary": "瀏覽器中的即時開源空間情報／OSINT 3D 地球，把公開的飛機、船舶、衛星、地震、交通與公共攝影機等訊號整合到可探索的寫實地球介面，並可選配即時 AI 語音 Agent 控制與查詢場景。",
+              "use_cases": [
+                  "在同一個 3D 地球上探索飛機、船舶、衛星、地震與公共攝影機等公開即時訊號",
+                  "研究 Cesium、WebGL、地理空間視覺化與即時 OSINT／situational awareness 介面",
+                  "用滑鼠或可選的 OpenAI 即時語音 Agent 導航、追蹤目標、標註與詢問場景",
+                  "自行部署並依模組加入新的公開資料來源、圖層、追蹤器或地理空間研究功能"
+              ],
+              "pricing": "open-source",
+              "open_source": True,
+              "license": "MIT",
+              "difficulty": "intermediate",
+              "status": "active",
+              "rating": 5,
+              "added_at": DATE,
+              "last_checked": DATE,
+              "notes": "Repository 的原始程式碼採 MIT License，但 LICENSE 明確說明第三方資料與 3D 模型不包含在 MIT 授權內，必須各自遵守來源條款。TeleGeography 海纜資料採 CC BY-NC-SA 3.0、OSM／Open Infrastructure Map 衍生資料涉及 ODbL；Google Maps、OpenSky 等即時 provider 也有自己的使用與商業限制。專案可無 API Key 啟動基本功能；寫實 3D、地點搜尋或語音功能可能需要使用者自己的 Cesium ion、Google Maps、OpenAI 等金鑰與額度。部分交通、CCTV pose 與火箭軌跡為聚合或粗略估計，不應當成官方精密監控資料。"
+          })
+          data["updated_at"] = DATE
+          resources_path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+          links_path = Path("data/resource-links.json")
+          links_data = json.loads(links_path.read_text())
+          links_data["updated_at"] = DATE
+          links = links_data.setdefault("links", {})
+          if RESOURCE_ID in links:
+              raise SystemExit("Supplemental links already exist for God's Eye View")
+          links[RESOURCE_ID] = [
+              {
+                  "label": "God's Eye View 官方網站",
+                  "kind": "website",
+                  "url": "https://maptheworld.ai/",
+                  "description": "Repository 官方 homepage 指向的專案網站與展示入口。"
+              },
+              {
+                  "label": "Data Sources & Licensing",
+                  "kind": "documentation",
+                  "url": "https://github.com/bilawalsidhu/gods-eye-view/blob/main/DATA_SOURCES.md",
+                  "description": "官方逐項整理地圖、航班、船舶、衛星、地震、攝影機與其他資料來源的授權、歸屬與使用限制。"
+              },
+              {
+                  "label": "Security Guide",
+                  "kind": "documentation",
+                  "url": "https://github.com/bilawalsidhu/gods-eye-view/blob/main/SECURITY.md",
+                  "description": "官方安全指南，涵蓋 API Key、Provider 設定、本機服務與分享環境時的安全注意事項。"
+              }
+          ]
+          links_path.write_text(json.dumps(links_data, ensure_ascii=False, indent=2) + "\n")
+
+          icons_path = Path("data/resource-icons.json")
+          icons_data = json.loads(icons_path.read_text())
+          icons_data["updated_at"] = DATE
+          icons = icons_data.setdefault("icons", {})
+          if RESOURCE_ID in icons:
+              raise SystemExit("Icon already exists for God's Eye View")
+          icons[RESOURCE_ID] = {
+              "url": "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/main/public/logo.svg",
+              "source": "official-repository-project-logo-svg"
+          }
+          icons_path.write_text(json.dumps(icons_data, ensure_ascii=False, indent=2) + "\n")
+
+          status_path = Path("PROJECT_STATUS.md")
+          status = status_path.read_text()
+          status = status.replace("Status date: 2026-09-03 (Asia/Taipei)", f"Status date: {DATE} (Asia/Taipei)", 1)
+          status = status.replace("Current canonical catalog size: **65 resources**", "Current canonical catalog size: **66 resources**", 1)
+          status = status.replace("- 65 canonical resources are currently present in `data/resources.json`.", "- 66 canonical resources are currently present in `data/resources.json`.", 1)
+          marker = "## Recent verified ingestion / refresh baseline\n\n"
+          addition = "- God's Eye View (`bilawalsidhu/gods-eye-view`) — active MIT-licensed source code for a browser-based 3D spatial-intelligence / OSINT globe; third-party data and model licenses remain separate and are explicitly recorded.\n"
+          if addition not in status:
+              if marker not in status:
+                  raise SystemExit("PROJECT_STATUS recent-ingestion marker not found")
+              status = status.replace(marker, marker + addition, 1)
+          status_path.write_text(status)
+
+          print(f"Catalog count: {len(resources)}")
+          if len(resources) != 66:
+              raise SystemExit(f"Unexpected catalog count after ingestion: {len(resources)}")
+          PY
+
+      - name: Validate JSON and project-status consistency
+        shell: bash
+        run: |
+          python -m json.tool data/resources.json >/dev/null
+          python -m json.tool data/resource-links.json >/dev/null
+          python -m json.tool data/resource-icons.json >/dev/null
+          python scripts/project_status_consistency.py
+
+      - name: Commit materialized ingestion and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm .github/workflows/ingest-gods-eye-view-temp.yml
+          git add data/resources.json data/resource-links.json data/resource-icons.json PROJECT_STATUS.md .github/workflows/ingest-gods-eye-view-temp.yml
+          git commit -m "Add God's Eye View to resource catalog"
+          git push origin HEAD:${GITHUB_REF_NAME}
