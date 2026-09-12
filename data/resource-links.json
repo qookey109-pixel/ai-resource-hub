@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-03",
+  "updated_at": "2026-09-12",
   "links": {
     "tt-a1i-archify": [
       {
@@ -766,6 +766,26 @@
         "kind": "demo",
         "url": "https://mars-tw.github.io/anti-gambling-trader-tw/",
         "description": "Repository metadata 指定的官方 GitHub Pages 入口，可快速查看專案功能與使用方式。"
+      }
+    ],
+    "bilawalsidhu-gods-eye-view": [
+      {
+        "label": "God's Eye View 官方網站",
+        "kind": "website",
+        "url": "https://maptheworld.ai/",
+        "description": "Repository 官方 homepage 指向的專案網站與展示入口。"
+      },
+      {
+        "label": "Data Sources & Licensing",
+        "kind": "documentation",
+        "url": "https://github.com/bilawalsidhu/gods-eye-view/blob/main/DATA_SOURCES.md",
+        "description": "官方逐項整理地圖、航班、船舶、衛星、地震、攝影機與其他資料來源的授權、歸屬與使用限制。"
+      },
+      {
+        "label": "Security Guide",
+        "kind": "documentation",
+        "url": "https://github.com/bilawalsidhu/gods-eye-view/blob/main/SECURITY.md",
+        "description": "官方安全指南，涵蓋 API Key、Provider 設定、本機服務與分享環境時的安全注意事項。"
       }
     ]
   }
