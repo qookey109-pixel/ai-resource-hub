@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-03",
+  "updated_at": "2026-09-12",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -261,6 +261,10 @@
     "stablyai-orca": {
       "url": "https://raw.githubusercontent.com/stablyai/orca/main/resources/build/icon.png",
       "source": "official-repository-app-icon"
+    },
+    "bilawalsidhu-gods-eye-view": {
+      "url": "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/main/public/logo.svg",
+      "source": "official-repository-project-logo-svg"
     }
   }
 }
