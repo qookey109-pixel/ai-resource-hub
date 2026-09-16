@@ -1,0 +1,50 @@
+name: One-off sync project status after GPUtw 2026-09-17
+
+on:
+  push:
+    branches:
+      - maintenance/status-after-gputw-20260917
+    paths:
+      - .github/workflows/one-off-sync-project-status-gputw-20260917.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync-status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync PROJECT_STATUS.md
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('PROJECT_STATUS.md')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace('Status date: 2026-09-12 (Asia/Taipei)', 'Status date: 2026-09-17 (Asia/Taipei)', 1)
+          text = text.replace('Current canonical catalog size: **66 resources**', 'Current canonical catalog size: **67 resources**', 1)
+          text = text.replace('- 66 canonical resources are currently present in `data/resources.json`.', '- 67 canonical resources are currently present in `data/resources.json`.', 1)
+          marker = '- God\'s Eye View (`bilawalsidhu/gods-eye-view`) — active MIT-licensed source code for a browser-based 3D spatial-intelligence / OSINT globe; third-party data and model licenses remain separate and are explicitly recorded.\n'
+          addition = marker + '- GPUtw Skill (`GPUtw-ai/GPUtw-Skill`) — official MIT-licensed GPUtw.ai Agent Skill with Claude Code / Codex / Cursor / Copilot / Gemini CLI support and an official beta MCP server; API keys require least-privilege handling, cloud usage can incur GPUtw charges, and root exec remains opt-in.\n'
+          if 'GPUtw Skill (`GPUtw-ai/GPUtw-Skill`)' not in text:
+              if marker not in text:
+                  raise SystemExit('recent ingestion marker not found')
+              text = text.replace(marker, addition, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate project status consistency
+        run: python scripts/project_status_consistency.py
+
+      - name: Commit project status sync
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add PROJECT_STATUS.md
+          git diff --cached --quiet && { echo 'No status changes'; exit 1; }
+          git commit -m "Sync project status after GPUtw ingestion"
+          git push origin HEAD:${GITHUB_REF_NAME}
