@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-09-17",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -265,6 +265,10 @@
     "bilawalsidhu-gods-eye-view": {
       "url": "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/main/public/logo.svg",
       "source": "official-repository-project-logo-svg"
+    },
+    "gputw-ai-gputw-skill": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://gputw.ai",
+      "source": "official-gputw-domain-favicon-128"
     }
   }
 }

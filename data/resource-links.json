@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-12",
+  "updated_at": "2026-09-17",
   "links": {
     "tt-a1i-archify": [
       {
@@ -786,6 +786,32 @@
         "kind": "documentation",
         "url": "https://github.com/bilawalsidhu/gods-eye-view/blob/main/SECURITY.md",
         "description": "官方安全指南，涵蓋 API Key、Provider 設定、本機服務與分享環境時的安全注意事項。"
+      }
+    ],
+    "gputw-ai-gputw-skill": [
+      {
+        "label": "GPUtw 官方網站",
+        "kind": "website",
+        "url": "https://gputw.ai/",
+        "description": "GPUtw 官方 GPU 雲端服務入口。"
+      },
+      {
+        "label": "GPUtw 官方文件",
+        "kind": "documentation",
+        "url": "https://gputw.ai/docs",
+        "description": "GPUtw REST API、GPU 執行個體、Vault、網路、帳務與整合說明的官方文件。"
+      },
+      {
+        "label": "GPUtw SKILL.md",
+        "kind": "documentation",
+        "url": "https://github.com/GPUtw-ai/GPUtw-Skill/blob/master/SKILL.md",
+        "description": "官方 Agent Skill 定義與決策樹，供 Claude Code、Codex、Cursor 等 Agent 查閱。"
+      },
+      {
+        "label": "GPUtw MCP 使用指南",
+        "kind": "documentation",
+        "url": "https://github.com/GPUtw-ai/GPUtw-Skill/blob/master/guides/12-mcp.md",
+        "description": "官方 MCP Server 安裝、環境變數、工具邊界、安全設定與連線驗證指南。"
       }
     ]
   }
