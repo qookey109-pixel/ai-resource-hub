@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-17",
+  "updated_at": "2026-09-18",
   "links": {
     "tt-a1i-archify": [
       {
@@ -852,6 +852,180 @@
         "kind": "documentation",
         "url": "https://github.com/kruzovic7/ai-data-extractor/blob/main/LICENSE",
         "description": "官方 MIT License。"
+      }
+    ],
+    "666ghj-mirofish": [
+      {
+        "label": "MiroFish Live Demo",
+        "kind": "demo",
+        "url": "https://666ghj.github.io/mirofish-demo/",
+        "description": "官方 README 提供的線上多 Agent 模擬展示。"
+      },
+      {
+        "label": "MiroFish README",
+        "kind": "documentation",
+        "url": "https://github.com/666ghj/MiroFish/blob/main/README.md",
+        "description": "官方架構、Workflow、部署需求、API 設定與 Demo 說明。"
+      },
+      {
+        "label": "MiroFish License",
+        "kind": "documentation",
+        "url": "https://github.com/666ghj/MiroFish/blob/main/LICENSE",
+        "description": "官方 GNU AGPL-3.0 License。"
+      }
+    ],
+    "tauricresearch-tradingagents": [
+      {
+        "label": "TradingAgents README",
+        "kind": "documentation",
+        "url": "https://github.com/TauricResearch/TradingAgents/blob/main/README.md",
+        "description": "官方 Multi-Agent Trading 架構、CLI、Provider、Markets 與研究用途說明。"
+      },
+      {
+        "label": "TradingAgents License",
+        "kind": "documentation",
+        "url": "https://github.com/TauricResearch/TradingAgents/blob/main/LICENSE",
+        "description": "官方 Apache-2.0 License。"
+      }
+    ],
+    "danny-avila-librechat": [
+      {
+        "label": "LibreChat 官方文件",
+        "kind": "documentation",
+        "url": "https://www.librechat.ai/docs/",
+        "description": "官方安裝、Provider、Agents、MCP、Auth 與部署文件。"
+      },
+      {
+        "label": "LibreChat README",
+        "kind": "documentation",
+        "url": "https://github.com/danny-avila/LibreChat/blob/main/README.md",
+        "description": "官方功能、模型支援、Agents、MCP 與部署入口。"
+      },
+      {
+        "label": "LibreChat License",
+        "kind": "documentation",
+        "url": "https://github.com/danny-avila/LibreChat/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "heygen-com-hyperframes": [
+      {
+        "label": "HyperFrames Docs",
+        "kind": "documentation",
+        "url": "https://hyperframes.heygen.com/introduction",
+        "description": "官方 HTML-to-video 與 Agent workflow 文件。"
+      },
+      {
+        "label": "HyperFrames Playground",
+        "kind": "demo",
+        "url": "https://www.hyperframes.dev/",
+        "description": "官方 Playground。"
+      },
+      {
+        "label": "HyperFrames README",
+        "kind": "documentation",
+        "url": "https://github.com/heygen-com/hyperframes/blob/main/README.md",
+        "description": "官方 Quick Start、Skills、CLI 與 rendering workflow。"
+      }
+    ],
+    "fincept-corporation-finceptterminal": [
+      {
+        "label": "Fincept Terminal Releases",
+        "kind": "download",
+        "url": "https://github.com/Fincept-Corporation/FinceptTerminal/releases",
+        "description": "官方 Windows、Linux 與 macOS 發行版本。"
+      },
+      {
+        "label": "Fincept Terminal Manual",
+        "kind": "documentation",
+        "url": "https://fincept.in/manual",
+        "description": "官方功能與操作手冊。"
+      },
+      {
+        "label": "Fincept Terminal README",
+        "kind": "documentation",
+        "url": "https://github.com/Fincept-Corporation/FinceptTerminal/blob/main/README.md",
+        "description": "官方 Open Edition、Enterprise 差異與功能說明。"
+      }
+    ],
+    "cloudflare-agentic-inbox": [
+      {
+        "label": "Agentic Inbox README",
+        "kind": "documentation",
+        "url": "https://github.com/cloudflare/agentic-inbox/blob/main/README.md",
+        "description": "官方 Cloudflare 部署、Email Routing、Access、AI Agent 與 MCP 說明。"
+      },
+      {
+        "label": "Email for Agents",
+        "kind": "documentation",
+        "url": "https://blog.cloudflare.com/email-for-agents/",
+        "description": "Cloudflare 官方 Email for Agents 介紹與整合說明。"
+      }
+    ],
+    "openbmb-voxcpm": [
+      {
+        "label": "VoxCPM 官方文件",
+        "kind": "documentation",
+        "url": "https://voxcpm.readthedocs.io/en/latest/",
+        "description": "官方安裝、推論、Voice Design、Cloning 與部署文件。"
+      },
+      {
+        "label": "VoxCPM Playground",
+        "kind": "demo",
+        "url": "https://huggingface.co/spaces/OpenBMB/VoxCPM-Demo",
+        "description": "官方 Hugging Face 語音生成展示。"
+      },
+      {
+        "label": "VoxCPM2 Model",
+        "kind": "model",
+        "url": "https://huggingface.co/openbmb/VoxCPM2",
+        "description": "官方 VoxCPM2 模型權重頁面。"
+      }
+    ],
+    "reconurge-flowsint": [
+      {
+        "label": "Flowsint README",
+        "kind": "documentation",
+        "url": "https://github.com/reconurge/flowsint/blob/main/README.md",
+        "description": "官方安裝、Enrichers、架構與安全部署說明。"
+      },
+      {
+        "label": "Flowsint Ethics",
+        "kind": "documentation",
+        "url": "https://github.com/reconurge/flowsint/blob/main/ETHICS.md",
+        "description": "官方合法與倫理使用規範。"
+      },
+      {
+        "label": "Flowsint License",
+        "kind": "documentation",
+        "url": "https://github.com/reconurge/flowsint/blob/main/LICENSE",
+        "description": "官方 Apache-2.0 License。"
+      }
+    ],
+    "nangohq-nango": [
+      {
+        "label": "Nango Docs",
+        "kind": "documentation",
+        "url": "https://nango.dev/docs/",
+        "description": "官方 Auth、Proxy、Functions、Sync、Webhook 與 MCP 文件。"
+      },
+      {
+        "label": "Nango Integrations",
+        "kind": "documentation",
+        "url": "https://nango.dev/docs/integrations/overview/",
+        "description": "官方 1,000+ API integrations 索引。"
+      },
+      {
+        "label": "Nango README",
+        "kind": "documentation",
+        "url": "https://github.com/NangoHQ/nango/blob/master/README.md",
+        "description": "官方平台能力、AI Builder、自架與方案差異說明。"
+      },
+      {
+        "label": "Nango License",
+        "kind": "documentation",
+        "url": "https://github.com/NangoHQ/nango/blob/master/LICENSE",
+        "description": "官方 Elastic License。"
       }
     ]
   }

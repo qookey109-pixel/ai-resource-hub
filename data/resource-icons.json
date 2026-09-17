@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-17",
+  "updated_at": "2026-09-18",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -277,6 +277,42 @@
     "kruzovic7-ai-data-extractor": {
       "url": "https://github.com/kruzovic7.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "666ghj-mirofish": {
+      "url": "https://raw.githubusercontent.com/666ghj/MiroFish/main/static/image/MiroFish_logo_compressed.jpeg",
+      "source": "official-repository-project-logo"
+    },
+    "tauricresearch-tradingagents": {
+      "url": "https://github.com/TauricResearch.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "danny-avila-librechat": {
+      "url": "https://raw.githubusercontent.com/danny-avila/LibreChat/main/client/public/assets/logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "heygen-com-hyperframes": {
+      "url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/docs/logo/light.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "fincept-corporation-finceptterminal": {
+      "url": "https://github.com/Fincept-Corporation.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "cloudflare-agentic-inbox": {
+      "url": "https://github.com/cloudflare.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "openbmb-voxcpm": {
+      "url": "https://raw.githubusercontent.com/OpenBMB/VoxCPM/main/assets/voxcpm_logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "reconurge-flowsint": {
+      "url": "https://github.com/reconurge.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "nangohq-nango": {
+      "url": "https://raw.githubusercontent.com/NangoHQ/nango/master/assets/nango-logo.png",
+      "source": "official-repository-project-logo"
     }
   }
 }
