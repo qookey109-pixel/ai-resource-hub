@@ -226,6 +226,20 @@ jobs:
           python -m json.tool data/resource-links.json >/dev/null
           python scripts/project_status_consistency.py
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Install browser test dependency
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run resource detail regressions
+        run: npm run test:browser
+
       - name: Commit catalog update
         shell: bash
         run: |
