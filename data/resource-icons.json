@@ -269,6 +269,14 @@
     "gputw-ai-gputw-skill": {
       "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://gputw.ai",
       "source": "official-gputw-domain-favicon-128"
+    },
+    "jarrodwatts-jev-trader": {
+      "url": "https://github.com/jarrodwatts.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "kruzovic7-ai-data-extractor": {
+      "url": "https://github.com/kruzovic7.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
     }
   }
 }

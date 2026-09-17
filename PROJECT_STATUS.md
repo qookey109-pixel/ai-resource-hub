@@ -9,7 +9,7 @@ Status date: 2026-09-17 (Asia/Taipei)
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
 - Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting + production Worker monitoring + status consistency CI**
-- Current canonical catalog size: **67 resources**
+- Current canonical catalog size: **69 resources**
 
 Repository `main` and the canonical data files below are authoritative. Historical commit/run details remain available in Git history and GitHub Actions; this file is intentionally maintained as the concise current operating baseline rather than an exhaustive changelog.
 
@@ -29,7 +29,7 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 ### Catalog and discovery
 
-- 67 canonical resources are currently present in `data/resources.json`.
+- 69 canonical resources are currently present in `data/resources.json`.
 - Multi-category classification is enabled.
 - User-facing summaries, use cases, notes and supplemental-link descriptions are Traditional Chinese by default.
 - Unknown pricing/license/status fields remain `unknown` / `null` instead of being guessed.
@@ -105,6 +105,8 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 - God's Eye View (`bilawalsidhu/gods-eye-view`) — active MIT-licensed source code for a browser-based 3D spatial-intelligence / OSINT globe; third-party data and model licenses remain separate and are explicitly recorded.
 - GPUtw Skill (`GPUtw-ai/GPUtw-Skill`) — official MIT-licensed GPUtw.ai Agent Skill with Claude Code / Codex / Cursor / Copilot / Gemini CLI support and an official beta MCP server; API keys require least-privilege handling, cloud usage can incur GPUtw charges, and root exec remains opt-in.
+- Jev Trader (`jarrodwatts/jev-trader`) — MIT-licensed Monad/Kuru low-latency AI trading example with dry-run mode, optional TypeSafe Jev inference, post-only limit-order quoting, SSE telemetry and explicit live-key/on-chain risk boundaries.
+- AI Coding Assistant Data Extractor (`kruzovic7/ai-data-extractor`) — MIT-licensed local chat-history exporter that normalizes ten AI coding assistants into JSONL for backup, personal analytics or rights-cleared training workflows; exported data requires secret/privacy review before sharing.
 The following current resources were added or refreshed after the older 50-resource status snapshot and must not be duplicated:
 
 - NESA-SLIDE

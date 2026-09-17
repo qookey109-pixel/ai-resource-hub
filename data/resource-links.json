@@ -813,6 +813,46 @@
         "url": "https://github.com/GPUtw-ai/GPUtw-Skill/blob/master/guides/12-mcp.md",
         "description": "官方 MCP Server 安裝、環境變數、工具邊界、安全設定與連線驗證指南。"
       }
+    ],
+    "jarrodwatts-jev-trader": [
+      {
+        "label": "Jev Trader 線上 Dry-run Demo",
+        "kind": "demo",
+        "url": "https://jev-trader-production.up.railway.app",
+        "description": "README 列出的已部署 dry-run／mock-model 版本，可查看目前模型、wallet、block event 與交易歷史。"
+      },
+      {
+        "label": "Jev Trader README",
+        "kind": "documentation",
+        "url": "https://github.com/jarrodwatts/jev-trader/blob/main/README.md",
+        "description": "官方執行方式、dry-run／live 行為、API endpoints、事件格式與 300 ms latency budget 說明。"
+      },
+      {
+        "label": "Jev Trader SPEC",
+        "kind": "documentation",
+        "url": "https://github.com/jarrodwatts/jev-trader/blob/main/SPEC.md",
+        "description": "Repository 內的正式規格文件，適合進一步理解系統目標與交易迴圈設計。"
+      },
+      {
+        "label": "Jev Trader License",
+        "kind": "documentation",
+        "url": "https://github.com/jarrodwatts/jev-trader/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "kruzovic7-ai-data-extractor": [
+      {
+        "label": "AI Data Extractor README",
+        "kind": "documentation",
+        "url": "https://github.com/kruzovic7/ai-data-extractor/blob/main/README.md",
+        "description": "官方支援來源、CLI 用法、JSONL 輸出格式、擴充 extractor 方法與隱私安全注意事項。"
+      },
+      {
+        "label": "AI Data Extractor License",
+        "kind": "documentation",
+        "url": "https://github.com/kruzovic7/ai-data-extractor/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
     ]
   }
 }
