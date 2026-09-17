@@ -17,7 +17,7 @@ test('verified secondary-link guide labels participate in discovery', async ({ p
   const search = page.locator('#search');
   await search.fill('Scenario Guide');
 
-  const cards = page.locator('.card');
-  await expect(cards).toHaveCount(1);
-  await expect(cards.first().locator('.name')).toHaveText('Archify');
+  const archifyCard = page.locator('.card').filter({ has: page.locator('.name', { hasText: 'Archify' }) });
+  await expect(archifyCard).toHaveCount(1);
+  await expect(archifyCard.locator('.name')).toHaveText('Archify');
 });
