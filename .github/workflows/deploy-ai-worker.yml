@@ -170,7 +170,16 @@ jobs:
             (
               (
                 .intent_mode == "ai" and
-                ((.intent.execution | map(ascii_downcase)) | any(. == "local" or contains("本機")))
+                (
+                  [
+                    (.intent.execution[]? // ""),
+                    (.intent.must_have[]? // ""),
+                    (.intent.primary_goal // ""),
+                    (.intent.desired_output // "")
+                  ]
+                  | map(ascii_downcase)
+                  | any(. == "local" or contains("本機") or contains("本地"))
+                )
               )
               or
               (.intent_mode == "fallback")
