@@ -995,7 +995,7 @@
       },
       {
         "label": "VoxCPM2 Model",
-        "kind": "model",
+        "kind": "download",
         "url": "https://huggingface.co/openbmb/VoxCPM2",
         "description": "官方 VoxCPM2 模型權重頁面。"
       }
