@@ -1,115 +1,86 @@
 # Qookey AI Resource Hub
 
-A curated AI and developer resource library for collecting, classifying, searching, and recommending useful websites, GitHub projects, Agent Skills, design references, cloud tools, databases, audio resources, and developer platforms.
+Qookey AI Resource Hub 是一個以靜態 GitHub Pages 為主的 AI / Agent / 開發資源目錄。
 
-## Website
+- Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
+- Repository authority: GitHub `main`
+- Canonical catalog: `data/resources.json`
+- Current catalog: **86 resources**
 
-GitHub Pages target:
+## 目前功能
 
-`https://qookey109-pixel.github.io/ai-resource-hub/`
+- 關鍵字、分類、類型、免費 / 開源篩選
+- 加入日期與共享互動次數排序
+- 快速分類與手機版 sticky search
+- Browser-local favorites
+- Resource Detail dialog 與 `?resource=<id>` deep link
+- 官方文件 / Demo / API / Download 等 supplemental links
+- Resource-specific icon + runtime fallback
+- Cloudflare Durable Object 共享互動計數
+- Resource Health 非破壞式網址 / GitHub 健康檢查
+- Cloudflare AI recommendation backend 已部署並持續監控
+- Playwright browser regression、production monitor、status consistency CI
 
-The repository includes a GitHub Actions Pages workflow at `.github/workflows/pages.yml`. GitHub Pages must be enabled with **Settings → Pages → Build and deployment → Source: GitHub Actions** before the first deployment can succeed.
+目前網站前端本身保持 dependency-free；AI backend 與瀏覽 / 搜尋 UI 分離，沒有 standalone AI recommendation panel。
 
-## Current version
-
-**V0.5 — live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + shared interaction counts**
-
-Current capabilities:
-
-- Static GitHub Pages-ready marketplace website
-- Search across names, descriptions, tags, use cases, notes, pricing, categories, and verified official/secondary-link labels and descriptions
-- Verified link-aware discovery, so terms such as `Proof Lab` or `Scenario Guide` can resolve the parent catalog resource without creating duplicate cards
-- Category and resource-type filters
-- Free/open-source filters
-- Search-side sort buttons for added date and shared interaction counts, with remembered ascending/descending direction per sort family
-- Default newest-first ordering
-- Popular-category shortcuts
-- Browser-local favorites with favorite-first ordering
-- Shared Cloudflare Durable Object interaction counter: opening a resource detail card records one interaction, and following an outbound resource/official link records a separate interaction
-- Responsive per-resource detail dialog opened from the whole resource card
-- Native accessible card hit target with dialog metadata and keyboard behavior
-- Shareable resource-detail URLs using stable `?resource=<id>` query parameters
-- Browser Back/Forward synchronization for detail views
-- One-click `複製連結` action inside the detail dialog
-- Full resource facts, use cases, categories, tags, notes and canonical external link
-- Verified official/secondary links such as project pages, documentation, live demos and galleries
-- Resource/category/open-source statistics
-- Live AI recommendation backed by the same public catalog authority
-- Resource Health V0.2 non-destructive URL/GitHub observation and reviewed triage
-- Playwright browser interaction regressions in CI; Playwright is test-only and is not shipped in the production frontend
-- Responsive desktop/mobile layout
-- Public-link sanitization for account-specific or temporary dashboard/login URLs
-
-## Data authority
-
-`data/resources.json` is the canonical V0.x resource catalog and remains the authority for resource identity and primary URLs.
-
-`data/categories.json` is the canonical category list.
-
-`data/resource-icons.json` is the resource-specific icon registry.
-
-`data/resource-links.json` is a supplemental registry for verified secondary public links. It does not create new resources or override the canonical primary URL. Discovery V1.4 may index its verified labels, descriptions, kinds and stable public URL components for search, but it does not promote those links into separate resources.
-
-`data/click-config.json` configures the public shared interaction-count endpoint. The counter is aggregate interaction data rather than unique-visitor analytics and must not redefine resource identity.
-
-Repository `main` is the project authority unless a later versioned governance rule changes this.
-
-## Ingestion rule
-
-Before adding a resource:
-
-1. Verify what the resource actually does.
-2. Check for duplicate URLs, aliases, and duplicate projects.
-3. Verify factual metadata where practical.
-4. Never publish credentials, API keys, tokens, account IDs, temporary login flows, or private dashboard URLs.
-5. Prefer a public canonical URL when the supplied URL contains account-specific navigation state.
-6. Use `unknown` / `null` instead of guessing.
-7. Keep existing verified resource metadata unless newer source evidence justifies an update.
-8. Store extra official pages, demos, docs or galleries in `data/resource-links.json` instead of creating duplicate catalog cards.
-9. Re-read current `main` immediately before ingestion writes so stale status/search results cannot create duplicate catalog entries.
-
-## Project structure
+## 專案結構
 
 ```text
 .
-├── .github/workflows/
-│   └── frontend-interaction.yml
-├── .nojekyll
-├── AGENTS.md
-├── PROJECT_STATUS.md
-├── README.md
 ├── index.html
-├── package.json
-├── playwright.config.js
+├── assets/
+│   └── qookey-logo.svg
 ├── css/
-│   ├── styles.css
-│   ├── resource-detail.css
-│   └── resource-links.css
+│   └── styles.css
 ├── js/
 │   ├── app.js
 │   ├── favorites.js
+│   ├── icon-reliability.js
 │   ├── resource-detail.js
-│   └── resource-links.js
+│   ├── resource-links.js
+│   └── sliced-waves-background.js
 ├── data/
-│   ├── ai-config.json
+│   ├── resources.json
 │   ├── categories.json
-│   ├── click-config.json
-│   ├── resource-health-expectations.json
 │   ├── resource-icons.json
 │   ├── resource-links.json
-│   └── resources.json
+│   ├── resource-health-expectations.json
+│   ├── ai-config.json
+│   └── click-config.json
+├── docs/
+├── scripts/
 ├── tests/
-│   ├── resource-detail.spec.js
-│   └── search-discovery.spec.js
+├── worker/
 ├── worker-clicks/
-└── docs/
-    ├── RESOURCE_LINKS.md
-    └── RESOURCE_SCHEMA.md
+└── .github/workflows/
 ```
 
-## Browser regression tests
+Production Pages 只發布 `index.html`、`.nojekyll`、`assets/`、`css/`、`js/` 與前端實際需要的 data JSON；tests、scripts、docs、Workers 原始碼不會進 Pages artifact。
 
-The production website remains dependency-free. The repository uses Playwright only as a development/CI dependency for critical interaction and discovery regressions:
+## 資料權威
+
+- `data/resources.json`: resource identity + canonical primary URL
+- `data/categories.json`: categories
+- `data/resource-icons.json`: resource-specific icons
+- `data/resource-links.json`: verified supplemental official links
+- `data/resource-health-expectations.json`: reviewed health expectations
+- `data/ai-config.json`: AI Worker runtime config
+- `data/click-config.json`: shared interaction counter frontend config
+
+Supplemental links 不能建立第二個 resource identity，也不能覆蓋 canonical URL。
+
+## 新增資源規則
+
+1. 先重新讀最新 `main`。
+2. 核對 canonical URL 與專案身分。
+3. 直接檢查 `data/resources.json`，避免 alias / duplicate。
+4. README / License / 官方文件能驗證才填；不能驗證就用 `unknown` / `null`。
+5. 使用既有分類；tags 使用小寫。
+6. 額外官方文件、Demo、API、Download 放進 `data/resource-links.json`。
+7. 不公開 credentials、tokens、private dashboard URLs 或暫時登入 URL。
+8. 修改後跑 JSON / Resource Health / Project Status / Playwright。
+
+## 本機測試
 
 ```bash
 npm install
@@ -117,14 +88,16 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-The tests cover card-to-detail interaction, detail-card shared-click counting, favorite/external-link separation, deep-link opening, Back-button closing, resource-link copying, and verified secondary-link search discovery.
+Playwright 只用於開發與 CI，不會打包進 production Pages。
 
-## Roadmap
+## 部署與監控
 
-- Expand verified official-link coverage across more catalog resources
-- Improve local icon reliability for verified third-party icons
-- Automated recurring production Worker health / semantic regression monitoring
-- Semantic / vector search for larger catalogs
-- Automated metadata refresh PR generation
-- Account/cloud-synced collections beyond browser-local favorites
-- Dedicated path-based per-resource pages only if query-parameter deep links later become insufficient
+- Pages: `.github/workflows/pages.yml`
+- Frontend regression: `.github/workflows/frontend-interaction.yml`
+- Resource Health: `.github/workflows/resource-health.yml`
+- Project Status consistency: `.github/workflows/project-status-consistency.yml`
+- Production Worker monitor: `.github/workflows/production-worker-monitor.yml`
+- AI Worker deploy: `.github/workflows/deploy-ai-worker.yml`
+- Click Worker deploy: `.github/workflows/deploy-click-worker.yml`
+
+更完整的目前狀態與維護邊界以 `PROJECT_STATUS.md` 為準。

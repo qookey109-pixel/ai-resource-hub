@@ -27,7 +27,9 @@ For every new URL:
 
 ## Frontend rules
 
-- Keep the production V0.x browsing and detail runtime dependency-free unless there is a clear benefit to adding a runtime dependency.
+- Keep the production browsing and detail runtime dependency-free unless there is a clear benefit to adding a runtime dependency.
+- Keep production CSS consolidated in `css/styles.css`; prefer editing existing rules over adding one-off patch stylesheets.
+- Keep the GitHub Pages artifact allowlisted to browser-required files; do not deploy the repository root.
 - Test-only development dependencies are allowed when they protect critical browser behavior and do not ship to GitHub Pages.
 - Preserve mobile and desktop usability.
 - Search must work across name, summary, categories, tags, use cases, and verified secondary-link metadata from `data/resource-links.json`.
