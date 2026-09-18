@@ -1,4 +1,4 @@
-/* ===== styles.css ===== */
+/* Core layout */
 :root {
   color-scheme: light;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -65,7 +65,6 @@ a { color: inherit; }
   font-size: 21px;
   letter-spacing: -.035em;
 }
-.brand-spark { font-size: 17px; }
 .header-actions { display: flex; gap: 10px; align-items: center; }
 .header-button {
   display: inline-flex;
@@ -127,22 +126,6 @@ h1 {
   font-size: 16px;
 }
 .hero-search-box input::placeholder { color: #a1a19c; }
-.composer-button {
-  position: absolute;
-  bottom: 14px;
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  border: 0;
-  border-radius: 11px;
-  background: #f6f6f4;
-  color: #c3c3be;
-  font-size: 20px;
-}
-.composer-button.add { left: 14px; cursor: default; }
-.composer-button.go { right: 14px; cursor: pointer; }
-.composer-button.go:hover { background: var(--accent-soft); color: var(--accent); }
 
 .market-toolbar {
   position: sticky;
@@ -460,9 +443,9 @@ body.compact-mode .compact-search-wrap { display: block; }
   .subtitle { max-width: 520px; }
   .hero-search-box { height: 104px; border-radius: 19px; }
   .hero-search-box input { padding: 18px 52px 52px 18px; font-size: 14px; }
-  .composer-button { width: 34px; height: 34px; bottom: 10px; }
-  .composer-button.add { left: 10px; }
-  .composer-button.go { right: 10px; }
+  
+  
+  
   .toolbar-inner { padding-top: 8px; }
   .quick-category { min-height: 32px; padding: 0 12px; font-size: 11px; }
   .catalog-shell { padding-top: 10px; }
@@ -480,7 +463,7 @@ body.compact-mode .compact-search-wrap { display: block; }
   .card { transition: none; }
 }
 
-/* ===== brand.css ===== */
+/* Brand */
 .brand-logo {
   display: block;
   width: 36px;
@@ -498,7 +481,7 @@ body.compact-mode .compact-search-wrap { display: block; }
   }
 }
 
-/* ===== icon-quality.css ===== */
+/* Icons */
 .resource-icon.has-brand-icon {
   background: #fff;
   box-shadow: inset 0 0 0 1px #ecece8;
@@ -525,7 +508,7 @@ body.compact-mode .compact-search-wrap { display: block; }
   }
 }
 
-/* ===== card-readability.css ===== */
+/* Card readability */
 /* Resource card readability pass — larger, clearer typography without changing layout structure. */
 .card {
   min-height: 300px;
@@ -633,7 +616,7 @@ body.compact-mode .compact-search-wrap { display: block; }
   }
 }
 
-/* ===== category-layout.css ===== */
+/* Category layout */
 .quick-categories {
   display: flex;
   flex-wrap: wrap;
@@ -711,7 +694,7 @@ body.compact-mode .quick-category {
   }
 }
 
-/* ===== card-clarity-v2.css ===== */
+/* Card clarity */
 /* Resource card clarity V2 — stronger hierarchy, contrast, and multi-category readability. */
 .card {
   min-height: 334px;
@@ -850,7 +833,7 @@ body.compact-mode .quick-category {
   }
 }
 
-/* ===== hero-compact.css ===== */
+/* Hero */
 /* Compact hero V2 — tighter top area so resource cards enter the viewport sooner. */
 body {
   background-color: #fbfbfa;
@@ -931,17 +914,6 @@ main,
   font-size: 14px;
 }
 
-.composer-button {
-  bottom: 9px;
-  width: 31px;
-  height: 31px;
-  border-radius: 9px;
-  font-size: 17px;
-}
-
-.composer-button.add { left: 10px; }
-.composer-button.go { right: 10px; }
-
 .toolbar-inner {
   padding-top: 7px;
   padding-bottom: 7px;
@@ -999,14 +971,10 @@ main,
     font-size: 13.5px;
   }
 
-  .composer-button {
-    bottom: 8px;
-    width: 30px;
-    height: 30px;
-  }
+  
 }
 
-/* ===== favorites.css ===== */
+/* Favorites */
 /* Personal favorites — local browser state, visually pinned to the card corner. */
 .card {
   position: relative;
@@ -1070,7 +1038,7 @@ main,
   }
 }
 
-/* ===== sliced-waves-background.css ===== */
+/* Background */
 /* Full-page sliced-waves background layer V3. */
 html,
 body {
@@ -1208,7 +1176,7 @@ main,
   }
 }
 
-/* ===== card-compact.css ===== */
+/* Resource cards */
 /* Balanced resource cards V3 — three readable columns with a compact footprint. */
 .grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1343,7 +1311,7 @@ main,
   }
 }
 
-/* ===== search-clean.css ===== */
+/* Search */
 /* Single-layer search UI: no AI badge, no arrow button, Enter-first interaction. */
 .hero-search {
   margin-top: 13px;
@@ -1405,14 +1373,6 @@ main,
   padding-top: 6px !important;
 }
 
-/* Defensive cleanup for stale markup cached by Safari. */
-.ai-mode-badge,
-.composer-button,
-.compact-search-wrap button,
-.ai-panel {
-  display: none !important;
-}
-
 @media (max-width: 720px) {
   .hero-search {
     margin-top: 11px;
@@ -1433,7 +1393,7 @@ main,
   }
 }
 
-/* ===== resource-detail.css ===== */
+/* Resource detail */
 /* Per-resource detail dialog — dependency-free and responsive. */
 .card-actions {
   position: relative;
@@ -1882,7 +1842,7 @@ body.resource-detail-open {
   }
 }
 
-/* ===== resource-links.css ===== */
+/* Resource links */
 /* Official and secondary links inside Resource Detail V1.1. */
 .resource-detail-links {
   display: grid;
@@ -1983,7 +1943,7 @@ body.resource-detail-open {
   }
 }
 
-/* ===== sorting.css ===== */
+/* Sorting */
 /* Resource sorting V2 — exactly two compact buttons beside the main search field. */
 .hero-search-row {
   display: grid;

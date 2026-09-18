@@ -1,4 +1,4 @@
-import { loadJson } from './catalog-data.js';
+import { loadJson } from './catalog-data.js?v=__BUILD__';
 
 const state = {
   resources: [],
