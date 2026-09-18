@@ -19,6 +19,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -63,16 +64,18 @@ jobs:
           # Cloudflare propagates the deployment. Retry before treating that
           # transient state as a failed release.
           curl --fail --silent --show-error \
+            --connect-timeout 5 --max-time 15 \
             --retry 10 --retry-delay 2 --retry-all-errors --retry-max-time 30 \
             "$BASE_URL/health" \
             | jq -e '.ok == true and .service == "qookey-resource-clicks"' >/dev/null
           curl --fail --silent --show-error \
+            --connect-timeout 5 --max-time 15 \
             --retry 10 --retry-delay 2 --retry-all-errors --retry-max-time 30 \
             -H 'origin: https://qookey109-pixel.github.io' \
             "$BASE_URL/api/resource-clicks" \
             | jq -e '.ok == true and (.counts | type == "object")' >/dev/null
 
-      - name: Activate frontend click endpoint
+      - name: Record deployed click endpoint
         shell: bash
         env:
           BASE_URL: ${{ steps.deploy.outputs.base_url }}
@@ -83,17 +86,25 @@ jobs:
           import os
           from pathlib import Path
 
+          from datetime import datetime, timezone
+
           path = Path('data/click-config.json')
+          endpoint = os.environ['BASE_URL'].rstrip('/') + '/api/resource-clicks'
+          current = json.loads(path.read_text(encoding='utf-8'))
+          if current.get('enabled') is True and current.get('endpoint') == endpoint:
+              print('Click endpoint unchanged.')
+              raise SystemExit(0)
+
           config = {
               'schema_version': '0.1',
               'enabled': True,
-              'endpoint': os.environ['BASE_URL'].rstrip('/') + '/api/resource-clicks',
-              'updated_at': '2026-09-02',
+              'endpoint': endpoint,
+              'updated_at': datetime.now(timezone.utc).date().isoformat(),
           }
           path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
-      - name: Commit click endpoint activation
+      - name: Commit click endpoint config
         shell: bash
         run: |
           set -euo pipefail
@@ -104,5 +115,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/click-config.json
-          git commit -m "Activate resource click counter"
+          git commit -m "Record deployed click counter endpoint"
           git push origin HEAD:main

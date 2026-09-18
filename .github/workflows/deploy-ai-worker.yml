@@ -191,12 +191,20 @@ jobs:
           import os
           from pathlib import Path
 
+          from datetime import datetime, timezone
+
           path = Path('data/ai-config.json')
+          endpoint = os.environ['BASE_URL'].rstrip('/') + '/api/recommend'
+          current = json.loads(path.read_text(encoding='utf-8'))
+          if current.get('enabled') is True and current.get('endpoint') == endpoint:
+              print('AI endpoint unchanged.')
+              raise SystemExit(0)
+
           config = {
               'schema_version': '0.1',
               'enabled': True,
-              'endpoint': os.environ['BASE_URL'].rstrip('/') + '/api/recommend',
-              'updated_at': '2026-08-23',
+              'endpoint': endpoint,
+              'updated_at': datetime.now(timezone.utc).date().isoformat(),
           }
           path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
