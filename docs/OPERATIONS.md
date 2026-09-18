@@ -32,7 +32,7 @@ Workflow: `.github/workflows/frontend-interaction.yml`
 - card → detail dialog
 - deep links / browser history
 - favorites vs external-link separation
-- search discovery
+- search discovery, including natural Traditional Chinese QA corpus coverage and negative precision checks
 - icon fallback
 - date / click sorting
 - full catalog render
