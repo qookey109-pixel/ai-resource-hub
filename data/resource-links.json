@@ -1459,6 +1459,26 @@
         "url": "https://github.com/lulu930128/lulu930128",
         "description": "GitHub Profile README 的公開來源 Repository。"
       }
+    ],
+    "create360-ai": [
+      {
+        "label": "Create360 / 888-url2md GitHub",
+        "kind": "github",
+        "url": "https://github.com/tbdavid2019/888-url2md",
+        "description": "create360.ai 目前部署所對應的官方開源 Web Reader / URL-to-Markdown 專案。"
+      },
+      {
+        "label": "888-url2md README",
+        "kind": "documentation",
+        "url": "https://github.com/tbdavid2019/888-url2md/blob/main/README.md",
+        "description": "官方功能、API、搜尋、批次抓取、Agent Skill 與自架部署說明。"
+      },
+      {
+        "label": "888-url2md License",
+        "kind": "documentation",
+        "url": "https://github.com/tbdavid2019/888-url2md/blob/main/LICENSE",
+        "description": "官方 GNU AGPL v3 授權文件。"
+      }
     ]
   }
 }
