@@ -7,7 +7,7 @@ Status date: 2026-09-18 (Asia/Taipei)
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Canonical catalog: **86 resources**
+- Current canonical catalog size: **86 resources**
 - Catalog identity authority: `data/resources.json`
 
 ## Production baseline
