@@ -18,7 +18,7 @@ Frontend:
 - dependency-free browsing runtime
 - one production stylesheet: `css/styles.css`
 - focused modules under `js/`
-- structured search + category navigation + sorting, including Traditional Chinese aliases and token-safe security acronym matching
+- structured search + natural Traditional Chinese query tokenization + category navigation + sorting, including aliases and token-safe security acronym matching
 - browser-local favorites
 - Resource Detail + stable `?resource=<id>` deep links
 - verified supplemental official links
