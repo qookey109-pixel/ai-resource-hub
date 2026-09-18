@@ -117,14 +117,7 @@ const embeddedQueryTerms = [...synonymGroups.keys()]
   .filter((term) => /[\u3400-\u9fff]/.test(term) && term.length >= 2)
   .sort((a, b) => b.length - a.length);
 
-const embeddedQueryPattern = new RegExp(
-  embeddedQueryTerms
-    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\}));
-
-let renderFrame = 0;'))
-    .join('|'),
-  'g'
-);
+const embeddedQueryPattern = new RegExp(embeddedQueryTerms.join('|'), 'g');
 
 let renderFrame = 0;
 let compactModeActive = null;
