@@ -175,7 +175,7 @@ jobs:
 
           echo "Semantic recommendation regression checks passed."
 
-      - name: Activate frontend AI endpoint
+      - name: Record deployed AI endpoint
         shell: bash
         env:
           BASE_URL: ${{ steps.deploy.outputs.base_url }}
@@ -196,7 +196,7 @@ jobs:
           path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
-      - name: Commit AI activation
+      - name: Commit AI endpoint config
         shell: bash
         run: |
           set -euo pipefail
@@ -207,5 +207,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/ai-config.json
-          git commit -m "Activate deployed AI recommender"
+          git commit -m "Record deployed AI recommender endpoint"
           git push origin HEAD:main

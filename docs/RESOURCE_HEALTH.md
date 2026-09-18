@@ -117,20 +117,9 @@ python scripts/resource_health_triage.py
 
 When `GITHUB_TOKEN` or `GH_TOKEN` is present, GitHub repository metadata requests use that token. No token is written to the report.
 
-## First-run evidence
+## Historical evidence
 
-Resource Health V0.1 first full run (`33312359208`) observed:
-
-- 39 total resources
-- 37 reachable
-- 2 restricted / rate-limited
-- 2 redirected
-- 0 broken 404 / 410
-- 0 transient / network / other errors
-- 24 GitHub repositories observed
-- 1 metadata observation
-
-The initial review queue was Cloudflare Dashboard, xorxor_hu CodePen, Supabase Dashboard, Mistral Studio and World Monitor. V0.2 was introduced specifically to encode the reviewed interpretation of those known conditions without erasing the raw evidence.
+Historical baselines, exact run IDs and old resource counts remain in GitHub Actions artifacts and Git history. This document describes the current health-check behavior rather than preserving a running changelog.
 
 ## V0.2 limitation
 
