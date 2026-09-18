@@ -27,7 +27,7 @@ Frontend:
 
 Services:
 
-- AI recommender Worker: runtime version **0.3.3**, model **`@cf/zai-org/glm-4.7-flash`**
+- AI recommender Worker: runtime version **0.3.4**, model **`@cf/zai-org/glm-4.7-flash`**
 - Click Worker: Cloudflare Durable Object counter
 - AI is deployed and monitored but is not required for normal catalog browsing
 
@@ -36,7 +36,7 @@ Quality gates:
 - Playwright browser regression + site smoke tests, including a 43-case real-world Traditional Chinese search QA corpus and negative precision guards
 - Resource Health structural validation, live URL/GitHub observation, metadata-freshness evidence, and reviewed triage
 - Project Status consistency
-- Production Worker monitor
+- Production Worker monitor with degraded-mode latency / diagnostic evidence
 - bounded Worker deployment health / semantic checks
 
 Data quality snapshot:
