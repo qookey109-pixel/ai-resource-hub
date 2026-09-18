@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.1';
+const RECOMMENDER_VERSION = '0.3.2';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -167,16 +167,32 @@ async function understandIntent(query, env) {
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
 
+function fallbackQueryConcepts(query) {
+  const normalized = String(query || '').toLowerCase();
+  const concepts = new Set(
+    normalized
+      .split(/[^\p{L}\p{N}+#.-]+/u)
+      .filter((term) => term.length >= 2 && !/\p{Script=Han}/u.test(term))
+  );
+
+  for (const run of normalized.match(/\p{Script=Han}{3,}/gu) || []) {
+    for (const size of [4, 3]) {
+      if (run.length < size) continue;
+      for (let index = 0; index <= run.length - size; index += 1) {
+        concepts.add(run.slice(index, index + size));
+      }
+    }
+  }
+
+  return [...concepts].slice(0, 48);
+}
+
 function fallbackIntent(query) {
   return normaliseIntent({
     primary_goal: query,
     desired_output: query,
     workflow_scope: 'unknown',
-    search_concepts: String(query)
-      .toLowerCase()
-      .split(/[^\p{L}\p{N}+#.-]+/u)
-      .filter((term) => term.length >= 2)
-      .slice(0, 10),
+    search_concepts: fallbackQueryConcepts(query),
     needs_clarification: false
   }, query);
 }
@@ -253,6 +269,7 @@ async function rankResources(intent, resources, env) {
 
 function fallbackRecommendations(intent, resources) {
   const concepts = [...new Set([
+    ...fallbackQueryConcepts(intent.original_query),
     ...intent.search_concepts,
     ...intent.must_have,
     ...intent.preferences,

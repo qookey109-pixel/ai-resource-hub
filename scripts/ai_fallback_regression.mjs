@@ -37,6 +37,15 @@ assert.ok(
   `expected meshy-ai recovery, got ${JSON.stringify(recovered)}`
 );
 
+const localVoice = fallbackRecommendations(
+  fallbackIntent('我要在本機做語音複製和配音，不想依賴雲端訂閱服務'),
+  catalog
+);
+assert.ok(
+  localVoice.some((item) => item.id === 'voice-studio'),
+  `expected voice-studio recovery for Chinese local voice query, got ${JSON.stringify(localVoice)}`
+);
+
 const generic = fallbackRecommendations(fallbackIntent('AI'), catalog);
 assert.equal(
   generic.length,
@@ -56,5 +65,5 @@ assert.equal(
 
 console.log(
   'AI fallback regression PASS:',
-  recovered.map((item) => item.id).join(', ') || 'none'
+  [...new Set([...recovered, ...localVoice].map((item) => item.id))].join(', ') || 'none'
 );
