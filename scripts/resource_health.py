@@ -42,6 +42,8 @@ ALLOWED_TYPES = {"website", "github", "documentation", "service", "library", "mo
 ALLOWED_PRICING = {"free", "freemium", "paid", "open-source", "unknown"}
 ALLOWED_DIFFICULTY = {"beginner", "intermediate", "advanced", "unknown"}
 ALLOWED_STATUS = {"active", "inactive", "deprecated", "archived", "unknown"}
+HUB_ICON_HOST = "qookey109-pixel.github.io"
+HUB_ICON_PATH_PREFIX = "/ai-resource-hub/"
 
 
 @dataclass
@@ -95,6 +97,41 @@ def load_json_object(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"{label} root must be an object")
     return payload
+
+
+def validate_local_icon_assets(
+    icons_payload: dict[str, Any],
+    repo_root: Path,
+) -> list[str]:
+    errors: list[str] = []
+    icons = icons_payload.get("icons")
+    if not isinstance(icons, dict):
+        return errors
+
+    for icon_id, icon in icons.items():
+        if not isinstance(icon, dict):
+            continue
+        icon_url = icon.get("url")
+        if not isinstance(icon_url, str) or not icon_url.strip():
+            continue
+
+        parsed = parse.urlparse(icon_url)
+        if parsed.hostname != HUB_ICON_HOST or not parsed.path.startswith(HUB_ICON_PATH_PREFIX):
+            continue
+
+        relative_path = parsed.path.removeprefix(HUB_ICON_PATH_PREFIX)
+        local_path = Path(relative_path)
+        if not relative_path or local_path.is_absolute() or ".." in local_path.parts:
+            errors.append(f"icons.{icon_id}.url: invalid local published asset path")
+            continue
+
+        asset_path = repo_root / local_path
+        if not asset_path.is_file():
+            errors.append(
+                f"icons.{icon_id}.url: local published asset is missing: {local_path.as_posix()}"
+            )
+
+    return errors
 
 
 def validate_catalog(
@@ -548,6 +585,8 @@ def run(args: argparse.Namespace) -> int:
         return 1
 
     validation_errors = validate_catalog(catalog, categories, icons)
+    repo_root = args.icons.parent.parent
+    validation_errors.extend(validate_local_icon_assets(icons, repo_root))
     if validation_errors:
         print("Catalog validation failed:", file=sys.stderr)
         for item in validation_errors:
