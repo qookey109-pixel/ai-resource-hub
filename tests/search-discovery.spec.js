@@ -105,3 +105,25 @@ test('Create360 verified source metadata participates in discovery', async ({ pa
   await search.fill('888-url2md');
   await expect(page.locator('.card', { hasText: 'Create360.ai' })).toHaveCount(1);
 });
+
+test('Taiwan virtual-currency wording discovers crypto resources', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  await search.fill('虛擬貨幣');
+
+  await expect(page.locator('.card')).not.toHaveCount(0);
+  await expect(page.locator('.card', { hasText: 'TradingAgents' })).toHaveCount(1);
+});
+
+
+test('security acronyms do not match inside unrelated words', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  await search.fill('SAST');
+
+  await expect(page.locator('.card').first().locator('.name')).toHaveText('Hermes Snyk Plugin');
+  await expect(page.locator('.card', { hasText: 'ABYSSAL — Natural Disasters' })).toHaveCount(0);
+});
+

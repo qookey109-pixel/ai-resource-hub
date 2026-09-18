@@ -55,6 +55,8 @@ const stopWords = new Set([
   '我要', '我想', '想要', '幫我', '請', '可以', '一個', '一些', '的', '用', '做', '找', '搜尋', '資源', '工具'
 ]);
 
+const wholeWordSearchTerms = new Set(['sast', 'sca', 'sbom', 'iac']);
+
 const synonymGroups = new Map(Object.entries({
   ai: ['ai', '人工智慧', 'llm', '模型', 'agent'],
   llm: ['llm', 'ai', '大語言模型', '模型'],
@@ -87,6 +89,8 @@ const synonymGroups = new Map(Object.entries({
   交易: ['交易', 'trading', '金融', '投資', 'crypto'],
   投資: ['投資', 'trading', '交易', '金融'],
   加密貨幣: ['加密貨幣', 'crypto', 'bitcoin', '交易'],
+  虛擬貨幣: ['虛擬貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
+  數位貨幣: ['數位貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
   資安: ['資安', 'security', 'reverse', '逆向'],
   逆向: ['逆向', 'reverse engineering', 'security', '資安'],
   部署: ['部署', 'deployment', 'cloud', '雲端'],
@@ -190,7 +194,16 @@ function buildSearchDoc(resource) {
 }
 
 function matchesAny(text, alternatives) {
-  return alternatives.some((term) => text.includes(normalise(term)));
+  let words = null;
+  return alternatives.some((term) => {
+    const normalisedTerm = normalise(term);
+    if (!normalisedTerm) return false;
+    if (wholeWordSearchTerms.has(normalisedTerm)) {
+      words ??= text.split(/[^a-z0-9]+/);
+      return words.includes(normalisedTerm);
+    }
+    return text.includes(normalisedTerm);
+  });
 }
 
 function scoreResource(resource, query) {
