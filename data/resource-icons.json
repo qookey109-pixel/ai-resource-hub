@@ -295,8 +295,8 @@
       "source": "official-repository-project-logo-svg"
     },
     "fincept-corporation-finceptterminal": {
-      "url": "https://github.com/Fincept-Corporation.png?size=256",
-      "source": "github-organization-avatar-256"
+      "url": "https://raw.githubusercontent.com/Fincept-Corporation/FinceptTerminal/main/fincept-qt/resources/in.fincept.FinceptTerminal.png",
+      "source": "official-repository-app-icon-png"
     },
     "cloudflare-agentic-inbox": {
       "url": "https://github.com/cloudflare.png?size=256",
@@ -307,8 +307,8 @@
       "source": "official-repository-project-logo"
     },
     "reconurge-flowsint": {
-      "url": "https://github.com/reconurge.png?size=256",
-      "source": "github-owner-avatar-256-fallback-no-project-logo"
+      "url": "https://raw.githubusercontent.com/reconurge/flowsint/main/flowsint-app/public/icon.png",
+      "source": "official-repository-app-icon-png"
     },
     "nangohq-nango": {
       "url": "https://raw.githubusercontent.com/NangoHQ/nango/master/assets/nango-logo.png",

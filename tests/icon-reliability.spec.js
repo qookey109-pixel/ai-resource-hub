@@ -32,3 +32,30 @@ test('exhausted derived icon candidates preserve the category fallback', async (
   await expect(cardIcon).toContainText('🧊');
   await expect(cardIcon).toHaveAttribute('data-icon-reliability', 'category-fallback');
 });
+
+
+test('verified official app icons are used on cards and detail', async ({ page }) => {
+  const fixtures = [
+    {
+      query: 'Flowsint',
+      name: 'Flowsint',
+      src: 'https://raw.githubusercontent.com/reconurge/flowsint/main/flowsint-app/public/icon.png'
+    },
+    {
+      query: 'Fincept Terminal',
+      name: 'Fincept Terminal',
+      src: 'https://raw.githubusercontent.com/Fincept-Corporation/FinceptTerminal/main/fincept-qt/resources/in.fincept.FinceptTerminal.png'
+    }
+  ];
+
+  for (const fixture of fixtures) {
+    await page.goto('/');
+    await page.locator('#search').fill(fixture.query);
+
+    const card = page.locator('.card', { hasText: fixture.name }).first();
+    await expect(card.locator('.resource-icon img')).toHaveAttribute('src', fixture.src);
+
+    await card.locator('.card-detail-hit').click();
+    await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', fixture.src);
+  }
+});
