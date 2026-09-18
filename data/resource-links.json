@@ -1361,6 +1361,104 @@
         "url": "https://github.com/SenteLabsAI/OpenExecutive/blob/main/LICENSE",
         "description": "官方 Apache-2.0 License。"
       }
+    ],
+    "refero-styles": [
+      {
+        "label": "Refero",
+        "kind": "website",
+        "url": "https://refero.design/",
+        "description": "Refero 官方主站，可瀏覽真實產品畫面、流程、UX Patterns 與 AI 設計研究工具。"
+      }
+    ],
+    "soundshockaudio": [
+      {
+        "label": "SoundShockAudio Free Downloads",
+        "kind": "download",
+        "url": "https://soundshockaudio.com/free-downloads/",
+        "description": "官方免費下載中心，集中 VST、Sample Pack、Preset、DAW Template、Kontakt 與 MIDI。"
+      },
+      {
+        "label": "SoundShockAudio Browse",
+        "kind": "website",
+        "url": "https://soundshockaudio.com/browse/",
+        "description": "官方分類瀏覽入口，可依工具類型快速篩選免費音樂製作資源。"
+      }
+    ],
+    "react-bits-shape-grid": [
+      {
+        "label": "React Bits GitHub",
+        "kind": "github",
+        "url": "https://github.com/DavidHDev/react-bits",
+        "description": "React Bits 官方 GitHub 原始碼與專案 README。"
+      },
+      {
+        "label": "React Bits Installation",
+        "kind": "documentation",
+        "url": "https://reactbits.dev/get-started/installation",
+        "description": "官方安裝與快速開始指南。"
+      },
+      {
+        "label": "React Bits Tools",
+        "kind": "website",
+        "url": "https://reactbits.dev/tools",
+        "description": "官方 Background Studio、Shape Magic、Texture Lab 等工具入口。"
+      }
+    ],
+    "capafy-ai": [
+      {
+        "label": "Capafy 使用者說明中心",
+        "kind": "documentation",
+        "url": "https://capafy.ai/zh-hant/help-center",
+        "description": "官方繁中 Help Center，說明 Skills、購買、執行模式、定價與退款。"
+      },
+      {
+        "label": "Capafy 創作者指南",
+        "kind": "documentation",
+        "url": "https://capafy.ai/zh-hant/developer/doc",
+        "description": "官方繁中 Publisher Guide，說明 Skill 上架、定價、審核與版本維護。"
+      }
+    ],
+    "pixelartbase-free-com-tw": [
+      {
+        "label": "PixelArtBase Terms",
+        "kind": "documentation",
+        "url": "https://www.pixelartbase.com/terms/",
+        "description": "官方服務條款，包含圖片與輸出權利、可接受使用與責任邊界。"
+      },
+      {
+        "label": "PixelArtBase Privacy",
+        "kind": "documentation",
+        "url": "https://www.pixelartbase.com/privacy/",
+        "description": "官方隱私政策，說明圖片處理主要在瀏覽器本機進行。"
+      }
+    ],
+    "metalforge-shader-editor": [
+      {
+        "label": "MetalForge",
+        "kind": "website",
+        "url": "https://metalforge.xyz/",
+        "description": "MetalForge 官方主站，包含效果列表、功能、價格與 FAQ。"
+      },
+      {
+        "label": "MetalForge Open Source Licences",
+        "kind": "documentation",
+        "url": "https://metalforge.xyz/licenses",
+        "description": "官方第三方開源套件與授權揭露頁。"
+      }
+    ],
+    "lulu930128-github-profile": [
+      {
+        "label": "Lulu Profile README",
+        "kind": "documentation",
+        "url": "https://github.com/lulu930128/lulu930128/blob/main/README.md",
+        "description": "官方 GitHub Profile README，整理 AI Agent、Automation 與資料工具方向。"
+      },
+      {
+        "label": "Lulu Profile Repository",
+        "kind": "github",
+        "url": "https://github.com/lulu930128/lulu930128",
+        "description": "GitHub Profile README 的公開來源 Repository。"
+      }
     ]
   }
 }
