@@ -1,3 +1,5 @@
+import { loadJson } from './catalog-data.js';
+
 const dialog = document.querySelector('#resource-detail-dialog');
 
 if (dialog) {
@@ -61,12 +63,6 @@ if (dialog) {
   let resourceIdByUrl = new Map();
   let lastTrigger = null;
   let shareResetTimer = 0;
-
-  async function loadJson(path) {
-    const response = await fetch(path, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
-    return response.json();
-  }
 
   function normaliseUrl(value) {
     try {
