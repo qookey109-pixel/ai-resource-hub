@@ -91,8 +91,8 @@
       "source": "official-repository-app-icon-svg"
     },
     "ai-website-cloner-template": {
-      "url": "https://github.com/JCodesMore.png?size=256",
-      "source": "github-owner-avatar-256-fallback-no-project-logo"
+      "url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/src/app/favicon.ico",
+      "source": "official-project-favicon-repo-ico"
     },
     "threeui-community": {
       "url": "https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg",
