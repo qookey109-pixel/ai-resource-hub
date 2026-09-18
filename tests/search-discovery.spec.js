@@ -44,7 +44,7 @@ test('search result changes are announced through a live status', async ({ page 
   await expect(status).toContainText('目前顯示 86 個資源');
 
   await search.fill('Proof Lab');
-  await expect(status).toHaveText('目前顯示 1 個資源');
+  await expect(status).toHaveText('目前顯示 1 個資源，依相關性排序');
 
   await search.fill('no-such-qookey-resource-zzzz');
   await expect(status).toHaveText('找不到符合目前條件的資源');
@@ -70,4 +70,26 @@ test('compact search accessibility state follows the scroll threshold', async ({
   await expect(page.locator('body')).not.toHaveClass(/compact-mode/);
   await expect(compactWrap).toHaveAttribute('aria-hidden', 'true');
   await expect(compactSearch).toHaveAttribute('tabindex', '-1');
+});
+
+
+test('active search preserves relevance order and suspends manual sorting', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  const added = page.locator('#sort-added-button');
+  const clicks = page.locator('#sort-clicks-button');
+
+  await search.fill('UI Skills');
+
+  await expect(page.locator('.card').first().locator('.name')).toHaveText('UI Skills');
+  await expect(page.locator('#resource-search-status')).toContainText('依相關性排序');
+  await expect(added).toBeDisabled();
+  await expect(clicks).toBeDisabled();
+
+  await search.fill('');
+
+  await expect(added).toBeEnabled();
+  await expect(clicks).toBeEnabled();
+  await expect(page.locator('#resource-search-status')).not.toContainText('依相關性排序');
 });

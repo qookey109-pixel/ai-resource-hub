@@ -273,7 +273,6 @@ function filteredResources() {
 
   const sort = els.sort.value;
   resources.sort((a, b) => {
-    if (sort === 'name') return String(a.name).localeCompare(String(b.name));
     if (sort === 'newest') {
       const dateDiff = String(b.added_at ?? '').localeCompare(String(a.added_at ?? ''));
       return dateDiff || (b.rating ?? -1) - (a.rating ?? -1) || String(a.name).localeCompare(String(b.name));
@@ -327,9 +326,10 @@ function render() {
   els.grid.replaceChildren();
   els.empty.hidden = resources.length !== 0;
   if (els.searchStatus) {
+    const searching = normalise(els.search.value).length > 0;
     els.searchStatus.textContent = resources.length === 0
       ? '找不到符合目前條件的資源'
-      : `目前顯示 ${resources.length} 個資源`;
+      : `目前顯示 ${resources.length} 個資源${searching ? '，依相關性排序' : ''}`;
   }
 
   resources.forEach((resource, index) => {
@@ -430,8 +430,6 @@ function bindEvents() {
   els.search.addEventListener('input', () => setSearchValue(els.search.value));
   els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value));
 
-  els.sort.addEventListener('input', scheduleRender);
-  els.sort.addEventListener('change', scheduleRender);
   window.addEventListener('scroll', updateCompactMode, { passive: true });
 
   document.addEventListener('keydown', (event) => {
