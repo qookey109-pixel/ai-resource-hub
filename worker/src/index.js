@@ -1,7 +1,8 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.3';
+const RECOMMENDER_VERSION = '0.3.4';
+const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -163,7 +164,7 @@ async function understandIntent(query, env) {
     prompt: buildIntentPrompt(query),
     temperature: 0.05,
     max_tokens: 900
-  });
+  }, AI_RUN_OPTIONS);
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
 
@@ -301,7 +302,7 @@ async function rankResources(intent, resources, env) {
     prompt: buildRankingPrompt(intent, resources),
     temperature: 0.05,
     max_tokens: 1200
-  });
+  }, AI_RUN_OPTIONS);
   return validateRecommendations(parseJsonObject(extractText(result)), resources);
 }
 

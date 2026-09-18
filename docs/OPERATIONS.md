@@ -47,13 +47,14 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.3`
+- version: `0.3.4`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
 - catalog source: public GitHub `main` `data/resources.json`
 - output IDs are validated against the catalog
 - deterministic fallback is retained for model / intent failures
+- Workers AI inference uses `rejectIfBusy` so capacity pressure fails fast into deterministic fallback instead of waiting in the provider queue
 - AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
 
 The Worker is deployed and monitored, but normal website browsing does not depend on it.
@@ -103,6 +104,7 @@ Checks:
 - AI recommendation contract
 - recommendation IDs resolve to current catalog
 - semantic fixture returns an expected resource
+- degraded AI mode evidence records intent mode, recommendation latency, and bounded diagnostics without turning a semantically correct fallback into a false outage
 
 ## Deployment boundaries
 
