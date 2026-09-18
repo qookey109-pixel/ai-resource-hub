@@ -3,7 +3,9 @@ const { test, expect } = require('@playwright/test');
 test('card hit target opens detail and Escape closes through history', async ({ page }) => {
   await page.goto('/');
 
+  const defaultTitle = await page.title();
   const card = page.locator('.card').first();
+  const resourceName = await card.locator('.name').textContent();
   const hitTarget = card.locator('.card-detail-hit');
   await expect(hitTarget).toBeVisible();
   await expect(hitTarget).toHaveAttribute('aria-haspopup', 'dialog');
@@ -14,11 +16,13 @@ test('card hit target opens detail and Escape closes through history', async ({ 
   const dialog = page.locator('#resource-detail-dialog');
   await expect(dialog).toBeVisible();
   await expect(page).toHaveURL(/resource=/);
+  await expect(page).toHaveTitle(`${resourceName} — Qookey AI Resource Hub`);
   await expect(hitTarget).toHaveAttribute('aria-expanded', 'true');
 
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   await expect(page).not.toHaveURL(/resource=/);
+  await expect(page).toHaveTitle(defaultTitle);
   await expect(hitTarget).toHaveAttribute('aria-expanded', 'false');
 });
 
@@ -82,6 +86,7 @@ test('direct Archify detail URL opens and browser back closes it', async ({ page
 
   const dialog = page.locator('#resource-detail-dialog');
   await expect(dialog).toBeVisible();
+  await expect(page).toHaveTitle('Archify — Qookey AI Resource Hub');
   await expect(page.locator('#resource-detail-title')).toContainText('Archify');
   await expect(page.locator('.resource-detail-links')).toContainText('Project Page');
 
