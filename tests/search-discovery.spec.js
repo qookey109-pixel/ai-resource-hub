@@ -127,3 +127,22 @@ test('security acronyms do not match inside unrelated words', async ({ page }) =
   await expect(page.locator('.card', { hasText: 'ABYSSAL — Natural Disasters' })).toHaveCount(0);
 });
 
+
+
+test('common Taiwan search intents discover existing catalog resources', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+
+  await search.fill('流程圖');
+  await expect(page.locator('.card', { hasText: 'Archify' })).toHaveCount(1);
+
+  await search.fill('網頁設計');
+  await expect(page.locator('.card', { hasText: 'GetLayers' })).toHaveCount(1);
+
+  await search.fill('代理人');
+  await expect(page.locator('.card', { hasText: 'Agent-Native' })).toHaveCount(1);
+
+  await search.fill('智能體');
+  await expect(page.locator('.card', { hasText: 'Agent-Native' })).toHaveCount(1);
+});
