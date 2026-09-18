@@ -220,3 +220,42 @@ test('mobile quick categories keep scroll and compact sizing after cascade clean
   });
 });
 
+
+
+test('failed resource icon falls back to category text without a broken image', async ({ page }) => {
+  const iconRegistry = require('../data/resource-icons.json');
+
+  await page.route('**/data/resource-icons.json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...iconRegistry,
+        icons: {
+          ...iconRegistry.icons,
+          'tt-a1i-archify': {
+            url: '/assets/qookey-logo.svg',
+            source: 'test-local-primary'
+          }
+        }
+      })
+    });
+  });
+
+  await page.goto('/');
+
+  const archifyCard = page.locator('.card').filter({ hasText: 'Archify' });
+  const icon = archifyCard.locator('.resource-icon');
+  const primaryImage = icon.locator('img');
+
+  await expect(archifyCard).toHaveCount(1);
+  await expect(primaryImage).toHaveAttribute('src', '/assets/qookey-logo.svg');
+
+  await primaryImage.evaluate((image) => {
+    image.src = '/__missing-qookey-resource-icon__.svg';
+  });
+
+  await expect(icon.locator('img')).toHaveCount(0);
+  await expect(icon).not.toHaveClass(/has-brand-icon/);
+  await expect(icon).toHaveText(/\S/);
+});
