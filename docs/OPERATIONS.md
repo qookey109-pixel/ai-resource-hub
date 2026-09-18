@@ -77,6 +77,8 @@ Workflow: `.github/workflows/resource-health.yml`
 - pull requests run structural validation only
 - scheduled/manual/relevant main runs observe live URLs and GitHub metadata
 - raw observations are evidence, not automatic catalog mutations
+- reports include `last_checked` age buckets so metadata freshness can be reviewed without silently rewriting production fields
+- freshness age is evidence only; it does not change triage state by itself
 - reviewed expectations live in `data/resource-health-expectations.json`
 - output reports are Actions artifacts, not committed history
 

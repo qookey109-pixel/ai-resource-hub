@@ -427,6 +427,11 @@ def github_observations(resource: dict[str, Any], github: GithubResult) -> list[
     return notes
 
 
+def freshness_age_days(last_checked: str, as_of: datetime) -> int:
+    checked_date = datetime.strptime(last_checked, "%Y-%m-%d").date()
+    return (as_of.date() - checked_date).days
+
+
 def markdown_cell(value: Any) -> str:
     text = str(value).replace("\n", " ").replace("|", "\\|")
     return text or "—"
@@ -449,6 +454,10 @@ def markdown_report(report: dict[str, Any]) -> str:
         f"- Transient/network/other errors: {summary['errors']}",
         f"- GitHub repositories observed: {summary['github_checked']}",
         f"- Metadata observations requiring review: {summary['metadata_observations']}",
+        f"- Metadata checked within 14 days: {summary['metadata_checked_within_14d']}",
+        f"- Metadata older than 14 days: {summary['metadata_older_than_14d']}",
+        f"- Metadata older than 30 days: {summary['metadata_older_than_30d']}",
+        f"- Oldest metadata check age: {summary['oldest_metadata_check_age_days']} days",
         "",
         "> This report is observational. It never rewrites `data/resources.json` automatically.",
         "",
@@ -546,6 +555,7 @@ def run(args: argparse.Namespace) -> int:
         return 0
 
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    generated_at = datetime.now(timezone.utc)
     results: list[dict[str, Any]] = []
 
     for index, resource in enumerate(catalog["resources"], start=1):
@@ -560,6 +570,7 @@ def run(args: argparse.Namespace) -> int:
                 "id": resource["id"],
                 "name": resource["name"],
                 "url": url,
+                "freshness_age_days": freshness_age_days(resource["last_checked"], generated_at),
                 "catalog": {
                     "type": resource.get("type"),
                     "status": resource.get("status"),
@@ -584,10 +595,14 @@ def run(args: argparse.Namespace) -> int:
         ),
         "github_checked": sum(bool(item["github"]["checked"]) for item in results),
         "metadata_observations": sum(len(item["metadata_observations"]) for item in results),
+        "metadata_checked_within_14d": sum(item["freshness_age_days"] <= 14 for item in results),
+        "metadata_older_than_14d": sum(item["freshness_age_days"] > 14 for item in results),
+        "metadata_older_than_30d": sum(item["freshness_age_days"] > 30 for item in results),
+        "oldest_metadata_check_age_days": max((item["freshness_age_days"] for item in results), default=0),
     }
     report = {
         "schema_version": "0.1",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": generated_at.isoformat(),
         "catalog_path": str(args.catalog),
         "summary": summary,
         "resources": results,
