@@ -135,10 +135,46 @@ def validate_catalog(
                 if not isinstance(category.get(field), str) or not category.get(field, "").strip():
                     errors.append(f"{prefix}.{field}: must be a non-empty string")
 
+    if icons_payload.get("schema_version") != "0.2":
+        errors.append("icons.schema_version: must be '0.2'")
+
+    icon_updated_at = icons_payload.get("updated_at")
+    if not isinstance(icon_updated_at, str):
+        errors.append("icons.updated_at: must be YYYY-MM-DD")
+    else:
+        try:
+            datetime.strptime(icon_updated_at, "%Y-%m-%d")
+        except ValueError:
+            errors.append("icons.updated_at: must be YYYY-MM-DD")
+
     icons = icons_payload.get("icons")
     if not isinstance(icons, dict):
         errors.append("icons.icons: must be an object")
         icons = {}
+    else:
+        for icon_id, icon in icons.items():
+            prefix = f"icons.{icon_id}"
+            if not isinstance(icon_id, str) or not RESOURCE_ID_PATTERN.fullmatch(icon_id):
+                errors.append(f"{prefix}: icon id must be lower-case kebab-case")
+                continue
+            if not isinstance(icon, dict):
+                errors.append(f"{prefix}: must be an object")
+                continue
+
+            icon_url = icon.get("url")
+            if not isinstance(icon_url, str) or not icon_url.strip():
+                errors.append(f"{prefix}.url: must be a non-empty string")
+            else:
+                parsed_icon_url = parse.urlparse(icon_url)
+                if parsed_icon_url.scheme not in {"http", "https"} or not parsed_icon_url.netloc:
+                    errors.append(f"{prefix}.url: must be an absolute http(s) URL")
+
+            icon_source = icon.get("source")
+            if (
+                not isinstance(icon_source, str)
+                or not RESOURCE_ID_PATTERN.fullmatch(icon_source)
+            ):
+                errors.append(f"{prefix}.source: must be lower-case kebab-case")
 
     for index, resource in enumerate(payload["resources"]):
         prefix = f"resources[{index}]"
