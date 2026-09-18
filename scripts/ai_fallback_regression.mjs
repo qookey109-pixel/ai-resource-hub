@@ -58,6 +58,27 @@ assert.ok(
   `expected voice-studio recovery for Chinese local voice query, got ${JSON.stringify(localVoice)}`
 );
 
+
+const contrastVoiceQuery = '不想依賴雲端訂閱服務但要在本機做語音複製和配音';
+const contrastVoiceConcepts = fallbackQueryConcepts(contrastVoiceQuery);
+assert.ok(
+  contrastVoiceConcepts.some((concept) => concept.includes('語音') || concept.includes('配音')),
+  `expected positive contrast voice concepts, got ${JSON.stringify(contrastVoiceConcepts)}`
+);
+assert.equal(
+  contrastVoiceConcepts.some((concept) => concept.includes('雲端') || concept.includes('訂閱')),
+  false,
+  `negated terms before contrast must stay excluded: ${JSON.stringify(contrastVoiceConcepts)}`
+);
+const contrastVoice = fallbackRecommendations(
+  fallbackIntent(contrastVoiceQuery),
+  catalog
+);
+assert.ok(
+  contrastVoice.some((item) => item.id === 'voice-studio'),
+  `expected voice-studio recovery after negated cloud preference, got ${JSON.stringify(contrastVoice)}`
+);
+
 const generic = fallbackRecommendations(fallbackIntent('AI'), catalog);
 assert.equal(
   generic.length,
@@ -77,5 +98,5 @@ assert.equal(
 
 console.log(
   'AI fallback regression PASS:',
-  [...new Set([...recovered, ...localVoice].map((item) => item.id))].join(', ') || 'none'
+  [...new Set([...recovered, ...localVoice, ...contrastVoice].map((item) => item.id))].join(', ') || 'none'
 );
