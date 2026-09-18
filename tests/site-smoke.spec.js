@@ -118,3 +118,22 @@ test('page exposes canonical and social metadata', async ({ page }) => {
   );
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary');
 });
+
+
+test('result scrolling respects reduced motion preference', async ({ page }) => {
+  await page.addInitScript(() => {
+    Element.prototype.scrollIntoView = function scrollIntoView(options) {
+      window.__qookeyLastScrollBehavior = options?.behavior ?? null;
+    };
+  });
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+
+  await page.locator('.quick-category[data-category="AI / LLM"]').click();
+  await expect.poll(() => page.evaluate(() => window.__qookeyLastScrollBehavior)).toBe('auto');
+
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.locator('.quick-category[data-category=""]').click();
+  await expect.poll(() => page.evaluate(() => window.__qookeyLastScrollBehavior)).toBe('smooth');
+});

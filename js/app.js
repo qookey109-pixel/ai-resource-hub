@@ -373,6 +373,11 @@ function scheduleRender() {
   });
 }
 
+function scrollToResults() {
+  const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  document.querySelector('#resources')?.scrollIntoView({ behavior, block: 'start' });
+}
+
 function createQuickCategory(label, category = '') {
   const button = document.createElement('button');
   button.type = 'button';
@@ -383,7 +388,7 @@ function createQuickCategory(label, category = '') {
   button.addEventListener('click', () => {
     selectedCategory = category;
     render();
-    document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToResults();
   });
   return button;
 }
@@ -417,7 +422,7 @@ function setSearchValue(value, immediate = false) {
 }
 
 function goToResults() {
-  document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  scrollToResults();
 }
 
 function updateCompactMode() {
