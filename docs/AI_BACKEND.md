@@ -1,81 +1,31 @@
-# Qookey AI Recommendation Backend V0.5
+# Qookey AI Recommendation Backend
 
-## Goal
+The AI recommender is a **separate Cloudflare Worker service**. It is deployed and monitored, but the current marketplace UI does not expose a standalone AI recommendation panel.
 
-Turn the large homepage task box into a real AI resource recommender while keeping the existing keyword search available.
+The public catalog remains fully usable without this Worker.
 
-User flow:
-
-1. User describes a task in Traditional Chinese or another language.
-2. Frontend sends the task to the Cloudflare Worker.
-3. Worker loads the current `data/resources.json` catalog.
-4. Workers AI selects 3–5 resources from that catalog only.
-5. Worker validates returned resource IDs before responding.
-6. Frontend shows reasons, suggested roles, a small stack plan and the matching resource cards.
-
-The model is not allowed to invent resources outside the catalog.
-
-## Backend
+## Runtime
 
 Location: `worker/`
 
 - Runtime: Cloudflare Workers
-- AI: Workers AI binding `env.AI`
+- AI binding: `env.AI`
 - Default model: `@cf/meta/llama-3.1-8b-instruct`
 - Catalog source: public GitHub `main` `data/resources.json`
 - Endpoint: `POST /api/recommend`
-- Health check: `GET /health`
-- CORS: production GitHub Pages origin plus localhost for development
+- Health: `GET /health`
 - Input limit: 2–500 characters
-- AI output: strict catalog IDs, validated server-side
-- Fallback: deterministic keyword/content ranking when model output fails
+- Output: catalog resource IDs only, validated server-side
+- Fallback: deterministic keyword/content ranking
 
-No AI API key is stored in frontend JavaScript or this repository.
+The model is not allowed to create resource IDs outside the catalog.
 
-## Deploy with GitHub Actions
+## Current frontend boundary
 
-A manual workflow exists at:
-
-`.github/workflows/deploy-ai-worker.yml`
-
-Repository secrets required:
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-
-The API token must have the Cloudflare permissions needed to deploy Workers for the target account.
-
-Then run:
-
-`GitHub → Actions → Deploy AI Worker → Run workflow`
-
-The workflow is intentionally manual so missing Cloudflare secrets do not break normal Pages CI.
-
-## Deploy locally with Wrangler
-
-```bash
-cd worker
-npm install
-npx wrangler login
-npm run deploy
-```
-
-Copy the resulting `https://<worker>.<subdomain>.workers.dev/api/recommend` URL.
-
-## Enable the frontend
-
-Edit `data/ai-config.json`:
-
-```json
-{
-  "schema_version": "0.1",
-  "enabled": true,
-  "endpoint": "https://<worker>.<subdomain>.workers.dev/api/recommend",
-  "updated_at": "YYYY-MM-DD"
-}
-```
-
-Until this is enabled, the site continues to behave as a normal keyword-search catalog and displays a clear backend-not-enabled message if the user explicitly requests AI recommendations.
+- Browsing, filtering and search are local/deterministic.
+- No AI API key is present in browser JavaScript.
+- The standalone AI recommendation panel is intentionally not part of the current UI.
+- `data/ai-config.json` records the deployed recommendation endpoint for project operations and monitoring; it is not required by the current Pages UI.
 
 ## Request
 
@@ -85,7 +35,7 @@ Until this is enabled, the site continues to behave as a normal keyword-search c
 }
 ```
 
-## Response shape
+## Response
 
 ```json
 {
@@ -106,11 +56,40 @@ Until this is enabled, the site continues to behave as a normal keyword-search c
 }
 ```
 
-## Security / governance
+## Deployment
 
-- Never put Cloudflare tokens or third-party model API keys in browser JavaScript.
-- The backend only accepts the configured production origin plus localhost development origins.
-- The model sees only public catalog metadata and the task query.
-- Returned IDs are checked against the current resource catalog.
-- Unknown or unavailable AI output falls back instead of inventing resources.
-- `data/resources.json` remains the resource authority; the AI backend does not write catalog data.
+Workflow:
+
+`.github/workflows/deploy-ai-worker.yml`
+
+Required repository secrets:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+The workflow:
+
+1. validates deterministic fallback behavior;
+2. verifies Cloudflare credentials;
+3. deploys the Worker;
+4. verifies `/health`;
+5. runs semantic recommendation regressions;
+6. records the deployed endpoint in `data/ai-config.json` when needed.
+
+Local deployment:
+
+```bash
+cd worker
+npm install
+npx wrangler login
+npm run deploy
+```
+
+## Security and governance
+
+- Never put Cloudflare tokens or third-party model API keys in frontend code.
+- The Worker only recommends IDs from the current catalog.
+- Returned IDs are validated before response.
+- Unknown / unavailable AI output falls back instead of inventing resources.
+- `data/resources.json` remains the resource authority.
+- The AI Worker never writes catalog metadata.

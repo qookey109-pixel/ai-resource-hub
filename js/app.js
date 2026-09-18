@@ -464,7 +464,7 @@ function resetFilters() {
   els.type.value = '';
   els.free.checked = false;
   els.openSource.checked = false;
-  els.sort.value = 'rating';
+  els.sort.value = 'newest';
   render();
   (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
 }

@@ -8,189 +8,91 @@ Status date: 2026-09-18 (Asia/Taipei)
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting + production Worker monitoring + status consistency CI**
 - Current canonical catalog size: **86 resources**
 
-Repository `main` and the canonical data files below are authoritative. Historical commit/run details remain available in Git history and GitHub Actions; this file is intentionally maintained as the concise current operating baseline rather than an exhaustive changelog.
+## Current baseline
+
+The project is a static, dependency-free resource marketplace frontend backed by canonical JSON data, with separate Cloudflare Workers for AI recommendation and shared interaction counts.
+
+Current production capabilities:
+
+- structured search across canonical metadata and verified supplemental links
+- category / type / free / open-source filters
+- newest / oldest and shared-interaction sorting
+- browser-local favorites
+- responsive resource cards and Resource Detail dialog
+- stable `?resource=<id>` deep links with Back/Forward support
+- verified supplemental official links
+- resource-specific icons with runtime fallback
+- shared aggregate interaction counts
+- Resource Health V0.2
+- production Worker monitoring
+- Playwright frontend regressions
+- status consistency CI
+
+The AI recommendation Worker remains deployed and monitored, but the current marketplace UI does **not** expose a standalone AI recommendation panel. Browsing and search remain local/deterministic and do not require the AI backend.
 
 ## Canonical authorities
 
-- Resource identity + canonical primary URLs: `data/resources.json`
+- Resource identity + primary URL: `data/resources.json`
 - Categories: `data/categories.json`
-- Resource icons: `data/resource-icons.json`
-- Verified supplemental official links: `data/resource-links.json`
-- Resource-health reviewed expectations: `data/resource-health-expectations.json`
-- AI recommender runtime config: `data/ai-config.json`
-- Shared interaction-counter frontend config: `data/click-config.json`
-- AI backend source: `worker/`
-- Shared interaction-counter backend: `worker-clicks/`
+- Icons: `data/resource-icons.json`
+- Supplemental links: `data/resource-links.json`
+- Health expectations: `data/resource-health-expectations.json`
+- AI Worker config: `data/ai-config.json`
+- Click counter config: `data/click-config.json`
+- AI Worker source: `worker/`
+- Click Worker source: `worker-clicks/`
 
-## Current completed capabilities
+## Frontend structure
 
-### Catalog and discovery
+Production source is intentionally small:
 
-- 86 canonical resources are currently present in `data/resources.json`.
-- Multi-category classification is enabled.
-- User-facing summaries, use cases, notes and supplemental-link descriptions are Traditional Chinese by default.
-- Unknown pricing/license/status fields remain `unknown` / `null` instead of being guessed.
-- Search covers names, summaries, categories, tags, use cases, notes, pricing and verified supplemental-link metadata.
-- Discovery V1.4 indexes verified supplemental-link labels/descriptions/kinds/stable URL components while always resolving back to the existing parent resource ID.
-- Account-specific, temporary login-flow and tracking URLs are normalized to stable public canonical URLs before publication.
-- Duplicate URLs/aliases must be checked against the canonical catalog immediately before every write.
+- `index.html`
+- `assets/qookey-logo.svg`
+- one stylesheet: `css/styles.css`
+- focused JS modules under `js/`
+- required public JSON under `data/`
 
-### Resource detail and navigation
+Historical patch stylesheets have been consolidated into `css/styles.css`. Do not reintroduce one-off CSS patch files unless there is a clear architectural reason.
 
-- Resource Detail V1.3 is live as a dependency-free responsive dialog.
-- The whole card is the accessible detail hit target while favorite and outbound-link actions remain independent.
-- Stable detail deep links use `?resource=<id>`.
-- Browser Back/Forward synchronizes with detail state.
-- Detail view supports `複製連結`.
-- Verified documentation, demos, APIs, downloads, galleries and project pages are attached through `data/resource-links.json`; they never become duplicate resources merely because they are separate official URLs.
+GitHub Pages stages only the files the browser needs. Repository-only material such as tests, scripts, docs, Worker source and health governance data is not part of the Pages artifact.
 
-### Sorting and shared interaction counts
+## Testing and operations
 
-- Search-side sort controls support added date and shared interaction counts.
-- Default order is added date: newest first.
-- Each sort family remembers its last direction.
-- Shared click data is stored through the Cloudflare Durable Object counter configured by `data/click-config.json`.
-- Opening a resource detail card records +1 interaction.
-- Following an outbound canonical/official resource link records a separate +1 interaction.
-- A detail open followed by an outbound click therefore records two separate interactions by design.
-- Direct `?resource=<id>` opening and browser-history reopening are not counted unless the user performs the actual card/link interaction.
-- These counts are aggregate interactions, not unique visitors, and existing count data must not be reset by UI/catalog changes.
+Maintained workflows:
 
-### AI recommendation
+- `pages.yml`: GitHub Pages
+- `frontend-interaction.yml`: Playwright browser regression
+- `resource-health.yml`: URL / GitHub observation + reviewed triage
+- `project-status-consistency.yml`: catalog count / date consistency
+- `production-worker-monitor.yml`: live AI Worker + click Worker monitoring
+- `deploy-ai-worker.yml`: AI Worker deployment
+- `deploy-click-worker.yml`: click Worker deployment
 
-- Live AI recommendation remains enabled through `data/ai-config.json`.
-- Production endpoint: `https://qookey-ai-resource-recommender.q-oo109.workers.dev/api/recommend`
-- Backend loads the public current catalog authority and can only return resource IDs present in that catalog.
-- Client and server both validate IDs.
-- Deterministic keyword/content fallback remains available if model inference or response parsing fails.
-- Browsing/searching the catalog never requires the AI backend.
+Production monitor reads the click API only; it must not generate synthetic click increments.
 
-### Resource Health
+## Current maintenance rules
 
-- Resource Health V0.2 is non-destructive.
-- It observes canonical URLs and GitHub metadata, uploads evidence, and applies reviewed expected-variance rules.
-- 401/403/429 are observations, not automatically treated as broken resources.
-- 404/410 are flagged as broken.
-- External observations do not silently modify verified pricing, license, summary, status, canonical URL or resource identity.
-- The refreshed 65-resource baseline was captured by GitHub Actions run `33762653338` against catalog authority `f28d1394ea558d76c64faedc19984c97dacb43b6`; the temporary workflow was the only branch-only file.
-- Baseline raw triage: **59 clean, 4 expected variances, 2 review required, 0 broken (404/410)**. Evidence artifact: `resource-health-65-baseline-33762653338`, SHA-256 `ea73b238facf10e85ac146f7f0a7c15c26e891c62b2666e28ace589d10066efd`.
-- `groqcloud-console` root → `/home` normalization has now been reviewed as an expected redirect while keeping the shorter stable console root as canonical.
-- `mistral-studio` remains review-required because one unauthenticated probe reached Mistral's generated login flow and ended in HTTP 500. Do not whitelist generic 500 responses or change the canonical URL from this single transient observation.
+1. Re-read latest `main` before every ingestion or structural change.
+2. Do not duplicate an existing resource or alias.
+3. Keep `data/resources.json` as identity authority.
+4. Supplemental links never override canonical identity.
+5. Do not guess pricing, license or status.
+6. Keep secrets, credentials, private dashboard state and temporary auth URLs out of the catalog.
+7. Keep production frontend dependency-free unless a clear benefit justifies a change.
+8. Prefer editing the existing stylesheet / module over adding patch files.
+9. Frontend interaction or discovery changes must pass Playwright.
+10. External health observations are evidence only; they do not silently rewrite verified catalog metadata.
+11. Shared interaction counts must not be reset by catalog or UI maintenance.
+12. Worker deployment remains separate from catalog-only additions.
 
-### Icons
+## Known follow-ups
 
-- Resource cards prefer resource-specific official marks/favicons/verified owner or organization images.
-- Icon Reliability V1 provides runtime fallback when a third-party icon fails.
-- Category icons remain the last fallback, not the preferred resource identity.
-- Do not replace an existing verified icon merely for novelty; upgrade only when a clearly better stable official project asset is verified.
+- continue verified official-link coverage where useful
+- replace remaining low-quality third-party icons when a better official asset is verified
+- consider semantic/vector search only if structured search becomes insufficient at larger catalog size
+- consider automated metadata-refresh PRs after the current evidence-only health workflow is stable
+- consider account/cloud-synced collections only if browser-local favorites become insufficient
 
-### Testing, monitoring and deployment
-
-- Production frontend remains dependency-free.
-- Playwright is test-only and covers resource-detail interactions, favorites/external-link separation, history/deep links, supplemental-link search and shared detail-click counting.
-- GitHub Pages deployment remains managed by `.github/workflows/pages.yml`.
-- Frontend regressions remain managed by `.github/workflows/frontend-interaction.yml`.
-- Resource Health remains managed by its existing workflow and scripts.
-- `scripts/project_status_consistency.py` + `.github/workflows/project-status-consistency.yml` verify that the status catalog count matches `data/resources.json` and that the status date is not older than canonical data updates.
-- `scripts/production_worker_monitor.py` + `.github/workflows/production-worker-monitor.yml` provide recurring production checks. The scheduled run is daily at `02:43 UTC` (`10:43 Asia/Taipei`) and can also be dispatched manually.
-- Production monitoring checks both Worker `/health` endpoints, performs a real semantic AI recommendation regression against the live current catalog, validates returned IDs against catalog authority, and reads the shared click API with GET only.
-- Production monitoring never POSTs a synthetic click and therefore must never increment or reset shared interaction counts.
-- Cloudflare AI recommender deployment remains separate from catalog-only changes.
-- Catalog-only additions do not require an AI Worker redeploy because the recommender reads the current public catalog authority.
-
-## Recent verified ingestion / refresh baseline
-
-- Hermes Bot Kit (`thomasbek3/hermes-bot-kit`) — MIT community Hermes Desktop / Agent plugin kit for chat bubbles, fleet computer viewing/control, bot grouping, task snapshots and texting-style replies.
-- Hermes Telemetry (`nujovich/hermes-telemetry`) — MIT Hermes runtime observability and budget guardrails with token/cost/latency telemetry, SQLite analytics and pre-call budget blocking.
-- Hermes BackSearch Plugin (`NousResearch/hermes-plugin-backsearch`) — MIT point-in-time frozen web/news search for Hermes with crawl-date cutoff semantics; OpenReward API usage is separately prepaid/billed.
-- Hermes Snyk Plugin (`NousResearch/hermes-plugin-snyk`) — MIT Agent Plugins v1 integration of Snyk's first-party MCP server for SAST/SCA/container/IaC/SBOM scans; private scans can send source/dependency data to Snyk Cloud.
-- Hermes Memory Wiki (`NousResearch/hermes-memory-wiki`) — MIT read-only local session-history wiki and Persistent Memory audit dashboard for Hermes; no LLM calls and no memory writes.
-- Open SEO Advisor (`mars-tw/open-seo-advisor-skill`) — Apache-2.0 portable SEO / marketing Agent Skill + CLI with analysis-first defaults, dry-run write paths, optional provider adapters and AI Matrix orchestration.
-- AI Console (`mars-tw/ai-console`) — MIT local-first AI CLI conversation hub and task-dispatch console with skill management, LM Studio continuation, scheduling and Tailscale remote control.
-- Cloudflare Security Audit Skill (`cloudflare/security-audit-skill`) — MIT defensive multi-agent code-audit workflow with coverage ledgers, independent finding verification and strict sandbox requirements.
-- 反詐投資王 (`mars-tw/anti-gambling-trader-tw`) — existing MIT resource re-verified in place; canonical identity preserved, `last_checked` refreshed and official README / user guide / FAQ links added.
-- MiroFish (`666ghj/MiroFish`) — AGPL-3.0 multi-agent swarm-intelligence simulation / prediction sandbox; treat outputs as scenario simulation rather than validated forecasts.
-- TradingAgents (`TauricResearch/TradingAgents`) — Apache-2.0 multi-agent financial research framework with analyst, debate, trader, risk and portfolio-manager roles; research-only, not investment advice.
-- LibreChat (`danny-avila/LibreChat`) — MIT self-hosted multi-model AI chat and agent platform with MCP, Skills, Code Interpreter and multi-user controls.
-- HyperFrames (`heygen-com/hyperframes`) — Apache-2.0 deterministic HTML/CSS/media-to-MP4 framework with agent skills and programmable video workflows.
-- Fincept Terminal (`Fincept-Corporation/FinceptTerminal`) — AGPL-3.0 open financial research terminal; separate proprietary Enterprise edition exists.
-- Agentic Inbox (`cloudflare/agentic-inbox`) — Apache-2.0 Cloudflare Workers email client with Workers AI agent, Durable Objects, R2 and MCP.
-- VoxCPM (`OpenBMB/VoxCPM`) — Apache-2.0 multilingual TTS, Voice Design and consent-sensitive Voice Cloning stack.
-- Flowsint (`reconurge/flowsint`) — Apache-2.0 local-first OSINT graph investigation platform with explicit ethical-use restrictions.
-- Nango (`NangoHQ/nango`) — API integration platform for Auth, Proxy, Sync, Webhooks, Actions and MCP; source-available under Elastic License rather than OSI open source.
-- God's Eye View (`bilawalsidhu/gods-eye-view`) — active MIT-licensed source code for a browser-based 3D spatial-intelligence / OSINT globe; third-party data and model licenses remain separate and are explicitly recorded.
-- GPUtw Skill (`GPUtw-ai/GPUtw-Skill`) — official MIT-licensed GPUtw.ai Agent Skill with Claude Code / Codex / Cursor / Copilot / Gemini CLI support and an official beta MCP server; API keys require least-privilege handling, cloud usage can incur GPUtw charges, and root exec remains opt-in.
-- Jev Trader (`jarrodwatts/jev-trader`) — MIT-licensed Monad/Kuru low-latency AI trading example with dry-run mode, optional TypeSafe Jev inference, post-only limit-order quoting, SSE telemetry and explicit live-key/on-chain risk boundaries.
-- AI Coding Assistant Data Extractor (`kruzovic7/ai-data-extractor`) — MIT-licensed local chat-history exporter that normalizes ten AI coding assistants into JSONL for backup, personal analytics or rights-cleared training workflows; exported data requires secret/privacy review before sharing.
-The following current resources were added or refreshed after the older 50-resource status snapshot and must not be duplicated:
-
-- NESA-SLIDE
-- Reverify
-- Lieflat Charts
-- Addy's Agent Skills
-- BAML
-- GetLayers
-- Curated
-- 60fps
-- Graft
-- Agency Agents
-- Codebase Memory MCP
-- OpenMontage
-- Agent Reach
-- Orca
-- Skills For Real Engineers (`mattpocock/skills`) — **existing resource refreshed in place; original `added_at=2026-08-26` preserved**
-
-`mattpocock/skills` is a particularly important duplicate-prevention example: repository search may fail to surface a minified JSON entry, so the canonical catalog itself must be read/checked before concluding a resource is absent.
-
-## Recent verified maintenance baseline
-
-- **Official Links Batch 6** is complete on `main`; links were materialized by commit `0569cee962b089b16aacda22c9bc5819e21fe91b`, and the temporary ingestion workflow was removed by `f28d1394ea558d76c64faedc19984c97dacb43b6`.
-- The 65-resource Resource Health baseline run `33762653338` completed successfully with no broken 404/410 resources.
-- Project-status consistency CI is now part of the maintained workflow set so resource-count/date drift is caught before being treated as current authority.
-- Production Worker monitoring is now part of the maintained workflow set; click-counter monitoring remains strictly read-only.
-
-## Pending ingestion
-
-- Threads post `@cyesuta.lee / DcWAmV-iScT`: not cataloged because the supplied media URL could not be reliably verified; a screenshot, post text or underlying resource URL is still required.
-- `https://dub.sh/hz9kTZ5`: not cataloged because the stable canonical destination has not been reliably verified.
-
-## Not yet completed
-
-- Wider verified official-link coverage across resources that still have clearly verifiable official docs/demo/release/Skill entry points.
-- Semantic/vector search if catalog size eventually makes current structured search insufficient.
-- Automated metadata-refresh PR generation; Resource Health remains evidence-only today.
-- GitHub Stars/activity synchronization into verified catalog metadata.
-- Account/cloud-synced personal collections beyond browser-local favorites.
-- Backend database migration if/when static JSON + current Workers cease to be sufficient.
-- Dedicated path-based standalone resource routes beyond current query-parameter detail deep links.
-- Local cached copies of every third-party icon.
-- Targeted replacement of remaining low-resolution/generic icon sources when a better verified official mark exists.
-- Final typography/accent-palette refinement.
-
-## Current rules
-
-1. Do not duplicate an existing resource.
-2. Re-read GitHub `main` and check `data/resources.json` immediately before every ingestion write; do not rely only on code search or an older chat/status snapshot.
-3. Do not overwrite verified resource metadata without newer source evidence.
-4. `data/resources.json` is the V0.x resource identity and canonical-primary-URL authority.
-5. `data/resource-links.json` may add verified supplemental public links only; it cannot create aliases as new resource identities or override the canonical primary URL.
-6. A resource may belong to multiple existing categories; add a new category only when the resource genuinely does not fit.
-7. Unknown values remain `unknown` / `null`; do not guess.
-8. User-facing `summary`, `use_cases`, `notes` and supplemental-link descriptions default to Traditional Chinese.
-9. Never publish credentials, API keys, tokens, private account IDs, temporary auth-flow URLs or private dashboard links.
-10. Preserve the current marketplace/card/detail architecture unless an explicit design decision changes it.
-11. Resource cards prefer verified resource-specific icons; category icons are fallback only.
-12. Public GitHub repositories without an explicit verified license must not be described as freely reusable or commercially usable.
-13. AI recommendations may only reference current catalog IDs and remain distinguishable from verified source metadata.
-14. Resource Health is evidence for review, not automatic catalog authority.
-15. Website reconstruction/cloning resources must be framed for authorized migration, recovery, learning or other lawful use, not deceptive impersonation or unauthorized brand copying.
-16. Shared interaction counts are aggregate behavior signals, not unique-user analytics; UI changes must preserve existing counter data and counting semantics.
-17. Frontend interaction/discovery changes must pass the existing browser regression suite before being treated as complete.
-18. Production click-counter monitoring is GET-only. Synthetic monitoring must never POST a click or mutate production interaction counts.
-
-## Next step
-
-Proceed with **Official Links Batch 7** across existing resources that still have clearly verifiable official documentation, demos, release pages or Skill entry points. Before adding any supplemental link, confirm that it belongs to the same canonical resource ID and is not a separate product. Keep icon-quality work opportunistic only. Keep `mistral-studio` under review until a later health observation confirms the transient login-flow HTTP 500 has cleared; do not broaden the expected-variance policy to generic server errors.
+Historical implementation details, old ingestion batches and previous CI run IDs remain available in Git history and Actions rather than being duplicated here.

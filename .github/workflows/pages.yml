@@ -33,13 +33,32 @@ jobs:
         with:
           ref: main
 
+      - name: Prepare static site
+        shell: bash
+        run: |
+          rm -rf _site
+          mkdir -p _site/assets _site/css _site/js _site/data
+          cp index.html .nojekyll _site/
+          cp -R assets/. _site/assets/
+          cp -R css/. _site/css/
+          cp -R js/. _site/js/
+          cp \
+            data/resources.json \
+            data/categories.json \
+            data/resource-icons.json \
+            data/resource-links.json \
+            data/click-config.json \
+            _site/data/
+          echo "Static site files:"
+          find _site -maxdepth 2 -type f | sort
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
