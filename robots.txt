@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qookey109-pixel.github.io/ai-resource-hub/sitemap.xml

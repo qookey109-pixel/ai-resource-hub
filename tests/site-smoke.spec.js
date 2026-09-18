@@ -137,3 +137,19 @@ test('result scrolling respects reduced motion preference', async ({ page }) => 
   await page.locator('.quick-category[data-category=""]').click();
   await expect.poll(() => page.evaluate(() => window.__qookeyLastScrollBehavior)).toBe('smooth');
 });
+
+
+test('SEO discovery files expose the canonical site URL', async ({ request }) => {
+  const robots = await request.get('/robots.txt');
+  expect(robots.ok()).toBeTruthy();
+  const robotsText = await robots.text();
+  expect(robotsText).toContain('User-agent: *');
+  expect(robotsText).toContain('Allow: /');
+  expect(robotsText).toContain('Sitemap: https://qookey109-pixel.github.io/ai-resource-hub/sitemap.xml');
+
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBeTruthy();
+  const sitemapText = await sitemap.text();
+  expect(sitemapText).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
+  expect(sitemapText).toContain('<loc>https://qookey109-pixel.github.io/ai-resource-hub/</loc>');
+});

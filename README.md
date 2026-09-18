@@ -35,4 +35,4 @@ Production frontend 本身不需要 runtime framework；Playwright 只用於開�
 - `docs/CATALOG.md` — catalog schema、icons、supplemental links、ingestion 規則
 - `docs/OPERATIONS.md` — Pages、Workers、Resource Health、CI / deployment
 
-GitHub Pages 只發布瀏覽器需要的 `index.html`、`.nojekyll`、`assets/`、`css/`、`js/` 與必要 public data JSON；tests、scripts、docs 與 Worker source 不會進 production artifact。
+GitHub Pages 只發布瀏覽器需要的 `index.html`、`.nojekyll`、`robots.txt`、`sitemap.xml`、`assets/`、`css/`、`js/` 與必要 public data JSON；tests、scripts、docs 與 Worker source 不會進 production artifact。
