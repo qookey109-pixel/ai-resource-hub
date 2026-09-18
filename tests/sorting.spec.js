@@ -16,6 +16,13 @@ function isMonotonic(values, direction) {
   return values.every((value, index) => index === 0 || (direction === 'desc' ? values[index - 1] >= value : values[index - 1] <= value));
 }
 
+test('sort controls expose group semantics', async ({ page }) => {
+  await page.goto('/');
+  const group = page.locator('.hero-sort-buttons');
+  await expect(group).toHaveAttribute('role', 'group');
+  await expect(group).toHaveAttribute('aria-label', '資源排序');
+});
+
 test.beforeEach(async ({ page }) => {
   await page.route('**/data/click-config.json', async (route) => {
     await route.fulfill({

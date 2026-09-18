@@ -77,15 +77,26 @@ test('legacy hidden filters are removed while quick categories still filter', as
 
   await expect(page.locator('#type-filter, #free-filter, #open-source-filter, #reset-filters, #category-filter')).toHaveCount(0);
 
+  const categoryGroup = page.locator('#quick-categories');
+  await expect(categoryGroup).toHaveAttribute('role', 'group');
+  await expect(categoryGroup).toHaveAttribute('aria-label', '資源分類');
+
+  const allCategory = page.locator('.quick-category[data-category=""]');
   const aiCategory = page.locator('.quick-category[data-category="AI / LLM"]');
+  await expect(allCategory).toHaveAttribute('aria-pressed', 'true');
+  await expect(aiCategory).toHaveAttribute('aria-pressed', 'false');
   await expect(aiCategory).toBeVisible();
   await aiCategory.click();
   await expect(aiCategory).toHaveClass(/active/);
+  await expect(aiCategory).toHaveAttribute('aria-pressed', 'true');
+  await expect(allCategory).toHaveAttribute('aria-pressed', 'false');
 
   const filteredCount = await page.locator('#resource-grid .card').count();
   expect(filteredCount).toBeGreaterThan(0);
   expect(filteredCount).toBeLessThan(resources.length);
 
-  await page.locator('.quick-category[data-category=""]').click();
+  await allCategory.click();
+  await expect(allCategory).toHaveAttribute('aria-pressed', 'true');
+  await expect(aiCategory).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
 });
