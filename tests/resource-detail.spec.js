@@ -125,3 +125,21 @@ test('deprecated status is localized in resource detail', async ({ page }) => {
   await expect(page.locator('#resource-detail-dialog')).toBeVisible();
   await expect(page.locator('.resource-detail-facts')).toContainText('已棄用');
 });
+
+
+test('detail dialog exposes its summary and keeps global search shortcut inactive', async ({ page }) => {
+  await page.goto('/');
+
+  await page.locator('.card-detail-hit').first().click();
+
+  const dialog = page.locator('#resource-detail-dialog');
+  const close = page.locator('.resource-detail-close');
+  await expect(dialog).toHaveAttribute('aria-describedby', 'resource-detail-summary');
+  await expect(page.locator('#resource-detail-summary')).not.toBeEmpty();
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('/');
+  await expect(close).toBeFocused();
+  await expect(page.locator('#search')).not.toBeFocused();
+  await expect(dialog).toBeVisible();
+});
