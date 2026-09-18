@@ -179,3 +179,44 @@ test('category filtering batches direct grid mutations', async ({ page }) => {
   const mutationRecords = await page.evaluate(() => window.__qookeyGridMutationRecords);
   expect(mutationRecords).toBeLessThanOrEqual(2);
 });
+
+test('mobile quick categories keep scroll and compact sizing after cascade cleanup', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const categories = page.locator('#quick-categories');
+  await expect(categories).toBeVisible();
+
+  const mobileStyles = await categories.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      flexWrap: style.flexWrap,
+      overflowX: style.overflowX,
+      overflowY: style.overflowY,
+      whiteSpace: style.whiteSpace
+    };
+  });
+  expect(mobileStyles).toEqual({
+    flexWrap: 'nowrap',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    whiteSpace: 'nowrap'
+  });
+
+  await page.evaluate(() => window.scrollTo(0, 500));
+  await expect(page.locator('body')).toHaveClass(/compact-mode/);
+
+  const compactButton = page.locator('.quick-category').first();
+  const compactStyles = await compactButton.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      minHeight: style.minHeight,
+      fontSize: style.fontSize
+    };
+  });
+  expect(compactStyles).toEqual({
+    minHeight: '29px',
+    fontSize: '10.5px'
+  });
+});
+

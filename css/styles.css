@@ -593,26 +593,14 @@ body.compact-mode .quick-category {
 @media (max-width: 720px) {
   .quick-categories {
     flex-wrap: nowrap;
-    overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    scrollbar-width: none;
-  }
-
-  .quick-categories::-webkit-scrollbar {
-    display: none;
   }
 
   .quick-category {
     min-height: 32px;
     padding: 0 11px;
     font-size: 11px;
-  }
-
-  body.compact-mode .quick-category {
-    min-height: 29px;
-    padding: 0 10px;
-    font-size: 10.5px;
   }
 }
 
