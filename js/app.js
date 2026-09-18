@@ -1,3 +1,5 @@
+import { loadJson } from './catalog-data.js';
+
 const state = {
   resources: [],
   categories: [],
@@ -105,12 +107,6 @@ const synonymGroups = new Map(Object.entries({
 }));
 
 let renderFrame = 0;
-
-async function loadJson(path) {
-  const response = await fetch(path, { cache: 'no-store' });
-  if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
-  return response.json();
-}
 
 function normalise(value) {
   return String(value ?? '')

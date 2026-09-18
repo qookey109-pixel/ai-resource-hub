@@ -1,3 +1,5 @@
+import { loadJson } from './catalog-data.js';
+
 const FAVORITES_STORAGE_KEY = 'qookey-ai-resource-favorites-v1';
 const CLICK_CONFIG_PATH = './data/click-config.json';
 const CLICK_SORTS = new Set(['clicks-desc', 'clicks-asc']);
@@ -49,9 +51,7 @@ function safeCount(value) {
 
 async function loadResourceMap() {
   try {
-    const response = await fetch('./data/resources.json', { cache: 'no-store' });
-    if (!response.ok) return;
-    const doc = await response.json();
+    const doc = await loadJson('./data/resources.json');
     for (const resource of (doc.resources || [])) {
       if (!resource?.id) continue;
       resourceById.set(resource.id, resource);

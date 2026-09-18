@@ -1,3 +1,5 @@
+import { loadJson } from './catalog-data.js';
+
 const dialog = document.querySelector('#resource-detail-dialog');
 const section = dialog?.querySelector('[data-detail-section="links"]');
 const container = dialog?.querySelector('.resource-detail-links');
@@ -16,12 +18,6 @@ if (dialog && section && container) {
 
   let resourcesById = new Map();
   let linksById = {};
-
-  async function loadJson(path) {
-    const response = await fetch(path, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
-    return response.json();
-  }
 
   function normaliseUrl(value) {
     try {

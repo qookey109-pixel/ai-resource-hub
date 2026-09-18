@@ -46,3 +46,27 @@ test('sticky compact search becomes keyboard-accessible after scrolling', async 
   await expect(wrap).toHaveAttribute('aria-hidden', 'false');
   await expect(input).toHaveAttribute('tabindex', '0');
 });
+
+
+test('shared catalog registries are fetched once per page', async ({ page }) => {
+  const targets = new Set([
+    '/data/resources.json',
+    '/data/categories.json',
+    '/data/resource-icons.json',
+    '/data/resource-links.json'
+  ]);
+  const counts = new Map([...targets].map((path) => [path, 0]));
+
+  page.on('request', (request) => {
+    const path = new URL(request.url()).pathname;
+    if (targets.has(path)) counts.set(path, counts.get(path) + 1);
+  });
+
+  await page.goto('/');
+  await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
+  await page.waitForTimeout(100);
+
+  for (const path of targets) {
+    expect(counts.get(path), `${path} should be fetched once`).toBe(1);
+  }
+});
