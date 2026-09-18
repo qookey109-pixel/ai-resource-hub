@@ -594,6 +594,7 @@ body.compact-mode .quick-category {
   .quick-categories {
     flex-wrap: nowrap;
     overflow-y: hidden;
+    white-space: nowrap;
   }
 
   .quick-category {
