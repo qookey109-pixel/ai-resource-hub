@@ -18,7 +18,7 @@ test('catalog renders canonical resources without runtime errors', async ({ page
   await page.goto('/');
 
   await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
-  await expect(page.locator('#result-count')).toHaveText(String(resources.length));
+  await expect(page.locator('#resource-search-status')).toContainText(`目前顯示 ${resources.length} 個資源`);
   await expect(page.locator('link[rel="stylesheet"]')).toHaveCount(1);
   expect(pageErrors).toEqual([]);
 });
@@ -69,4 +69,23 @@ test('shared catalog registries are fetched once per page', async ({ page }) => 
   for (const path of targets) {
     expect(counts.get(path), `${path} should be fetched once`).toBe(1);
   }
+});
+
+
+test('legacy hidden filters are removed while quick categories still filter', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('#type-filter, #free-filter, #open-source-filter, #reset-filters, #category-filter')).toHaveCount(0);
+
+  const aiCategory = page.locator('.quick-category[data-category="AI / LLM"]');
+  await expect(aiCategory).toBeVisible();
+  await aiCategory.click();
+  await expect(aiCategory).toHaveClass(/active/);
+
+  const filteredCount = await page.locator('#resource-grid .card').count();
+  expect(filteredCount).toBeGreaterThan(0);
+  expect(filteredCount).toBeLessThan(resources.length);
+
+  await page.locator('.quick-category[data-category=""]').click();
+  await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
 });
