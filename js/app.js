@@ -102,6 +102,7 @@ const synonymGroups = new Map(Object.entries({
   虛擬貨幣: ['虛擬貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
   數位貨幣: ['數位貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
   資安: ['資安', 'security', 'reverse', '逆向'],
+  掃描: ['掃描', 'scan', 'scanner', 'security', 'sast', 'sca'],
   逆向: ['逆向', 'reverse engineering', 'security', '資安'],
   部署: ['部署', 'deployment', 'cloud', '雲端'],
   雲端: ['雲端', 'cloud', 'deployment'],
