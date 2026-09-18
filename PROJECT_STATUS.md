@@ -9,7 +9,7 @@ Status date: 2026-09-18 (Asia/Taipei)
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
 - Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting + production Worker monitoring + status consistency CI**
-- Current canonical catalog size: **81 resources**
+- Current canonical catalog size: **86 resources**
 
 Repository `main` and the canonical data files below are authoritative. Historical commit/run details remain available in Git history and GitHub Actions; this file is intentionally maintained as the concise current operating baseline rather than an exhaustive changelog.
 
@@ -29,7 +29,7 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 ### Catalog and discovery
 
-- 81 canonical resources are currently present in `data/resources.json`.
+- 86 canonical resources are currently present in `data/resources.json`.
 - Multi-category classification is enabled.
 - User-facing summaries, use cases, notes and supplemental-link descriptions are Traditional Chinese by default.
 - Unknown pricing/license/status fields remain `unknown` / `null` instead of being guessed.
@@ -103,6 +103,11 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 ## Recent verified ingestion / refresh baseline
 
+- Hermes Bot Kit (`thomasbek3/hermes-bot-kit`) — MIT community Hermes Desktop / Agent plugin kit for chat bubbles, fleet computer viewing/control, bot grouping, task snapshots and texting-style replies.
+- Hermes Telemetry (`nujovich/hermes-telemetry`) — MIT Hermes runtime observability and budget guardrails with token/cost/latency telemetry, SQLite analytics and pre-call budget blocking.
+- Hermes BackSearch Plugin (`NousResearch/hermes-plugin-backsearch`) — MIT point-in-time frozen web/news search for Hermes with crawl-date cutoff semantics; OpenReward API usage is separately prepaid/billed.
+- Hermes Snyk Plugin (`NousResearch/hermes-plugin-snyk`) — MIT Agent Plugins v1 integration of Snyk's first-party MCP server for SAST/SCA/container/IaC/SBOM scans; private scans can send source/dependency data to Snyk Cloud.
+- Hermes Memory Wiki (`NousResearch/hermes-memory-wiki`) — MIT read-only local session-history wiki and Persistent Memory audit dashboard for Hermes; no LLM calls and no memory writes.
 - Open SEO Advisor (`mars-tw/open-seo-advisor-skill`) — Apache-2.0 portable SEO / marketing Agent Skill + CLI with analysis-first defaults, dry-run write paths, optional provider adapters and AI Matrix orchestration.
 - AI Console (`mars-tw/ai-console`) — MIT local-first AI CLI conversation hub and task-dispatch console with skill management, LM Studio continuation, scheduling and Tailscale remote control.
 - Cloudflare Security Audit Skill (`cloudflare/security-audit-skill`) — MIT defensive multi-agent code-audit workflow with coverage ledgers, independent finding verification and strict sandbox requirements.

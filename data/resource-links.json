@@ -1117,6 +1117,100 @@
         "url": "https://github.com/cloudflare/security-audit-skill/blob/main/LICENSE",
         "description": "官方 MIT License。"
       }
+    ],
+    "thomasbek3-hermes-bot-kit": [
+      {
+        "label": "Hermes Bot Kit README",
+        "kind": "documentation",
+        "url": "https://github.com/thomasbek3/hermes-bot-kit/blob/master/README.md",
+        "description": "官方功能、五個插件、需求與安裝說明。"
+      },
+      {
+        "label": "Hermes Bot Kit Security",
+        "kind": "documentation",
+        "url": "https://github.com/thomasbek3/hermes-bot-kit/blob/master/SECURITY.md",
+        "description": "專案安全政策與遠端電腦相關安全指引入口。"
+      },
+      {
+        "label": "Hermes Bot Kit License",
+        "kind": "documentation",
+        "url": "https://github.com/thomasbek3/hermes-bot-kit/blob/master/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "nujovich-hermes-telemetry": [
+      {
+        "label": "Hermes Telemetry README",
+        "kind": "documentation",
+        "url": "https://github.com/nujovich/hermes-telemetry/blob/main/README.md",
+        "description": "官方 observability、budget enforcement、Dashboard 與限制說明。"
+      },
+      {
+        "label": "Hermes Telemetry Changelog",
+        "kind": "documentation",
+        "url": "https://github.com/nujovich/hermes-telemetry/blob/main/CHANGELOG.md",
+        "description": "官方版本變更紀錄。"
+      },
+      {
+        "label": "Hermes Telemetry License",
+        "kind": "documentation",
+        "url": "https://github.com/nujovich/hermes-telemetry/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "nousresearch-hermes-plugin-backsearch": [
+      {
+        "label": "Hermes BackSearch README",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-plugin-backsearch/blob/main/README.md",
+        "description": "官方 point-in-time archive、as_of 語意、安裝與計費邊界。"
+      },
+      {
+        "label": "BackSearch by General Reasoning",
+        "kind": "website",
+        "url": "https://www.gr.inc/releases/introducing-backsearch",
+        "description": "README 引用的 BackSearch 服務官方介紹。"
+      },
+      {
+        "label": "Hermes BackSearch License",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-plugin-backsearch/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "nousresearch-hermes-plugin-snyk": [
+      {
+        "label": "Hermes Snyk Plugin README",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-plugin-snyk/blob/main/README.md",
+        "description": "官方 Snyk MCP、13 個工具、隱私與版本 pin 說明。"
+      },
+      {
+        "label": "Snyk",
+        "kind": "website",
+        "url": "https://snyk.io/",
+        "description": "插件所使用的 Snyk 官方安全掃描服務。"
+      },
+      {
+        "label": "Hermes Snyk Plugin License",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-plugin-snyk/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "nousresearch-hermes-memory-wiki": [
+      {
+        "label": "Hermes Memory Wiki README",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-memory-wiki/blob/main/README.md",
+        "description": "官方 Session Wiki、Persistent Memory audit、routes 與安裝說明。"
+      },
+      {
+        "label": "Hermes Memory Wiki License",
+        "kind": "documentation",
+        "url": "https://github.com/NousResearch/hermes-memory-wiki/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
     ]
   }
 }
