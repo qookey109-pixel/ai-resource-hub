@@ -153,3 +153,29 @@ test('SEO discovery files expose the canonical site URL', async ({ request }) =>
   expect(sitemapText).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
   expect(sitemapText).toContain('<loc>https://qookey109-pixel.github.io/ai-resource-hub/</loc>');
 });
+
+
+test('category filtering batches direct grid mutations', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
+
+  await page.evaluate(() => {
+    const grid = document.querySelector('#resource-grid');
+    window.__qookeyGridMutationRecords = 0;
+    window.__qookeyGridMutationObserver = new MutationObserver((records) => {
+      window.__qookeyGridMutationRecords += records.filter((record) => record.type === 'childList').length;
+    });
+    window.__qookeyGridMutationObserver.observe(grid, { childList: true });
+  });
+
+  await page.locator('.quick-category[data-category="AI / LLM"]').click();
+  await expect(page.locator('#resource-grid .card').first()).toBeVisible();
+
+  const filteredCount = await page.locator('#resource-grid .card').count();
+  expect(filteredCount).toBeGreaterThan(0);
+  expect(filteredCount).toBeLessThan(resources.length);
+
+  await expect.poll(() => page.evaluate(() => window.__qookeyGridMutationRecords)).toBeGreaterThan(0);
+  const mutationRecords = await page.evaluate(() => window.__qookeyGridMutationRecords);
+  expect(mutationRecords).toBeLessThanOrEqual(2);
+});
