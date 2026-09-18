@@ -510,6 +510,38 @@ def run(args: argparse.Namespace) -> int:
         return 1
 
     print(f"Catalog validation passed: {len(catalog['resources'])} resources")
+
+    icon_registry = icons.get("icons") if isinstance(icons.get("icons"), dict) else {}
+    icon_sources = {
+        resource_id: icon.get("source", "")
+        for resource_id, icon in icon_registry.items()
+        if isinstance(icon, dict)
+    }
+    official_icon_ids = sorted(
+        resource_id
+        for resource_id, source in icon_sources.items()
+        if source.startswith("official-")
+    )
+    github_avatar_ids = sorted(
+        resource_id
+        for resource_id, source in icon_sources.items()
+        if source.startswith("github-owner-avatar")
+        or source.startswith("github-organization-avatar")
+    )
+    fallback_icon_ids = sorted(
+        resource_id
+        for resource_id, source in icon_sources.items()
+        if "fallback" in source
+    )
+    print(
+        "Icon registry sources: "
+        f"official-labelled={len(official_icon_ids)}/{len(icon_sources)}, "
+        f"github-avatar={len(github_avatar_ids)}, "
+        f"fallback-labelled={len(fallback_icon_ids)}"
+    )
+    if fallback_icon_ids:
+        print("Fallback-labelled icons: " + ", ".join(fallback_icon_ids))
+
     if args.validate_only:
         return 0
 
