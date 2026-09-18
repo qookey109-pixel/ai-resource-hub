@@ -159,8 +159,8 @@
       "source": "domain-favicon-128"
     },
     "vercel-labs-vgpu": {
-      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://vgpu.sh",
-      "source": "official-docs-domain-favicon-128"
+      "url": "https://raw.githubusercontent.com/vercel-labs/vgpu/canary/apps/docs/app/favicon.ico",
+      "source": "official-repository-docs-favicon-ico"
     },
     "sentelabs-openexecutive": {
       "url": "https://raw.githubusercontent.com/SenteLabsAI/OpenExecutive/main/docs/assets/chat-avatar.svg",
