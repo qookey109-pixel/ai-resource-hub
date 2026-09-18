@@ -146,3 +146,27 @@ test('common Taiwan search intents discover existing catalog resources', async (
   await search.fill('智能體');
   await expect(page.locator('.card', { hasText: 'Agent-Native' })).toHaveCount(1);
 });
+
+
+test('natural Traditional Chinese search phrases are tokenized by intent', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  const cases = [
+    ['我要做流程圖', 'Archify'],
+    ['幫我找流程圖工具', 'Archify'],
+    ['我想做網頁設計', 'GetLayers'],
+    ['找 AI 代理人工具', 'Agent-Native'],
+    ['有沒有智能體資源', 'Agent-Native'],
+    ['免費網頁設計資源', 'GetLayers'],
+    ['我想找虛擬貨幣交易工具', 'TradingAgents'],
+    ['幫我找資安掃描工具', 'Hermes Snyk Plugin'],
+    ['我要做簡報', 'NESA-SLIDE'],
+    ['找免費語音工具', 'ElevenLabs']
+  ];
+
+  for (const [query, expectedResource] of cases) {
+    await search.fill(query);
+    await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+  }
+});
