@@ -167,19 +167,6 @@ body.compact-mode .compact-search-wrap { display: block; }
   transform: translateY(-50%);
   color: #9b9b96;
 }
-.compact-search-wrap button {
-  position: absolute;
-  right: 8px;
-  top: 7px;
-  width: 30px;
-  height: 30px;
-  border: 0;
-  border-radius: 9px;
-  background: #f1f1ef;
-  color: #aaa;
-  cursor: pointer;
-}
-
 .quick-categories {
   display: flex;
   gap: 8px;
