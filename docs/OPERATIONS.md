@@ -47,13 +47,14 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.2`
+- version: `0.3.3`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
 - catalog source: public GitHub `main` `data/resources.json`
 - output IDs are validated against the catalog
 - deterministic fallback is retained for model / intent failures
+- AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
 
 The Worker is deployed and monitored, but normal website browsing does not depend on it.
 
