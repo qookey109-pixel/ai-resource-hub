@@ -313,6 +313,18 @@
     "nangohq-nango": {
       "url": "https://raw.githubusercontent.com/NangoHQ/nango/master/assets/nango-logo.png",
       "source": "official-repository-project-logo"
+    },
+    "mars-tw-open-seo-advisor-skill": {
+      "url": "https://github.com/mars-tw.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "mars-tw-ai-console": {
+      "url": "https://raw.githubusercontent.com/mars-tw/ai-console/main/docs/logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "cloudflare-security-audit-skill": {
+      "url": "https://github.com/cloudflare.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
     }
   }
 }
