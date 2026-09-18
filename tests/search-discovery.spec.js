@@ -21,3 +21,15 @@ test('verified secondary-link guide labels participate in discovery', async ({ p
   await expect(archifyCard).toHaveCount(1);
   await expect(archifyCard.locator('.name')).toHaveText('Archify');
 });
+
+
+test('exact and prefix name searches stay top-ranked', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  await search.fill('TradingAgents');
+  await expect(page.locator('.card').first().locator('.name')).toHaveText('TradingAgents');
+
+  await search.fill('Hermes Back');
+  await expect(page.locator('.card').first().locator('.name')).toHaveText('Hermes BackSearch Plugin');
+});

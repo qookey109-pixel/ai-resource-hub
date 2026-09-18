@@ -1211,6 +1211,156 @@
         "url": "https://github.com/NousResearch/hermes-memory-wiki/blob/main/LICENSE",
         "description": "官方 MIT License。"
       }
+    ],
+    "ai-website-cloner-template": [
+      {
+        "label": "AI Website Cloner README",
+        "kind": "documentation",
+        "url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/README.md",
+        "description": "官方 Quick Start、支援平台、使用流程與 Demo 說明。"
+      },
+      {
+        "label": "Use this template",
+        "kind": "website",
+        "url": "https://github.com/JCodesMore/ai-website-cloner-template/generate",
+        "description": "GitHub 官方 Template 建立入口，可直接建立自己的副本。"
+      },
+      {
+        "label": "AI Website Cloner Demo",
+        "kind": "demo",
+        "url": "https://youtu.be/O669pVZ_qr0",
+        "description": "README 連結的官方示範影片。"
+      },
+      {
+        "label": "AI Website Cloner Security",
+        "kind": "documentation",
+        "url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/SECURITY.md",
+        "description": "官方安全政策與漏洞回報方式。"
+      },
+      {
+        "label": "AI Website Cloner License",
+        "kind": "documentation",
+        "url": "https://github.com/JCodesMore/ai-website-cloner-template/blob/master/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "legal-skills-open": [
+      {
+        "label": "Legal Skills README",
+        "kind": "documentation",
+        "url": "https://github.com/ThomasMoreAI/legal-skills-open/blob/main/README.md",
+        "description": "官方 3,500+ legal skills、jurisdiction、practice plugin 與使用方式總覽。"
+      },
+      {
+        "label": "Legal Skills Contributing",
+        "kind": "documentation",
+        "url": "https://github.com/ThomasMoreAI/legal-skills-open/blob/main/CONTRIBUTING.md",
+        "description": "官方貢獻流程與技能格式規則。"
+      },
+      {
+        "label": "Legal Skills License",
+        "kind": "documentation",
+        "url": "https://github.com/ThomasMoreAI/legal-skills-open/blob/main/LICENSE",
+        "description": "官方 Apache-2.0 License。"
+      }
+    ],
+    "ai-drama-pound": [
+      {
+        "label": "AI 短劇編劇 README",
+        "kind": "documentation",
+        "url": "https://github.com/POUND0423/AI-drama-pound/blob/main/README.md",
+        "description": "官方安裝、使用方法、功能邊界與驗證狀態。"
+      },
+      {
+        "label": "AI 短劇編劇 SKILL",
+        "kind": "documentation",
+        "url": "https://github.com/POUND0423/AI-drama-pound/blob/main/skill-src/ai-short-drama-screenwriter/SKILL.md",
+        "description": "正式 Agent Skill 定義、觸發範圍與輸出契約。"
+      },
+      {
+        "label": "AI 短劇編劇 v0.1.0",
+        "kind": "download",
+        "url": "https://github.com/POUND0423/AI-drama-pound/releases/tag/v0.1.0",
+        "description": "官方 GitHub Release v0.1.0。"
+      },
+      {
+        "label": "AI 短劇編劇 License",
+        "kind": "documentation",
+        "url": "https://github.com/POUND0423/AI-drama-pound/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "sirius-walkthrough-me": [
+      {
+        "label": "Sirius Skills README",
+        "kind": "documentation",
+        "url": "https://github.com/sirius-cc-wu/sirius-skills/blob/main/README.md",
+        "description": "官方 skills collection、安裝方式與 profiles 說明。"
+      },
+      {
+        "label": "Walkthrough Me SKILL",
+        "kind": "documentation",
+        "url": "https://github.com/sirius-cc-wu/sirius-skills/blob/main/skills/walkthrough-me/SKILL.md",
+        "description": "Walkthrough Me 正式 Skill 定義與 bounded change walkthrough 規則。"
+      },
+      {
+        "label": "Sirius Prompt Guide",
+        "kind": "documentation",
+        "url": "https://github.com/sirius-cc-wu/sirius-skills/blob/main/PROMPT_GUIDE.md",
+        "description": "官方 prompt 使用指南與 skills 操作方式。"
+      }
+    ],
+    "voltagent-awesome-agent-skills": [
+      {
+        "label": "Awesome Agent Skills README",
+        "kind": "documentation",
+        "url": "https://github.com/VoltAgent/awesome-agent-skills/blob/main/README.md",
+        "description": "官方 Agent Skills 清單、相容工具與收錄說明。"
+      },
+      {
+        "label": "Awesome Agent Skills Contributing",
+        "kind": "documentation",
+        "url": "https://github.com/VoltAgent/awesome-agent-skills/blob/main/CONTRIBUTING.md",
+        "description": "官方提交與維護規則。"
+      },
+      {
+        "label": "Awesome Agent Skills License",
+        "kind": "documentation",
+        "url": "https://github.com/VoltAgent/awesome-agent-skills/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "sentelabs-openexecutive": [
+      {
+        "label": "OpenExecutive README",
+        "kind": "documentation",
+        "url": "https://github.com/SenteLabsAI/OpenExecutive/blob/main/README.md",
+        "description": "官方功能、八個 specialist agents、整合與部署概覽。"
+      },
+      {
+        "label": "OpenExecutive Website",
+        "kind": "website",
+        "url": "https://openexecutive.ai",
+        "description": "README 公開的 OpenExecutive 官方網站。"
+      },
+      {
+        "label": "OpenExecutive Demo",
+        "kind": "demo",
+        "url": "https://youtu.be/O_g97xxVTMk",
+        "description": "README 連結的官方產品 walkthrough。"
+      },
+      {
+        "label": "OpenExecutive Security",
+        "kind": "documentation",
+        "url": "https://github.com/SenteLabsAI/OpenExecutive/blob/main/SECURITY.md",
+        "description": "官方安全政策、漏洞回報方式與目前存取控制邊界。"
+      },
+      {
+        "label": "OpenExecutive License",
+        "kind": "documentation",
+        "url": "https://github.com/SenteLabsAI/OpenExecutive/blob/main/LICENSE",
+        "description": "官方 Apache-2.0 License。"
+      }
     ]
   }
 }

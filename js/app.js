@@ -208,7 +208,9 @@ function scoreResource(resource, query) {
   let score = 0;
   let matchedTokens = 0;
 
-  if (doc.name.includes(phrase)) score += 24;
+  if (doc.name === phrase) score += 48;
+  else if (doc.name.startsWith(phrase)) score += 34;
+  else if (doc.name.includes(phrase)) score += 24;
   else if (doc.all.includes(phrase)) score += 8;
 
   for (const token of tokens) {
