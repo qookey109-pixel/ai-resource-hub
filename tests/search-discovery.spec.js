@@ -33,3 +33,19 @@ test('exact and prefix name searches stay top-ranked', async ({ page }) => {
   await search.fill('Hermes Back');
   await expect(page.locator('.card').first().locator('.name')).toHaveText('Hermes BackSearch Plugin');
 });
+
+
+test('search result changes are announced through a live status', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  const status = page.locator('#resource-search-status');
+
+  await expect(status).toContainText('目前顯示 86 個資源');
+
+  await search.fill('Proof Lab');
+  await expect(status).toHaveText('目前顯示 1 個資源');
+
+  await search.fill('no-such-qookey-resource-zzzz');
+  await expect(status).toHaveText('找不到符合目前條件的資源');
+});
