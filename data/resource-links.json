@@ -766,6 +766,24 @@
         "kind": "demo",
         "url": "https://mars-tw.github.io/anti-gambling-trader-tw/",
         "description": "Repository metadata 指定的官方 GitHub Pages 入口，可快速查看專案功能與使用方式。"
+      },
+      {
+        "label": "反詐投資王 README",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/anti-gambling-trader-tw/blob/main/README.md",
+        "description": "官方功能、統計方法、反詐流程、自動化交易腳架與安全限制說明。"
+      },
+      {
+        "label": "反詐投資王完整指南",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/anti-gambling-trader-tw/blob/main/docs/user-guide.md",
+        "description": "官方資料格式、Fail-closed 規則、分析指標與操作流程。"
+      },
+      {
+        "label": "反詐投資王 FAQ",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/anti-gambling-trader-tw/blob/main/docs/faq.md",
+        "description": "官方常見問題與投資反詐查核說明。"
       }
     ],
     "bilawalsidhu-gods-eye-view": [
@@ -1026,6 +1044,78 @@
         "kind": "documentation",
         "url": "https://github.com/NangoHQ/nango/blob/master/LICENSE",
         "description": "官方 Elastic License。"
+      }
+    ],
+    "mars-tw-open-seo-advisor-skill": [
+      {
+        "label": "Open SEO Advisor README",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/open-seo-advisor-skill/blob/main/README.md",
+        "description": "官方能力總覽、七大模式、AI Matrix、安裝與安全邊界。"
+      },
+      {
+        "label": "Open SEO Advisor SKILL",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/open-seo-advisor-skill/blob/main/SKILL.md",
+        "description": "正式 Agent Skill 規格、triggers、模式路由與目前實作狀態。"
+      },
+      {
+        "label": "Open SEO Advisor Quickstart",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/open-seo-advisor-skill/blob/main/QUICKSTART.md",
+        "description": "官方新手安裝與快速開始指南。"
+      },
+      {
+        "label": "Open SEO Advisor Capability Map",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/open-seo-advisor-skill/blob/main/docs/capability-map.md",
+        "description": "官方能力地圖，整理 SEO、內容、廣告、成長行銷與電商功能。"
+      }
+    ],
+    "mars-tw-ai-console": [
+      {
+        "label": "AI Console Releases",
+        "kind": "download",
+        "url": "https://github.com/mars-tw/ai-console/releases",
+        "description": "官方 Windows 免安裝版與原始碼發行頁。"
+      },
+      {
+        "label": "AI Console README",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/ai-console/blob/main/README.md",
+        "description": "官方功能、安裝、對話索引、技能管理、地端續聊與派工安全說明。"
+      },
+      {
+        "label": "AI Console License",
+        "kind": "documentation",
+        "url": "https://github.com/mars-tw/ai-console/blob/main/LICENSE",
+        "description": "官方 MIT License。"
+      }
+    ],
+    "cloudflare-security-audit-skill": [
+      {
+        "label": "Security Audit Skill README",
+        "kind": "documentation",
+        "url": "https://github.com/cloudflare/security-audit-skill/blob/main/README.md",
+        "description": "官方六階段審計流程、安裝方式、Requirements 與 Design Principles。"
+      },
+      {
+        "label": "Security Audit SKILL",
+        "kind": "documentation",
+        "url": "https://github.com/cloudflare/security-audit-skill/blob/main/skills/security-audit/SKILL.md",
+        "description": "正式 Coding Agent Skill 規格、Guidance / Full Audit 模式與 sandbox 安全規則。"
+      },
+      {
+        "label": "Build your own vulnerability harness",
+        "kind": "documentation",
+        "url": "https://blog.cloudflare.com/build-your-own-vulnerability-harness/",
+        "description": "Cloudflare 官方文章，說明由此 Skill 發展出的 vulnerability discovery harness。"
+      },
+      {
+        "label": "Security Audit Skill License",
+        "kind": "documentation",
+        "url": "https://github.com/cloudflare/security-audit-skill/blob/main/LICENSE",
+        "description": "官方 MIT License。"
       }
     ]
   }
