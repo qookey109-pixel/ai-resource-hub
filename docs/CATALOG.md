@@ -88,7 +88,7 @@ Rules:
 
 Validators:
 
-- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates and 1:1 icon coverage
+- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates, 1:1 icon coverage, and non-blocking icon-source quality metrics
 - `scripts/resource_links_validate.py` — supplemental-link structure and resource references
 
 ## Ingestion checklist
