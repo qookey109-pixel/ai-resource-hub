@@ -47,13 +47,14 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.4`
+- version: `0.3.5`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
 - catalog source: public GitHub `main` `data/resources.json`
 - output IDs are validated against the catalog
 - deterministic fallback is retained for model / intent failures
+- model JSON parsing tolerates trailing text after the first complete JSON object, and workflow-scope enum variants are normalized before ranking
 - Workers AI inference uses `rejectIfBusy` so capacity pressure fails fast into deterministic fallback instead of waiting in the provider queue
 - AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
 
@@ -109,6 +110,7 @@ Checks:
 ## Deployment boundaries
 
 - Worker deployments require Cloudflare credentials from repository secrets.
+- deployment health verification waits for the exact package/runtime version before semantic probes, avoiding propagation races against the previous Worker version.
 - Never store Cloudflare tokens or provider keys in frontend code or catalog data.
 - Deployment verification must be bounded by job/request timeouts.
 - Endpoint config should only change when the resolved endpoint actually changes.
