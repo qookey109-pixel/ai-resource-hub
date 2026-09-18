@@ -47,7 +47,7 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.2`
+- version: `0.3.3`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
