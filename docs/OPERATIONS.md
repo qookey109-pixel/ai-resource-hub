@@ -106,7 +106,8 @@ Checks:
 - AI recommendation contract
 - recommendation IDs resolve to current catalog
 - semantic fixture returns an expected resource
-- degraded AI mode evidence records intent mode, recommendation latency, and bounded diagnostics without turning a semantically correct fallback into a false outage
+- semantic deployment gates accept equivalent structured evidence for constraints instead of requiring one exact model field when the meaning is preserved
+- degraded AI mode evidence records intent mode, Worker-native stage timings, recommendation latency, and bounded diagnostics without turning a semantically correct fallback into a false outage
 
 ## Deployment boundaries
 
