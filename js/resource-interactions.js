@@ -11,8 +11,9 @@ let resourceById = new Map();
 let clickCounts = {};
 let clickCountsLoaded = false;
 let clickEndpoint = '';
-let applying = false;
 let scheduled = false;
+let sortControlsReady = false;
+let gridObserver = null;
 let dateSortMode = 'newest';
 let clickSortMode = 'clicks-desc';
 
@@ -58,7 +59,7 @@ async function loadResourceMap() {
       if (resource.url) resourceIdByUrl.set(normaliseUrl(resource.url), resource.id);
     }
   } catch (error) {
-    console.warn('Favorite resource map unavailable', error);
+    console.warn('Resource interaction map unavailable', error);
   }
 }
 
@@ -179,35 +180,16 @@ function updateSortButtons(sort) {
   clicksButton.setAttribute('aria-label', `點擊次數：${clickSortMode === 'clicks-desc' ? '多到少' : '少到多'}`);
 }
 
-function setupSortOptions() {
+function setupSortControls() {
   const sort = document.querySelector('#sort-filter');
   const addedButton = document.querySelector('#sort-added-button');
   const clicksButton = document.querySelector('#sort-clicks-button');
-  if (!sort || !addedButton || !clicksButton || sort.dataset.qookeySortV3 === 'true') return;
+  if (!sort || !addedButton || !clicksButton || sortControlsReady) return;
 
-  const previousValue = DATE_SORTS.has(sort.value) || CLICK_SORTS.has(sort.value) ? sort.value : 'newest';
-  const options = [
-    ['newest', '加入日期：新 → 舊'],
-    ['oldest', '加入日期：舊 → 新'],
-    ['clicks-desc', '點擊次數：多 → 少'],
-    ['clicks-asc', '點擊次數：少 → 多']
-  ];
-
-  sort.replaceChildren(...options.map(([value, label]) => {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = label;
-    return option;
-  }));
-  sort.value = options.some(([value]) => value === previousValue) ? previousValue : 'newest';
+  if (!DATE_SORTS.has(sort.value) && !CLICK_SORTS.has(sort.value)) sort.value = 'newest';
   dateSortMode = DATE_SORTS.has(sort.value) ? sort.value : 'newest';
   clickSortMode = CLICK_SORTS.has(sort.value) ? sort.value : 'clicks-desc';
-  sort.dataset.qookeySortV3 = 'true';
-
-  sort.addEventListener('change', () => {
-    updateSortButtons(sort);
-    scheduleDecorateAndSort();
-  });
+  sortControlsReady = true;
 
   addedButton.addEventListener('click', () => {
     if (DATE_SORTS.has(sort.value)) {
@@ -278,9 +260,9 @@ function updateSortAvailability(searching) {
 }
 
 function decorateAndSort() {
-  setupSortOptions();
+  setupSortControls();
   const grid = document.querySelector('#resource-grid');
-  if (!grid || applying) return;
+  if (!grid) return;
 
   const searching = currentSearchValue().length > 0;
   updateSortAvailability(searching);
@@ -318,11 +300,11 @@ function decorateAndSort() {
   const orderChanged = entries.some((entry, index) => entry.card !== cards[index]);
   if (!orderChanged) return;
 
-  applying = true;
+  gridObserver?.disconnect();
   try {
     for (const entry of entries) grid.append(entry.card);
   } finally {
-    applying = false;
+    gridObserver?.observe(grid, { childList: true });
   }
 }
 
@@ -415,20 +397,18 @@ function initResourceScrollOffset() {
   }
 }
 
-async function initFavorites() {
-  setupSortOptions();
+async function initResourceInteractions() {
+  setupSortControls();
   bindClickTracking();
   await loadResourceMap();
   const grid = document.querySelector('#resource-grid');
   if (!grid) return;
 
-  const observer = new MutationObserver(() => {
-    if (!applying) scheduleDecorateAndSort();
-  });
-  observer.observe(grid, { childList: true });
+  gridObserver = new MutationObserver(scheduleDecorateAndSort);
+  gridObserver.observe(grid, { childList: true });
   scheduleDecorateAndSort();
   void loadClickCounts();
 }
 
 initResourceScrollOffset();
-initFavorites();
+initResourceInteractions();

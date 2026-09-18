@@ -100,3 +100,13 @@ test('click-count button toggles descending and ascending', async ({ page }) => 
   await expect(clicks.locator('[data-sort-direction]')).toHaveText('少→多');
   await expect.poll(async () => isMonotonic(await cardNumbers(page, 'clickCount'), 'asc')).toBe(true);
 });
+
+
+test('hidden sort state keeps the HTML option contract', async ({ page }) => {
+  const values = await page.locator('#sort-filter option').evaluateAll((options) =>
+    options.map((option) => option.value)
+  );
+
+  expect(values).toEqual(['newest', 'oldest', 'clicks-desc', 'clicks-asc']);
+  await expect(page.locator('#sort-filter')).not.toHaveAttribute('data-qookey-sort-v3');
+});
