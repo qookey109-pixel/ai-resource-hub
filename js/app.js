@@ -11,21 +11,12 @@ const state = {
 const els = {
   search: document.querySelector('#search'),
   compactSearch: document.querySelector('#compact-search'),
-  category: document.querySelector('#category-filter'),
-  type: document.querySelector('#type-filter'),
-  free: document.querySelector('#free-filter'),
-  openSource: document.querySelector('#open-source-filter'),
-  reset: document.querySelector('#reset-filters'),
   sort: document.querySelector('#sort-filter'),
   quickCategories: document.querySelector('#quick-categories'),
   grid: document.querySelector('#resource-grid'),
   empty: document.querySelector('#empty-state'),
-  count: document.querySelector('#result-count'),
   searchStatus: document.querySelector('#resource-search-status'),
   detailDialog: document.querySelector('#resource-detail-dialog'),
-  totalStat: document.querySelector('#total-stat'),
-  categoryStat: document.querySelector('#category-stat'),
-  openStat: document.querySelector('#open-stat'),
   template: document.querySelector('#resource-template')
 };
 
@@ -110,6 +101,7 @@ const synonymGroups = new Map(Object.entries({
 
 let renderFrame = 0;
 let compactModeActive = null;
+let selectedCategory = '';
 
 function normalise(value) {
   return String(value ?? '')
@@ -264,23 +256,11 @@ function scoreResource(resource, query) {
   return score;
 }
 
-function isFree(resource) {
-  return ['free', 'freemium', 'open-source'].includes(resource.pricing) || resource.open_source === true;
-}
-
-function matchesSecondaryFilters(resource) {
-  const category = els.category.value;
-  const type = els.type.value;
-  if (category && !(resource.categories ?? []).includes(category)) return false;
-  if (type && resource.type !== type) return false;
-  if (els.free.checked && !isFree(resource)) return false;
-  if (els.openSource.checked && resource.open_source !== true) return false;
-  return true;
-}
-
 function filteredResources() {
   const query = normalise(els.search.value);
-  let resources = state.resources.filter(matchesSecondaryFilters);
+  let resources = selectedCategory
+    ? state.resources.filter((resource) => (resource.categories ?? []).includes(selectedCategory))
+    : [...state.resources];
 
   if (query) {
     resources = resources
@@ -345,7 +325,6 @@ function renderResourceIcon(iconEl, resource) {
 function render() {
   const resources = filteredResources();
   els.grid.replaceChildren();
-  els.count.textContent = String(resources.length);
   els.empty.hidden = resources.length !== 0;
   if (els.searchStatus) {
     els.searchStatus.textContent = resources.length === 0
@@ -393,32 +372,6 @@ function scheduleRender() {
   });
 }
 
-function populateCategories() {
-  for (const category of state.categories) {
-    const option = document.createElement('option');
-    option.value = category.name;
-    option.textContent = `${category.icon ?? ''} ${category.display_name ?? category.name}`.trim();
-    els.category.append(option);
-  }
-}
-
-function populateTypes() {
-  const types = [...new Set(state.resources.map((resource) => resource.type).filter(Boolean))].sort();
-  for (const type of types) {
-    const option = document.createElement('option');
-    option.value = type;
-    option.textContent = typeLabels[type] ?? type;
-    els.type.append(option);
-  }
-}
-
-function renderStats() {
-  els.totalStat.textContent = String(state.resources.length);
-  const usedCategories = new Set(state.resources.flatMap((resource) => resource.categories ?? []));
-  els.categoryStat.textContent = String(usedCategories.size);
-  els.openStat.textContent = String(state.resources.filter((resource) => resource.open_source === true).length);
-}
-
 function createQuickCategory(label, category = '') {
   const button = document.createElement('button');
   button.type = 'button';
@@ -426,7 +379,7 @@ function createQuickCategory(label, category = '') {
   button.dataset.category = category;
   button.textContent = label;
   button.addEventListener('click', () => {
-    els.category.value = category;
+    selectedCategory = category;
     render();
     document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
@@ -448,7 +401,7 @@ function renderQuickCategories() {
 
 function syncQuickCategoryState() {
   for (const button of els.quickCategories.querySelectorAll('.quick-category')) {
-    button.classList.toggle('active', button.dataset.category === els.category.value);
+    button.classList.toggle('active', button.dataset.category === selectedCategory);
   }
 }
 
@@ -461,18 +414,6 @@ function setSearchValue(value, immediate = false) {
 
 function goToResults() {
   document.querySelector('#resources')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function resetFilters() {
-  els.search.value = '';
-  els.compactSearch.value = '';
-  els.category.value = '';
-  els.type.value = '';
-  els.free.checked = false;
-  els.openSource.checked = false;
-  els.sort.value = 'newest';
-  render();
-  (document.body.classList.contains('compact-mode') ? els.compactSearch : els.search).focus();
 }
 
 function updateCompactMode() {
@@ -489,12 +430,8 @@ function bindEvents() {
   els.search.addEventListener('input', () => setSearchValue(els.search.value));
   els.compactSearch.addEventListener('input', () => setSearchValue(els.compactSearch.value));
 
-  for (const el of [els.category, els.type, els.free, els.openSource, els.sort]) {
-    el.addEventListener('input', scheduleRender);
-    el.addEventListener('change', scheduleRender);
-  }
-
-  els.reset.addEventListener('click', resetFilters);
+  els.sort.addEventListener('input', scheduleRender);
+  els.sort.addEventListener('change', scheduleRender);
   window.addEventListener('scroll', updateCompactMode, { passive: true });
 
   document.addEventListener('keydown', (event) => {
@@ -540,9 +477,6 @@ async function init() {
     state.icons = iconDoc && typeof iconDoc.icons === 'object' ? iconDoc.icons : {};
     state.resourceLinks = linkDoc && typeof linkDoc.links === 'object' ? linkDoc.links : {};
 
-    populateCategories();
-    populateTypes();
-    renderStats();
     renderQuickCategories();
 
     for (const resource of state.resources) state.searchDocs.set(resource.id, buildSearchDoc(resource));
