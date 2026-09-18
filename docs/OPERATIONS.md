@@ -78,7 +78,8 @@ Workflow: `.github/workflows/resource-health.yml`
 - scheduled/manual/relevant main runs observe live URLs and GitHub metadata
 - raw observations are evidence, not automatic catalog mutations
 - reports include `last_checked` age buckets so metadata freshness can be reviewed without silently rewriting production fields
-- freshness age is evidence only; it does not change triage state by itself
+- reviewed summaries include a bounded oldest-first metadata refresh queue for resources older than 14 days
+- freshness age and queue position are evidence only; they do not change triage state by themselves
 - reviewed expectations live in `data/resource-health-expectations.json`
 - output reports are Actions artifacts, not committed history
 
