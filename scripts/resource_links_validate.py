@@ -155,6 +155,18 @@ def main() -> int:
     total = len(resources)
     percent = round((covered / total * 100), 1) if total else 0.0
     print(f"Resource links validation passed: {covered}/{total} resources covered ({percent}%).")
+    uncovered = [
+        resource["id"]
+        for resource in resources
+        if isinstance(resource, dict)
+        and isinstance(resource.get("id"), str)
+        and not (
+            isinstance(links.get(resource["id"]), list)
+            and len(links[resource["id"]]) > 0
+        )
+    ]
+    if uncovered:
+        print("Resources without supplemental links: " + ", ".join(uncovered))
     return 0
 
 
