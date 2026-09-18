@@ -82,6 +82,7 @@ Rules:
 - every catalog resource must have exactly one registry entry
 - icon IDs must match stable resource IDs
 - `url` must be an absolute HTTP(S) URL
+- first-party Hub icon URLs under `qookey109-pixel.github.io/ai-resource-hub/` must resolve to an existing repository file before merge
 - `source` must be lower-case kebab-case and describe provenance
 - use verified official/project assets when available
 - otherwise use an explicit reviewed fallback; do not invent project logos
@@ -112,7 +113,7 @@ Rules:
 
 Validators:
 
-- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates, icon schema/URL/source structure, 1:1 icon coverage, and non-blocking icon-source quality metrics
+- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates, icon schema/URL/source structure, first-party icon asset existence, 1:1 icon coverage, and non-blocking icon-source quality metrics
 - `scripts/resource_links_validate.py` — supplemental-link structure and resource references
 
 ## Ingestion checklist
