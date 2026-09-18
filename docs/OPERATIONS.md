@@ -47,7 +47,7 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.6`
+- version: `0.3.7`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
@@ -57,6 +57,7 @@ Current runtime:
 - model JSON parsing tolerates trailing text after the first complete JSON object, and workflow-scope enum variants are normalized before ranking
 - Workers AI inference uses `rejectIfBusy` so capacity pressure fails fast into deterministic fallback instead of waiting in the provider queue
 - inference uses low reasoning effort and `max_completion_tokens`; production responses expose bounded per-stage timing evidence for catalog, intent, ranking, and total latency
+- before AI ranking, a deterministic recall-preserving prefilter narrows the catalog to at most 18 lexically/category-relevant candidates; sparse/no-signal cases safely fall back to the full catalog
 - AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
 
 The Worker is deployed and monitored, but normal website browsing does not depend on it.
