@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { resources } = require('../data/resources.json');
+const iconRegistry = require('../data/resource-icons.json');
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/data/click-config.json', async (route) => {
@@ -223,6 +224,22 @@ test('mobile quick categories keep scroll and compact sizing after cascade clean
 
 
 test('failed primary resource icon recovers through canonical derived fallback', async ({ page }) => {
+  await page.route('**/data/resource-icons.json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...iconRegistry,
+        icons: {
+          ...iconRegistry.icons,
+          'tt-a1i-archify': {
+            url: '/assets/qookey-logo.svg',
+            source: 'test-local-primary'
+          }
+        }
+      })
+    });
+  });
   await page.route('https://github.com/tt-a1i.png?size=256', async (route) => {
     await route.fulfill({
       status: 200,
@@ -238,8 +255,11 @@ test('failed primary resource icon recovers through canonical derived fallback',
   const primaryImage = icon.locator('img');
 
   await expect(archifyCard).toHaveCount(1);
-  await expect(primaryImage).toHaveCount(1);
-  await primaryImage.evaluate((image) => image.dispatchEvent(new Event('error')));
+  await expect(primaryImage).toHaveAttribute('src', '/assets/qookey-logo.svg');
+
+  await primaryImage.evaluate((image) => {
+    image.src = '/__missing-qookey-resource-icon__.svg';
+  });
 
   await expect(icon).toHaveAttribute('data-icon-reliability', 'derived-fallback');
   await expect(icon.locator('img')).toHaveAttribute('src', 'https://github.com/tt-a1i.png?size=256');
