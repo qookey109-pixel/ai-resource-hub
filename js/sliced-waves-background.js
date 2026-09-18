@@ -10,9 +10,6 @@ const CONFIG = {
   waveSpread: 0.9,
   rowOffset: 0.7,
   softness: 0.05,
-  glow: 0,
-  brightness: 1,
-  contrast: 1,
   opacity: 0.5,
   orientation: 'horizontal',
   alternate: false,
@@ -24,6 +21,7 @@ const CONFIG = {
 };
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const FRAME_INTERVAL_MS = 1000 / 30;
 
 function hexToRgb(hex) {
   const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -65,6 +63,7 @@ function initSlicedWaves() {
   let dpr = 1;
   let raf = 0;
   let startedAt = performance.now();
+  let lastFrameAt = 0;
   let pageVisible = !document.hidden;
   let currentMouse = { x: 0.5, y: 0.5, active: 0 };
   let targetMouse = { x: 0.5, y: 0.5, active: 0 };
@@ -91,10 +90,15 @@ function initSlicedWaves() {
   }
 
   function draw(time) {
+    if (!reducedMotion.matches && lastFrameAt && time - lastFrameAt < FRAME_INTERVAL_MS) {
+      raf = requestAnimationFrame(draw);
+      return;
+    }
+    lastFrameAt = time;
+
     try {
-      const elapsed = (time - startedAt) / 1000;
-      const speed = reducedMotion.matches ? CONFIG.speed * 0.2 : CONFIG.speed;
-      const phaseTime = elapsed * speed * Math.PI * 2;
+      const elapsed = reducedMotion.matches ? 0 : (time - startedAt) / 1000;
+      const phaseTime = elapsed * CONFIG.speed * Math.PI * 2;
 
       currentMouse.x += (targetMouse.x - currentMouse.x) * 0.06;
       currentMouse.y += (targetMouse.y - currentMouse.y) * 0.06;
@@ -173,22 +177,38 @@ function initSlicedWaves() {
       return;
     }
 
-    if (pageVisible) raf = requestAnimationFrame(draw);
+    if (pageVisible && !reducedMotion.matches) {
+      raf = requestAnimationFrame(draw);
+    } else {
+      raf = 0;
+    }
   }
 
   function start() {
-    if (raf || !pageVisible) return;
+    if (!pageVisible) return;
+
+    if (reducedMotion.matches) {
+      stop();
+      lastFrameAt = 0;
+      host.dataset.motionMode = 'static';
+      draw(performance.now());
+      return;
+    }
+
+    if (raf) return;
     startedAt = performance.now();
+    lastFrameAt = 0;
+    host.dataset.motionMode = 'animated';
     raf = requestAnimationFrame(draw);
   }
 
   function stop() {
-    if (!raf) return;
-    cancelAnimationFrame(raf);
+    if (raf) cancelAnimationFrame(raf);
     raf = 0;
   }
 
   function onPointerMove(event) {
+    if (reducedMotion.matches) return;
     targetMouse.x = clamp(event.clientX / Math.max(width, 1));
     targetMouse.y = clamp(event.clientY / Math.max(height, 1));
     targetMouse.active = 1;
@@ -198,17 +218,39 @@ function initSlicedWaves() {
     targetMouse.active = 0;
   }
 
+  function onResize() {
+    resize();
+    if (pageVisible && reducedMotion.matches) {
+      lastFrameAt = 0;
+      draw(performance.now());
+    }
+  }
+
+  function onMotionPreferenceChange() {
+    stop();
+    currentMouse.active = 0;
+    targetMouse.active = 0;
+    startedAt = performance.now();
+    lastFrameAt = 0;
+    start();
+  }
+
   function onVisibilityChange() {
     pageVisible = !document.hidden;
     pageVisible ? start() : stop();
   }
 
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('resize', onResize, { passive: true });
   window.addEventListener('pointermove', onPointerMove, { passive: true });
   window.addEventListener('pointerleave', onPointerLeave, { passive: true });
   window.addEventListener('blur', onPointerLeave, { passive: true });
   document.addEventListener('visibilitychange', onVisibilityChange);
+  if (typeof reducedMotion.addEventListener === 'function') {
+    reducedMotion.addEventListener('change', onMotionPreferenceChange);
+  } else if (typeof reducedMotion.addListener === 'function') {
+    reducedMotion.addListener(onMotionPreferenceChange);
+  }
   start();
 }
 

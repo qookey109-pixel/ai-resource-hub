@@ -89,3 +89,21 @@ test('legacy hidden filters are removed while quick categories still filter', as
   await page.locator('.quick-category[data-category=""]').click();
   await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
 });
+
+
+test('reduced motion keeps the decorative canvas static', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+
+  const host = page.locator('#sliced-waves-background');
+  const canvas = page.locator('.sliced-waves-canvas');
+
+  await expect(canvas).toHaveCount(1);
+  await expect(host).toHaveAttribute('data-motion-mode', 'static');
+
+  const firstFrame = await canvas.evaluate((node) => node.toDataURL());
+  await page.waitForTimeout(180);
+  const secondFrame = await canvas.evaluate((node) => node.toDataURL());
+
+  expect(secondFrame).toBe(firstFrame);
+});
