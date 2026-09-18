@@ -14,6 +14,17 @@ assert.match(
   'Worker must retain the fallback-intent + no-match recovery guard.'
 );
 
+assert.match(
+  source,
+  /const AI_RUN_OPTIONS = Object\.freeze\(\{ rejectIfBusy: true \}\);/,
+  'Worker must reject busy Workers AI capacity instead of waiting in the queue.'
+);
+assert.equal(
+  (source.match(/AI_RUN_OPTIONS\);/g) || []).length,
+  2,
+  'Both Workers AI inference stages must use the fail-fast capacity option.'
+);
+
 source = source.replace(
   'export default {',
   'globalThis.__test = { fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
