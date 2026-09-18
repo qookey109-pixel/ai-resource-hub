@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.2';
+const RECOMMENDER_VERSION = '0.3.3';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -167,8 +167,19 @@ async function understandIntent(query, env) {
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
 
+const FALLBACK_NEGATION = /(?:不要|不想|不需要|不用|避免|不希望|拒絕|排除)/u;
+
+function fallbackPositiveText(query) {
+  return String(query || '')
+    .toLowerCase()
+    .split(/[，,。.!！？?；;\n]+/u)
+    .map((clause) => clause.split(FALLBACK_NEGATION, 1)[0].trim())
+    .filter(Boolean)
+    .join(' ');
+}
+
 function fallbackQueryConcepts(query) {
-  const normalized = String(query || '').toLowerCase();
+  const normalized = fallbackPositiveText(query);
   const concepts = new Set(
     normalized
       .split(/[^\p{L}\p{N}+#.-]+/u)
