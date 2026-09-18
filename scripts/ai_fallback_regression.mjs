@@ -25,6 +25,22 @@ assert.equal(
   'Both Workers AI inference stages must use the fail-fast capacity option.'
 );
 
+assert.equal(
+  (source.match(/reasoning_effort: AI_REASONING_EFFORT/g) || []).length,
+  2,
+  'Both Workers AI stages must use the bounded low reasoning effort setting.'
+);
+assert.equal(
+  (source.match(/max_completion_tokens:/g) || []).length,
+  2,
+  'Both Workers AI stages must use max_completion_tokens.'
+);
+assert.doesNotMatch(
+  source,
+  /\bmax_tokens\s*:/,
+  'Deprecated max_tokens must not return to the Worker inference path.'
+);
+
 source = source.replace(
   'export default {',
   'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
