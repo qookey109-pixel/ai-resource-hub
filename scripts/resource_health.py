@@ -567,22 +567,31 @@ def run(args: argparse.Namespace) -> int:
         for resource_id, source in icon_sources.items()
         if source.startswith("official-")
     )
-    github_avatar_ids = sorted(
-        resource_id
-        for resource_id, source in icon_sources.items()
-        if source.startswith("github-owner-avatar")
-        or source.startswith("github-organization-avatar")
-    )
     fallback_icon_ids = sorted(
         resource_id
         for resource_id, source in icon_sources.items()
         if "fallback" in source
     )
+    github_avatar_ids = sorted(
+        resource_id
+        for resource_id, source in icon_sources.items()
+        if (
+            source.startswith("github-owner-avatar")
+            or source.startswith("github-organization-avatar")
+        )
+        and "fallback" not in source
+    )
+    domain_favicon_ids = sorted(
+        resource_id
+        for resource_id, source in icon_sources.items()
+        if source.startswith("domain-favicon")
+    )
     print(
-        "Icon registry sources: "
+        "Icon registry sources (mutually exclusive): "
         f"official-labelled={len(official_icon_ids)}/{len(icon_sources)}, "
         f"github-avatar={len(github_avatar_ids)}, "
-        f"fallback-labelled={len(fallback_icon_ids)}"
+        f"fallback-labelled={len(fallback_icon_ids)}, "
+        f"domain-favicon={len(domain_favicon_ids)}"
     )
     if fallback_icon_ids:
         print("Fallback-labelled icons: " + ", ".join(fallback_icon_ids))
