@@ -18,7 +18,7 @@ Frontend:
 - dependency-free browsing runtime
 - one production stylesheet: `css/styles.css`
 - focused modules under `js/`
-- structured search + filters + sorting
+- structured search + category navigation + sorting
 - browser-local favorites
 - Resource Detail + stable `?resource=<id>` deep links
 - verified supplemental official links
