@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.4';
+const RECOMMENDER_VERSION = '0.3.5';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 
 function json(data, status = 200, extraHeaders = {}) {
@@ -80,12 +80,47 @@ function parseJsonObject(text) {
   const trimmed = String(text || '').trim();
   try {
     return JSON.parse(trimmed);
-  } catch {
-    const start = trimmed.indexOf('{');
-    const end = trimmed.lastIndexOf('}');
-    if (start >= 0 && end > start) return JSON.parse(trimmed.slice(start, end + 1));
-    throw new Error('model did not return JSON');
+  } catch {}
+
+  let start = -1;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < trimmed.length; index += 1) {
+    const char = trimmed[index];
+
+    if (start < 0) {
+      if (char !== '{') continue;
+      start = index;
+      depth = 1;
+      continue;
+    }
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === '\\') {
+        escaped = true;
+      } else if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+      continue;
+    }
+    if (char === '{') depth += 1;
+    if (char === '}') depth -= 1;
+
+    if (depth === 0) {
+      return JSON.parse(trimmed.slice(start, index + 1));
+    }
   }
+
+  throw new Error('model did not return a complete JSON object');
 }
 
 function cleanString(value, max = 240) {
@@ -112,6 +147,18 @@ function cleanChoices(value, query) {
     .slice(0, 4);
 }
 
+function normaliseWorkflowScope(value) {
+  let normalized = cleanString(value, 100)
+    .toLowerCase()
+    .replace(/[_\s\u2010-\u2015\u2212]+/gu, '-')
+    .replace(/-+/g, '-');
+
+  if (normalized === 'endtoend') normalized = 'end-to-end';
+  return ['end-to-end', 'component', 'either', 'unknown'].includes(normalized)
+    ? normalized
+    : 'unknown';
+}
+
 function normaliseIntent(raw, query) {
   return {
     original_query: query,
@@ -126,7 +173,7 @@ function normaliseIntent(raw, query) {
     openness: cleanString(raw?.openness, 80),
     interface: cleanList(raw?.interface, 6, 80),
     skill_level: cleanString(raw?.skill_level, 80),
-    workflow_scope: cleanString(raw?.workflow_scope, 100),
+    workflow_scope: normaliseWorkflowScope(raw?.workflow_scope),
     implied_needs: cleanList(raw?.implied_needs),
     search_concepts: cleanList(raw?.search_concepts, 12, 80),
     ambiguities: cleanList(raw?.ambiguities, 6, 120),
