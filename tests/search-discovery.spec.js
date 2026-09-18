@@ -49,3 +49,25 @@ test('search result changes are announced through a live status', async ({ page 
   await search.fill('no-such-qookey-resource-zzzz');
   await expect(status).toHaveText('找不到符合目前條件的資源');
 });
+
+
+test('compact search accessibility state follows the scroll threshold', async ({ page }) => {
+  await page.goto('/');
+
+  const compactWrap = page.locator('.compact-search-wrap');
+  const compactSearch = page.locator('#compact-search');
+
+  await expect(page.locator('body')).not.toHaveClass(/compact-mode/);
+  await expect(compactWrap).toHaveAttribute('aria-hidden', 'true');
+  await expect(compactSearch).toHaveAttribute('tabindex', '-1');
+
+  await page.evaluate(() => window.scrollTo(0, 500));
+  await expect(page.locator('body')).toHaveClass(/compact-mode/);
+  await expect(compactWrap).toHaveAttribute('aria-hidden', 'false');
+  await expect(compactSearch).toHaveAttribute('tabindex', '0');
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.locator('body')).not.toHaveClass(/compact-mode/);
+  await expect(compactWrap).toHaveAttribute('aria-hidden', 'true');
+  await expect(compactSearch).toHaveAttribute('tabindex', '-1');
+});

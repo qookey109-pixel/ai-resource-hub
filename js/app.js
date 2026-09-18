@@ -109,6 +109,7 @@ const synonymGroups = new Map(Object.entries({
 }));
 
 let renderFrame = 0;
+let compactModeActive = null;
 
 function normalise(value) {
   return String(value ?? '')
@@ -476,6 +477,9 @@ function resetFilters() {
 
 function updateCompactMode() {
   const compact = window.scrollY > 250;
+  if (compactModeActive === compact) return;
+  compactModeActive = compact;
+
   document.body.classList.toggle('compact-mode', compact);
   els.compactSearch.tabIndex = compact ? 0 : -1;
   document.querySelector('.compact-search-wrap')?.setAttribute('aria-hidden', compact ? 'false' : 'true');
