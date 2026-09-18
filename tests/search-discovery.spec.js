@@ -170,3 +170,60 @@ test('natural Traditional Chinese search phrases are tokenized by intent', async
     await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
   }
 });
+
+
+test('real-world Traditional Chinese search QA corpus keeps relevant resources discoverable', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+  const cases = [
+    ['有沒有免費做簡報的 AI', 'NESA-SLIDE'],
+    ['我想找可以做圖表的工具', 'Lieflat Charts'],
+    ['幫我做流程圖', 'Archify'],
+    ['找可以畫架構圖的工具', 'Archify'],
+    ['想找網頁設計靈感', 'Curated'],
+    ['有沒有 UI 設計參考網站', 'Refero Styles'],
+    ['我要做網站動畫', 'Anime.js'],
+    ['找 Three.js 3D 元件', 'ThreeUI Community'],
+    ['有沒有 AI 生成 3D 模型', 'Meshy AI'],
+    ['想做虛擬人物 avatar', 'OneWorks Avatar'],
+    ['找免費音樂素材', 'SoundShockAudio'],
+    ['有沒有 AI 語音生成工具', 'ElevenLabs'],
+    ['我想做文字轉語音', 'ElevenLabs'],
+    ['找影片剪輯工具', 'OpenMontage'],
+    ['想自動產生短影片', 'MoneyPrinterTurbo'],
+    ['有沒有 AI 短劇編劇', 'AI 短劇編劇'],
+    ['找虛擬貨幣交易研究工具', 'TradingAgents'],
+    ['有沒有 AI 交易代理人', 'TradingAgents'],
+    ['想看金融市場終端', 'Fincept Terminal'],
+    ['找世界市場監控工具', 'World Monitor'],
+    ['幫我找 SAST 掃描', 'Hermes Snyk Plugin'],
+    ['找程式碼安全審計工具', 'Cloudflare Security Audit Skill'],
+    ['有沒有逆向工程工具', 'reverse-skill'],
+    ['找供應鏈安全掃描', 'Hermes Snyk Plugin'],
+    ['我要部署到雲端', 'Oracle Cloud Free Tier'],
+    ['找免費雲端主機', 'Oracle Cloud Free Tier'],
+    ['有沒有資料庫後端平台', 'Supabase Dashboard'],
+    ['找 API 整合工具', 'Nango'],
+    ['我想做 SEO 分析', 'Open SEO Advisor'],
+    ['找網站抓取工具', 'Create360.ai'],
+    ['有沒有網頁轉 Markdown', 'Create360.ai'],
+    ['想找資料擷取工具', 'Create360.ai'],
+    ['找 MCP 記憶工具', 'Codebase Memory MCP'],
+    ['有沒有 agent memory', 'Codebase Memory MCP'],
+    ['找 agent telemetry', 'Hermes Telemetry'],
+    ['找歷史時間點搜尋工具', 'Hermes BackSearch Plugin'],
+    ['有沒有 agent skills 清單', 'Awesome Agent Skills'],
+    ['想找法律 agent skills', 'Legal Skills (Open)'],
+    ['找自動化 email agent', 'Agentic Inbox'],
+    ['想做 shader 特效', 'MetalForge'],
+    ['找像素畫轉換工具', 'PixelArtBase'],
+    ['有沒有產品設計案例', 'Curated'],
+    ['找 UI 動畫元件', 'React Bits — Shape Grid']
+  ];
+
+  for (const [query, expectedResource] of cases) {
+    await search.fill(query);
+    await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+  }
+});
