@@ -39,6 +39,13 @@ Quality gates:
 - Production Worker monitor
 - bounded Worker deployment health / semantic checks
 
+Data quality snapshot:
+
+- supplemental official links: **85 / 86 resources (98.8%)**
+- canonical-only exception: `xorxor-hu-codepen` until a second verified official endpoint exists
+- icon registry coverage: **86 / 86 resources**
+- icon sources: **39 official-labelled**, **40 GitHub-avatar**, **27 fallback-labelled**
+
 ## Current maintenance boundary
 
 - Catalog changes must preserve stable resource IDs and canonical URLs.
@@ -53,7 +60,7 @@ Deployment/monitoring: `docs/OPERATIONS.md`
 
 ## Follow-ups
 
-- continue replacing low-quality third-party icons when a better verified official asset exists
-- expand useful official-link coverage
+- continue replacing avatar/fallback icons only when a better verified official project asset exists
+- maintain near-complete supplemental-link coverage; do not add weak links only to reach 100%
 - consider semantic/vector search only when structured search becomes insufficient
 - consider metadata-refresh PR automation after the evidence-only health workflow is mature
