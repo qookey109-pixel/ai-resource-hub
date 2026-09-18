@@ -115,7 +115,9 @@ jobs:
             echo "Health attempt $attempt: HTTP $status"
             cat /tmp/health.json 2>/dev/null || true
             echo
-            if [ "$status" = "200" ] && jq -e --arg expected_version "$expected_version"               '.ok == true and .service == "qookey-ai-resource-recommender" and .version == $expected_version'               /tmp/health.json >/dev/null 2>&1; then
+            if [ "$status" = "200" ] && jq -e --arg expected_version "$expected_version" \
+              '.ok == true and .service == "qookey-ai-resource-recommender" and .version == $expected_version' \
+              /tmp/health.json >/dev/null 2>&1; then
               ok=1
               break
             fi
