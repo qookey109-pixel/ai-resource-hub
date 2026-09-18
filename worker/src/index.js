@@ -1,8 +1,9 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.5';
+const RECOMMENDER_VERSION = '0.3.6';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
+const AI_REASONING_EFFORT = 'low';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -34,6 +35,15 @@ function corsHeaders(request, env) {
         'vary': 'Origin'
       }
     : {};
+}
+
+function timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs) {
+  return {
+    catalog: catalogMs,
+    intent: intentMs,
+    ranking: rankingMs,
+    total: Date.now() - requestStarted
+  };
 }
 
 function compactResource(resource) {
@@ -210,7 +220,8 @@ async function understandIntent(query, env) {
   const result = await env.AI.run(env.MODEL || DEFAULT_MODEL, {
     prompt: buildIntentPrompt(query),
     temperature: 0.05,
-    max_tokens: 900
+    reasoning_effort: AI_REASONING_EFFORT,
+    max_completion_tokens: 700
   }, AI_RUN_OPTIONS);
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
@@ -348,7 +359,8 @@ async function rankResources(intent, resources, env) {
   const result = await env.AI.run(env.MODEL || DEFAULT_MODEL, {
     prompt: buildRankingPrompt(intent, resources),
     temperature: 0.05,
-    max_tokens: 1200
+    reasoning_effort: AI_REASONING_EFFORT,
+    max_completion_tokens: 900
   }, AI_RUN_OPTIONS);
   return validateRecommendations(parseJsonObject(extractText(result)), resources);
 }
@@ -442,12 +454,25 @@ export default {
       return json({ error: 'query_length', message: 'query must be 2-500 characters' }, 400, cors);
     }
 
+    const requestStarted = Date.now();
+    let catalogMs = 0;
+    let intentMs = 0;
+    let rankingMs = 0;
+    let intentDiagnostic = '';
+
     let resources;
+    const catalogStarted = Date.now();
     try {
       resources = await loadCatalog(env);
     } catch (error) {
-      return json({ error: 'catalog_unavailable', message: String(error.message || error) }, 503, cors);
+      catalogMs = Date.now() - catalogStarted;
+      return json({
+        error: 'catalog_unavailable',
+        message: String(error.message || error),
+        timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs)
+      }, 503, cors);
     }
+    catalogMs = Date.now() - catalogStarted;
 
     if (!resources.length) {
       return json({ error: 'catalog_empty' }, 503, cors);
@@ -455,12 +480,16 @@ export default {
 
     let intent;
     let intentMode = 'ai';
+    const intentStarted = Date.now();
     try {
       intent = await understandIntent(query, env);
     } catch (error) {
       console.error('intent understanding failed', error);
+      intentDiagnostic = cleanString(error?.message || error, 180);
       intent = fallbackIntent(query);
       intentMode = 'fallback';
+    } finally {
+      intentMs = Date.now() - intentStarted;
     }
 
     if (intentMode === 'ai' && hasUsableClarification(intent)) {
@@ -471,14 +500,18 @@ export default {
         query,
         intent_mode: intentMode,
         intent,
+        intent_diagnostic: intentDiagnostic,
+        timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
         clarifying_question: intent.clarifying_question,
         choices: intent.clarification_choices,
         recommendations: []
       }, 200, cors);
     }
 
+    const rankingStarted = Date.now();
     try {
       const ranked = await rankResources(intent, resources, env);
+      rankingMs = Date.now() - rankingStarted;
       if (ranked.no_match && intentMode === 'fallback') {
         const recommendations = fallbackRecommendations(intent, resources);
         if (recommendations.length) {
@@ -489,6 +522,8 @@ export default {
             query,
             intent_mode: intentMode,
             intent,
+            intent_diagnostic: intentDiagnostic,
+            timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
             intent_summary: ranked.intent_summary || intent.primary_goal,
             no_match: false,
             recommendations,
@@ -505,9 +540,12 @@ export default {
         query,
         intent_mode: intentMode,
         intent,
+        intent_diagnostic: intentDiagnostic,
+        timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
         ...ranked
       }, 200, cors);
     } catch (error) {
+      rankingMs = Date.now() - rankingStarted;
       console.error('resource ranking failed', error);
       const recommendations = fallbackRecommendations(intent, resources);
       return json({
@@ -517,6 +555,8 @@ export default {
         query,
         intent_mode: intentMode,
         intent,
+        intent_diagnostic: intentDiagnostic,
+        timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
         intent_summary: intent.primary_goal,
         no_match: recommendations.length === 0,
         recommendations,
