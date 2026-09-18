@@ -59,3 +59,30 @@ test('verified official app icons are used on cards and detail', async ({ page }
     await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', fixture.src);
   }
 });
+
+
+test('lightweight official brand icons are used for OneWorks and Agent-Native', async ({ page }) => {
+  const fixtures = [
+    {
+      query: 'OneWorks Avatar',
+      name: 'OneWorks Avatar',
+      src: 'https://raw.githubusercontent.com/oneworks-ai/avatar/main/public/favicon.svg'
+    },
+    {
+      query: 'Agent-Native',
+      name: 'Agent-Native',
+      src: 'https://raw.githubusercontent.com/BuilderIO/agent-native/main/packages/core/src/assets/branding/icon-on-light.svg'
+    }
+  ];
+
+  for (const fixture of fixtures) {
+    await page.goto('/');
+    await page.locator('#search').fill(fixture.query);
+
+    const card = page.locator('.card', { hasText: fixture.name }).first();
+    await expect(card.locator('.resource-icon img')).toHaveAttribute('src', fixture.src);
+
+    await card.locator('.card-detail-hit').click();
+    await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', fixture.src);
+  }
+});
