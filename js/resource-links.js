@@ -1,4 +1,4 @@
-import { loadJson } from './catalog-data.js';
+import { loadJson } from './catalog-data.js?v=__BUILD__';
 
 const dialog = document.querySelector('#resource-detail-dialog');
 const section = dialog?.querySelector('[data-detail-section="links"]');

@@ -1,4 +1,4 @@
-import { loadJson } from './catalog-data.js';
+import { loadJson } from './catalog-data.js?v=__BUILD__';
 
 const FAVORITES_STORAGE_KEY = 'qookey-ai-resource-favorites-v1';
 const CLICK_CONFIG_PATH = './data/click-config.json';

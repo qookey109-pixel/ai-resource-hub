@@ -86,7 +86,10 @@ Rules:
 - labels/descriptions use Traditional Chinese by default
 - supplemental links may improve search discovery but never create a second resource identity
 
-Validator: `scripts/resource_links_validate.py`
+Validators:
+
+- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates and 1:1 icon coverage
+- `scripts/resource_links_validate.py` — supplemental-link structure and resource references
 
 ## Ingestion checklist
 

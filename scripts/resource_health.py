@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -35,6 +36,12 @@ REQUIRED_FIELDS = {
     "last_checked",
     "notes",
 }
+
+RESOURCE_ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+ALLOWED_TYPES = {"website", "github", "documentation", "service", "library", "model", "dataset", "platform", "other"}
+ALLOWED_PRICING = {"free", "freemium", "paid", "open-source", "unknown"}
+ALLOWED_DIFFICULTY = {"beginner", "intermediate", "advanced", "unknown"}
+ALLOWED_STATUS = {"active", "inactive", "deprecated", "archived", "unknown"}
 
 
 @dataclass
@@ -78,9 +85,60 @@ def load_catalog(path: Path) -> dict[str, Any]:
     return payload
 
 
-def validate_catalog(payload: dict[str, Any]) -> list[str]:
+def load_json_object(path: Path, label: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"{label} not found: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{label} JSON is invalid: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError(f"{label} root must be an object")
+    return payload
+
+
+def validate_catalog(
+    payload: dict[str, Any],
+    categories_payload: dict[str, Any],
+    icons_payload: dict[str, Any],
+) -> list[str]:
     errors: list[str] = []
     seen_ids: set[str] = set()
+    seen_urls: dict[str, str] = {}
+
+    category_items = categories_payload.get("categories")
+    allowed_categories: set[str] = set()
+    seen_category_ids: set[str] = set()
+    if not isinstance(category_items, list):
+        errors.append("categories.categories: must be an array")
+    else:
+        for index, category in enumerate(category_items):
+            prefix = f"categories[{index}]"
+            if not isinstance(category, dict):
+                errors.append(f"{prefix}: must be an object")
+                continue
+            category_id = category.get("id")
+            name = category.get("name")
+            if not isinstance(category_id, str) or not category_id.strip():
+                errors.append(f"{prefix}.id: must be a non-empty string")
+            elif category_id in seen_category_ids:
+                errors.append(f"{prefix}.id: duplicate category id {category_id!r}")
+            else:
+                seen_category_ids.add(category_id)
+            if not isinstance(name, str) or not name.strip():
+                errors.append(f"{prefix}.name: must be a non-empty string")
+            elif name in allowed_categories:
+                errors.append(f"{prefix}.name: duplicate category name {name!r}")
+            else:
+                allowed_categories.add(name)
+            for field in ("display_name", "icon"):
+                if not isinstance(category.get(field), str) or not category.get(field, "").strip():
+                    errors.append(f"{prefix}.{field}: must be a non-empty string")
+
+    icons = icons_payload.get("icons")
+    if not isinstance(icons, dict):
+        errors.append("icons.icons: must be an object")
+        icons = {}
 
     for index, resource in enumerate(payload["resources"]):
         prefix = f"resources[{index}]"
@@ -95,6 +153,8 @@ def validate_catalog(payload: dict[str, Any]) -> list[str]:
         resource_id = resource.get("id")
         if not isinstance(resource_id, str) or not resource_id.strip():
             errors.append(f"{prefix}.id: must be a non-empty string")
+        elif not RESOURCE_ID_PATTERN.fullmatch(resource_id):
+            errors.append(f"{prefix}.id: must be lower-case kebab-case")
         elif resource_id in seen_ids:
             errors.append(f"{prefix}.id: duplicate id {resource_id!r}")
         else:
@@ -107,11 +167,112 @@ def validate_catalog(payload: dict[str, Any]) -> list[str]:
             parsed = parse.urlparse(url)
             if parsed.scheme not in {"http", "https"} or not parsed.netloc:
                 errors.append(f"{prefix}.url: must be an absolute http(s) URL")
+            else:
+                normalized = normalize_url(url)
+                previous_id = seen_urls.get(normalized)
+                if previous_id:
+                    errors.append(f"{prefix}.url: duplicate canonical URL also used by {previous_id!r}")
+                elif isinstance(resource_id, str):
+                    seen_urls[normalized] = resource_id
 
-        for field in ("categories", "tags", "use_cases"):
+        name = resource.get("name")
+        summary = resource.get("summary")
+        notes = resource.get("notes")
+        if not isinstance(name, str) or not name.strip():
+            errors.append(f"{prefix}.name: must be a non-empty string")
+        if not isinstance(summary, str) or not summary.strip():
+            errors.append(f"{prefix}.summary: must be a non-empty string")
+        if not isinstance(notes, str):
+            errors.append(f"{prefix}.notes: must be a string")
+
+        categories = resource.get("categories")
+        if not isinstance(categories, list) or not categories:
+            errors.append(f"{prefix}.categories: must be a non-empty array")
+        else:
+            if len(categories) != len(set(categories)):
+                errors.append(f"{prefix}.categories: duplicate values are not allowed")
+            for category in categories:
+                if not isinstance(category, str) or not category.strip():
+                    errors.append(f"{prefix}.categories: values must be non-empty strings")
+                elif category not in allowed_categories:
+                    errors.append(f"{prefix}.categories: unknown category {category!r}")
+
+        tags = resource.get("tags")
+        if not isinstance(tags, list) or not tags:
+            errors.append(f"{prefix}.tags: must be a non-empty array")
+        else:
+            string_tags = [tag for tag in tags if isinstance(tag, str)]
+            if len(string_tags) != len(tags) or any(not tag.strip() for tag in string_tags):
+                errors.append(f"{prefix}.tags: values must be non-empty strings")
+            if any(tag != tag.lower() for tag in string_tags):
+                errors.append(f"{prefix}.tags: values must be lower-case")
+            if len(string_tags) != len(set(string_tags)):
+                errors.append(f"{prefix}.tags: duplicate values are not allowed")
+
+        use_cases = resource.get("use_cases")
+        if not isinstance(use_cases, list) or not use_cases:
+            errors.append(f"{prefix}.use_cases: must be a non-empty array")
+        elif any(not isinstance(item, str) or not item.strip() for item in use_cases):
+            errors.append(f"{prefix}.use_cases: values must be non-empty strings")
+
+        enum_fields = {
+            "type": ALLOWED_TYPES,
+            "pricing": ALLOWED_PRICING,
+            "difficulty": ALLOWED_DIFFICULTY,
+            "status": ALLOWED_STATUS,
+        }
+        for field, allowed in enum_fields.items():
+            if resource.get(field) not in allowed:
+                errors.append(f"{prefix}.{field}: unsupported value {resource.get(field)!r}")
+
+        open_source = resource.get("open_source")
+        if open_source is not None and not isinstance(open_source, bool):
+            errors.append(f"{prefix}.open_source: must be true, false, or null")
+
+        license_value = resource.get("license")
+        if license_value is not None and not isinstance(license_value, str):
+            errors.append(f"{prefix}.license: must be a string or null")
+
+        rating = resource.get("rating")
+        if rating is not None and (
+            not isinstance(rating, int)
+            or isinstance(rating, bool)
+            or not 1 <= rating <= 5
+        ):
+            errors.append(f"{prefix}.rating: must be an integer from 1 to 5 or null")
+
+        for field in ("added_at", "last_checked"):
             value = resource.get(field)
-            if not isinstance(value, list) or not value:
-                errors.append(f"{prefix}.{field}: must be a non-empty array")
+            if not isinstance(value, str):
+                errors.append(f"{prefix}.{field}: must be YYYY-MM-DD")
+                continue
+            try:
+                datetime.strptime(value, "%Y-%m-%d")
+            except ValueError:
+                errors.append(f"{prefix}.{field}: must be YYYY-MM-DD")
+
+    missing_icons = sorted(seen_ids - set(icons))
+    orphan_icons = sorted(set(icons) - seen_ids)
+    if missing_icons:
+        errors.append("icons: missing resource ids: " + ", ".join(missing_icons))
+    if orphan_icons:
+        errors.append("icons: orphan resource ids: " + ", ".join(orphan_icons))
+
+    for resource_id, icon in icons.items():
+        prefix = f"icons[{resource_id!r}]"
+        if not isinstance(icon, dict):
+            errors.append(f"{prefix}: must be an object")
+            continue
+        icon_url = icon.get("url")
+        source = icon.get("source")
+        if not isinstance(icon_url, str) or not icon_url.strip():
+            errors.append(f"{prefix}.url: must be a non-empty string")
+        else:
+            parsed = parse.urlparse(icon_url)
+            if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+                errors.append(f"{prefix}.url: must be an absolute http(s) URL")
+        if not isinstance(source, str) or not source.strip():
+            errors.append(f"{prefix}.source: must be a non-empty string")
 
     return errors
 
@@ -334,11 +495,13 @@ def markdown_report(report: dict[str, Any]) -> str:
 def run(args: argparse.Namespace) -> int:
     try:
         catalog = load_catalog(args.catalog)
+        categories = load_json_object(args.categories, "categories registry")
+        icons = load_json_object(args.icons, "icon registry")
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 1
 
-    validation_errors = validate_catalog(catalog)
+    validation_errors = validate_catalog(catalog, categories, icons)
     if validation_errors:
         print("Catalog validation failed:", file=sys.stderr)
         for item in validation_errors:
@@ -411,6 +574,8 @@ def run(args: argparse.Namespace) -> int:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path, default=Path("data/resources.json"))
+    parser.add_argument("--categories", type=Path, default=Path("data/categories.json"))
+    parser.add_argument("--icons", type=Path, default=Path("data/resource-icons.json"))
     parser.add_argument("--output-dir", type=Path, default=Path("reports/resource-health"))
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
     parser.add_argument("--validate-only", action="store_true")

@@ -9,6 +9,8 @@ on:
       - main
     paths:
       - "data/resources.json"
+      - "data/categories.json"
+      - "data/resource-icons.json"
       - "data/resource-links.json"
       - "data/resource-health-expectations.json"
       - "scripts/resource_health.py"
@@ -18,6 +20,8 @@ on:
   pull_request:
     paths:
       - "data/resources.json"
+      - "data/categories.json"
+      - "data/resource-icons.json"
       - "data/resource-links.json"
       - "data/resource-health-expectations.json"
       - "scripts/resource_health.py"

@@ -1,4 +1,4 @@
-import { loadJson } from './catalog-data.js';
+import { loadJson } from './catalog-data.js?v=__BUILD__';
 
 const dialog = document.querySelector('#resource-detail-dialog');
 
@@ -50,8 +50,8 @@ if (dialog) {
 
   const statusLabels = {
     active: '活躍',
-    beta: 'Beta',
     inactive: '停止維護',
+    deprecated: '已棄用',
     archived: '已封存',
     unknown: '狀態未知'
   };
