@@ -189,12 +189,13 @@ def validate_catalog(
         if not isinstance(categories, list) or not categories:
             errors.append(f"{prefix}.categories: must be a non-empty array")
         else:
-            if len(categories) != len(set(categories)):
+            string_categories = [category for category in categories if isinstance(category, str)]
+            if len(string_categories) != len(categories) or any(not category.strip() for category in string_categories):
+                errors.append(f"{prefix}.categories: values must be non-empty strings")
+            if len(string_categories) != len(set(string_categories)):
                 errors.append(f"{prefix}.categories: duplicate values are not allowed")
-            for category in categories:
-                if not isinstance(category, str) or not category.strip():
-                    errors.append(f"{prefix}.categories: values must be non-empty strings")
-                elif category not in allowed_categories:
+            for category in string_categories:
+                if category and category not in allowed_categories:
                     errors.append(f"{prefix}.categories: unknown category {category!r}")
 
         tags = resource.get("tags")
