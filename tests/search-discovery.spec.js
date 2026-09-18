@@ -227,3 +227,25 @@ test('real-world Traditional Chinese search QA corpus keeps relevant resources d
     await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
   }
 });
+
+
+test('broad synonym expansion does not swamp high-confidence search intents', async ({ page }) => {
+  await page.goto('/');
+
+  const search = page.locator('#search');
+
+  await search.fill('流程圖');
+  await expect(page.locator('.card', { hasText: 'Archify' })).toHaveCount(1);
+  await expect(page.locator('.card', { hasText: 'Agency Agents' })).toHaveCount(0);
+
+  await search.fill('3D');
+  await expect(page.locator('.card', { hasText: 'Meshy AI' })).toHaveCount(1);
+  await expect(page.locator('.card', { hasText: 'FreeLLMAPI' })).toHaveCount(0);
+
+  await search.fill('MCP');
+  await expect(page.locator('.card', { hasText: 'Codebase Memory MCP' })).toHaveCount(1);
+  await expect(page.locator('.card', { hasText: 'AI 短劇編劇' })).toHaveCount(0);
+
+  await search.fill('逆向');
+  await expect(page.locator('.card').first().locator('.name')).toHaveText('reverse-skill');
+});
