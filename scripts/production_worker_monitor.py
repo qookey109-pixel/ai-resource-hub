@@ -161,6 +161,8 @@ def markdown_report(report: dict[str, Any]) -> str:
         f"- AI recommendation mode: `{report.get('ai_mode') or 'unavailable'}`",
         f"- AI intent mode: `{report.get('ai_intent_mode') or 'unavailable'}`",
         f"- AI recommendation latency: **{report.get('ai_latency_ms', 0)}ms**",
+        f"- AI Worker stage timings: `{json.dumps(report.get('ai_stage_timings_ms') or {}, ensure_ascii=False, sort_keys=True)}`",
+        f"- AI intent diagnostic: `{report.get('ai_intent_diagnostic') or 'none'}`",
         f"- AI diagnostic: `{report.get('ai_diagnostic') or 'none'}`",
         f"- AI recommendation IDs: `{', '.join(report.get('recommendation_ids') or []) or 'none'}`",
         f"- Expected semantic ID(s): `{', '.join(report.get('semantic_expected_ids') or [])}`",
@@ -192,7 +194,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
     warnings: list[str] = []
     ai_mode: str | None = None
     ai_intent_mode: str | None = None
+    ai_intent_diagnostic = ""
     ai_diagnostic = ""
+    ai_stage_timings_ms: dict[str, int] = {}
     ai_latency_ms = 0
     recommendation_ids: list[str] = []
     click_count_entries = 0
@@ -273,7 +277,18 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         )
         ai_mode = str(payload.get("mode") or "")
         ai_intent_mode = str(payload.get("intent_mode") or "")
+        ai_intent_diagnostic = str(payload.get("intent_diagnostic") or "")[:180]
         ai_diagnostic = str(payload.get("diagnostic") or "")[:180]
+        raw_timings = payload.get("timings_ms")
+        if isinstance(raw_timings, dict):
+            ai_stage_timings_ms = {
+                key: int(value)
+                for key, value in raw_timings.items()
+                if key in {"catalog", "intent", "ranking", "total"}
+                and isinstance(value, int)
+                and not isinstance(value, bool)
+                and value >= 0
+            }
         ai_latency_ms = elapsed
         recommendations = payload.get("recommendations")
         recommendations = recommendations if isinstance(recommendations, list) else []
@@ -321,6 +336,10 @@ def run_monitor(timeout: float) -> dict[str, Any]:
                 f"mode={ai_mode or 'missing'}, intent_mode={ai_intent_mode or 'missing'}, "
                 f"latency={elapsed}ms"
             )
+            if ai_stage_timings_ms:
+                degraded_details += f", stage_timings_ms={ai_stage_timings_ms}"
+            if ai_intent_diagnostic:
+                degraded_details += f", intent_diagnostic={ai_intent_diagnostic}"
             if ai_diagnostic:
                 degraded_details += f", diagnostic={ai_diagnostic}"
             warnings.append(
@@ -342,7 +361,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "semantic_expected_ids": sorted(semantic_expected_ids),
         "ai_mode": ai_mode,
         "ai_intent_mode": ai_intent_mode,
+        "ai_intent_diagnostic": ai_intent_diagnostic,
         "ai_diagnostic": ai_diagnostic,
+        "ai_stage_timings_ms": ai_stage_timings_ms,
         "ai_latency_ms": ai_latency_ms,
         "recommendation_ids": recommendation_ids,
         "click_count_entries": click_count_entries,
