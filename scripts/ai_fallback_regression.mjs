@@ -16,7 +16,7 @@ assert.match(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
+  'globalThis.__test = { fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -26,7 +26,7 @@ vm.runInContext(source, context);
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8')).resources;
 assert.ok(Array.isArray(catalog) && catalog.length > 0, 'catalog must contain resources');
 
-const { fallbackIntent, fallbackRecommendations } = context.__test;
+const { fallbackQueryConcepts, fallbackIntent, fallbackRecommendations } = context.__test;
 
 const recovered = fallbackRecommendations(
   fallbackIntent('我要從文字快速生成可以拿去做遊戲原型的 3D 模型'),
@@ -37,8 +37,20 @@ assert.ok(
   `expected meshy-ai recovery, got ${JSON.stringify(recovered)}`
 );
 
+const localVoiceQuery = '我要在本機做語音複製和配音，不想依賴雲端訂閱服務';
+const localVoiceConcepts = fallbackQueryConcepts(localVoiceQuery);
+assert.ok(
+  localVoiceConcepts.some((concept) => concept.includes('語音') || concept.includes('配音')),
+  `expected positive voice concepts, got ${JSON.stringify(localVoiceConcepts)}`
+);
+assert.equal(
+  localVoiceConcepts.some((concept) => concept.includes('雲端') || concept.includes('訂閱')),
+  false,
+  `negated cloud/subscription terms must not become positive concepts: ${JSON.stringify(localVoiceConcepts)}`
+);
+
 const localVoice = fallbackRecommendations(
-  fallbackIntent('我要在本機做語音複製和配音，不想依賴雲端訂閱服務'),
+  fallbackIntent(localVoiceQuery),
   catalog
 );
 assert.ok(
