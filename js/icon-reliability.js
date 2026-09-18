@@ -75,6 +75,7 @@ function tryDerivedFallback(container) {
   image.referrerPolicy = 'no-referrer';
 
   if (container.classList.contains('resource-icon')) {
+    image.setAttribute('fetchpriority', 'low');
     image.width = 40;
     image.height = 40;
     image.style.width = '40px';

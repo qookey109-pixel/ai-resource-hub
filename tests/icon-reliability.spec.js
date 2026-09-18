@@ -100,3 +100,17 @@ test('OpenExecutive uses its verified brand avatar', async ({ page }) => {
   await card.locator('.card-detail-hit').click();
   await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', src);
 });
+
+
+test('card icons use low fetch priority without slowing detail icons', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#search').fill('Flowsint');
+
+  const card = page.locator('.card', { hasText: 'Flowsint' }).first();
+  const cardIcon = card.locator('.resource-icon img');
+  await expect(cardIcon).toHaveAttribute('fetchpriority', 'low');
+
+  await card.locator('.card-detail-hit').click();
+  const detailIcon = page.locator('.resource-detail-icon img');
+  await expect(detailIcon).not.toHaveAttribute('fetchpriority', 'low');
+});

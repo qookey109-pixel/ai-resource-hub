@@ -309,6 +309,7 @@ function renderResourceIcon(iconEl, resource) {
   img.alt = '';
   img.loading = 'lazy';
   img.decoding = 'async';
+  img.setAttribute('fetchpriority', 'low');
   img.referrerPolicy = 'no-referrer';
   img.width = 40;
   img.height = 40;
