@@ -168,12 +168,39 @@ async function understandIntent(query, env) {
 }
 
 const FALLBACK_NEGATION = /(?:不要|不想|不需要|不用|避免|不希望|拒絕|排除)/u;
+const FALLBACK_CONTRAST = /(?:但(?:是)?|不過|而是|只要|改用|改成|改為)/u;
+
+function fallbackPositiveClause(clause) {
+  let remaining = String(clause || '').trim();
+  const positiveParts = [];
+
+  while (remaining) {
+    const negation = FALLBACK_NEGATION.exec(remaining);
+    if (!negation) {
+      positiveParts.push(remaining);
+      break;
+    }
+
+    const prefix = remaining.slice(0, negation.index).trim();
+    if (prefix) positiveParts.push(prefix);
+
+    const negatedTail = remaining.slice(negation.index + negation[0].length);
+    const contrast = FALLBACK_CONTRAST.exec(negatedTail);
+    if (!contrast) break;
+
+    remaining = negatedTail
+      .slice(contrast.index + contrast[0].length)
+      .trim();
+  }
+
+  return positiveParts.join(' ');
+}
 
 function fallbackPositiveText(query) {
   return String(query || '')
     .toLowerCase()
     .split(/[，,。.!！？?；;\n]+/u)
-    .map((clause) => clause.split(FALLBACK_NEGATION, 1)[0].trim())
+    .map(fallbackPositiveClause)
     .filter(Boolean)
     .join(' ');
 }
