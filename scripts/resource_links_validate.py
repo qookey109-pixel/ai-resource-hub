@@ -140,7 +140,21 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print("Resource links validation passed.")
+    resources_doc = load_json(RESOURCES_PATH)
+    links_doc = load_json(LINKS_PATH)
+    resources = resources_doc.get("resources") if isinstance(resources_doc.get("resources"), list) else []
+    links = links_doc.get("links") if isinstance(links_doc.get("links"), dict) else {}
+    covered = sum(
+        1
+        for resource in resources
+        if isinstance(resource, dict)
+        and isinstance(resource.get("id"), str)
+        and isinstance(links.get(resource["id"]), list)
+        and len(links[resource["id"]]) > 0
+    )
+    total = len(resources)
+    percent = round((covered / total * 100), 1) if total else 0.0
+    print(f"Resource links validation passed: {covered}/{total} resources covered ({percent}%).")
     return 0
 
 
