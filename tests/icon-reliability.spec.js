@@ -114,3 +114,17 @@ test('card icons use low fetch priority without slowing detail icons', async ({ 
   const detailIcon = page.locator('.resource-detail-icon img');
   await expect(detailIcon).not.toHaveAttribute('fetchpriority', 'low');
 });
+
+
+test('Create360 uses its verified repository favicon', async ({ page }) => {
+  const src = 'https://raw.githubusercontent.com/tbdavid2019/888-url2md/main/public/favicon.svg';
+
+  await page.goto('/');
+  await page.locator('#search').fill('Create360.ai');
+
+  const card = page.locator('.card', { hasText: 'Create360.ai' }).first();
+  await expect(card.locator('.resource-icon img')).toHaveAttribute('src', src);
+
+  await card.locator('.card-detail-hit').click();
+  await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', src);
+});
