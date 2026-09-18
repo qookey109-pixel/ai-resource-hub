@@ -29,6 +29,18 @@ CATALOG_SIZE_RE = re.compile(
     r"^- Current canonical catalog size:\s*\*\*(\d+) resources\*\*\s*$",
     re.MULTILINE,
 )
+SUPPLEMENTAL_LINKS_RE = re.compile(
+    r"^- supplemental official links:\s*\*\*(\d+)\s*/\s*(\d+) resources \(([\d.]+)%\)\*\*\s*$",
+    re.MULTILINE,
+)
+ICON_COVERAGE_RE = re.compile(
+    r"^- icon registry coverage:\s*\*\*(\d+)\s*/\s*(\d+) resources\*\*\s*$",
+    re.MULTILINE,
+)
+ICON_SOURCES_RE = re.compile(
+    r"^- icon sources:\s*\*\*(\d+) official-labelled\*\*,\s*\*\*(\d+) GitHub-avatar\*\*,\s*\*\*(\d+) fallback-labelled\*\*\s*$",
+    re.MULTILINE,
+)
 
 
 def load_json(path: Path) -> dict:
@@ -95,6 +107,97 @@ def main() -> int:
             "catalog size drift: PROJECT_STATUS.md says "
             f"{size_markers[0]} but data/resources.json contains {resource_count}"
         )
+
+    try:
+        links_doc = load_json(ROOT / "data/resource-links.json")
+        icons_doc = load_json(ROOT / "data/resource-icons.json")
+    except ValueError as exc:
+        errors.append(str(exc))
+        links_doc = {}
+        icons_doc = {}
+
+    if resource_count is not None and isinstance(resources, list):
+        resource_ids = {
+            resource.get("id")
+            for resource in resources
+            if isinstance(resource, dict) and isinstance(resource.get("id"), str)
+        }
+
+        link_registry = links_doc.get("links")
+        if isinstance(link_registry, dict):
+            linked_count = sum(
+                resource_id in link_registry
+                and isinstance(link_registry.get(resource_id), list)
+                and len(link_registry.get(resource_id)) > 0
+                for resource_id in resource_ids
+            )
+            link_markers = SUPPLEMENTAL_LINKS_RE.findall(status_text)
+            if len(link_markers) != 1:
+                errors.append(
+                    "expected exactly one supplemental official links marker, "
+                    f"found {len(link_markers)}"
+                )
+            else:
+                status_linked, status_total, status_percent = link_markers[0]
+                expected_percent = round((linked_count / resource_count) * 100, 1) if resource_count else 0.0
+                if int(status_linked) != linked_count or int(status_total) != resource_count:
+                    errors.append(
+                        "supplemental-link coverage drift: PROJECT_STATUS.md says "
+                        f"{status_linked}/{status_total} but registry coverage is "
+                        f"{linked_count}/{resource_count}"
+                    )
+                if float(status_percent) != expected_percent:
+                    errors.append(
+                        "supplemental-link percentage drift: PROJECT_STATUS.md says "
+                        f"{status_percent}% but registry coverage is {expected_percent:.1f}%"
+                    )
+
+        icon_registry = icons_doc.get("icons")
+        if isinstance(icon_registry, dict):
+            icon_count = sum(resource_id in icon_registry for resource_id in resource_ids)
+            coverage_markers = ICON_COVERAGE_RE.findall(status_text)
+            if len(coverage_markers) != 1:
+                errors.append(
+                    f"expected exactly one icon registry coverage marker, found {len(coverage_markers)}"
+                )
+            else:
+                status_icons, status_total = coverage_markers[0]
+                if int(status_icons) != icon_count or int(status_total) != resource_count:
+                    errors.append(
+                        "icon coverage drift: PROJECT_STATUS.md says "
+                        f"{status_icons}/{status_total} but registry coverage is "
+                        f"{icon_count}/{resource_count}"
+                    )
+
+            sources = [
+                icon.get("source", "")
+                for resource_id, icon in icon_registry.items()
+                if resource_id in resource_ids and isinstance(icon, dict)
+            ]
+            official_count = sum(source.startswith("official-") for source in sources)
+            avatar_count = sum(
+                source.startswith("github-owner-avatar")
+                or source.startswith("github-organization-avatar")
+                for source in sources
+            )
+            fallback_count = sum("fallback" in source for source in sources)
+            source_markers = ICON_SOURCES_RE.findall(status_text)
+            if len(source_markers) != 1:
+                errors.append(
+                    f"expected exactly one icon sources marker, found {len(source_markers)}"
+                )
+            else:
+                status_official, status_avatar, status_fallback = map(int, source_markers[0])
+                if (status_official, status_avatar, status_fallback) != (
+                    official_count,
+                    avatar_count,
+                    fallback_count,
+                ):
+                    errors.append(
+                        "icon source count drift: PROJECT_STATUS.md says "
+                        f"{status_official}/{status_avatar}/{status_fallback} but registry is "
+                        f"{official_count}/{avatar_count}/{fallback_count}"
+                    )
 
     latest_data_date: date | None = None
     latest_data_sources: list[str] = []
