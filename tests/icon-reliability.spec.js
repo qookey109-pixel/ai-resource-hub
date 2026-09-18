@@ -86,3 +86,17 @@ test('lightweight official brand icons are used for OneWorks and Agent-Native', 
     await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', fixture.src);
   }
 });
+
+
+test('OpenExecutive uses its verified brand avatar', async ({ page }) => {
+  const src = 'https://raw.githubusercontent.com/SenteLabsAI/OpenExecutive/main/docs/assets/chat-avatar.svg';
+
+  await page.goto('/');
+  await page.locator('#search').fill('OpenExecutive');
+
+  const card = page.locator('.card', { hasText: 'OpenExecutive' }).first();
+  await expect(card.locator('.resource-icon img')).toHaveAttribute('src', src);
+
+  await card.locator('.card-detail-hit').click();
+  await expect(page.locator('.resource-detail-icon img')).toHaveAttribute('src', src);
+});
