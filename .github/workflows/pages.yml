@@ -7,6 +7,8 @@ on:
     paths:
       - "index.html"
       - ".nojekyll"
+      - "robots.txt"
+      - "sitemap.xml"
       - "assets/**"
       - "css/**"
       - "js/**"
@@ -45,7 +47,7 @@ jobs:
         run: |
           rm -rf _site
           mkdir -p _site/assets _site/css _site/js _site/data
-          cp index.html .nojekyll _site/
+          cp index.html .nojekyll robots.txt sitemap.xml _site/
           cp -R assets/. _site/assets/
           cp -R css/. _site/css/
           cp -R js/. _site/js/

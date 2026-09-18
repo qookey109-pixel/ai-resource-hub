@@ -10,6 +10,8 @@ Pages publishes only browser-required files:
 
 - `index.html`
 - `.nojekyll`
+- `robots.txt`
+- `sitemap.xml`
 - `assets/`
 - `css/`
 - `js/`
