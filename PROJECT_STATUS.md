@@ -41,8 +41,7 @@ Quality gates:
 
 Data quality snapshot:
 
-- supplemental official links: **85 / 86 resources (98.8%)**
-- canonical-only exception: `xorxor-hu-codepen` until a second verified official endpoint exists
+- supplemental official links: **86 / 86 resources (100%)**
 - icon registry coverage: **86 / 86 resources**
 - icon sources (mutually exclusive): **45 official-labelled**, **13 GitHub-avatar**, **21 fallback-labelled**, **7 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
@@ -62,6 +61,6 @@ Deployment/monitoring: `docs/OPERATIONS.md`
 ## Follow-ups
 
 - continue replacing avatar/fallback icons only when a better verified official project asset exists
-- maintain near-complete supplemental-link coverage; do not add weak links only to reach 100%
+- maintain full supplemental-link coverage only while every added endpoint remains independently verified; never preserve 100% by adding weak links
 - consider semantic/vector search only when structured search becomes insufficient
 - metadata freshness evidence is now live; any future metadata-refresh automation must remain evidence/PR-only until reviewed before production promotion
