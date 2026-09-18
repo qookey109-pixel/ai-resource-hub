@@ -324,7 +324,7 @@ function renderResourceIcon(iconEl, resource) {
 
 function render() {
   const resources = filteredResources();
-  els.grid.replaceChildren();
+  const nextGrid = document.createDocumentFragment();
   els.empty.hidden = resources.length !== 0;
   if (els.searchStatus) {
     const searching = normalise(els.search.value).length > 0;
@@ -359,9 +359,10 @@ function render() {
     const link = fragment.querySelector('.visit');
     link.href = resource.url;
     link.setAttribute('aria-label', `開啟 ${resource.name}`);
-    els.grid.append(fragment);
+    nextGrid.append(fragment);
   });
 
+  els.grid.replaceChildren(nextGrid);
   syncQuickCategoryState();
 }
 
