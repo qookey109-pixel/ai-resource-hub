@@ -93,3 +93,15 @@ test('active search preserves relevance order and suspends manual sorting', asyn
   await expect(clicks).toBeEnabled();
   await expect(page.locator('#resource-search-status')).not.toContainText('依相關性排序');
 });
+
+
+test('Create360 verified source metadata participates in discovery', async ({ page }) => {
+  await page.goto('/');
+  const search = page.locator('#search');
+
+  await search.fill('WebMCP');
+  await expect(page.locator('.card', { hasText: 'Create360.ai' })).toHaveCount(1);
+
+  await search.fill('888-url2md');
+  await expect(page.locator('.card', { hasText: 'Create360.ai' })).toHaveCount(1);
+});
