@@ -62,6 +62,30 @@ Stable IDs should not change only because a display name changes.
 
 `rating` is an internal editorial usefulness score, not external source metadata.
 
+## Icon registry
+
+`data/resource-icons.json` must use schema version `0.2` and a valid `updated_at` date.
+
+Each resource ID maps to one icon object:
+
+```json
+{
+  "resource-id": {
+    "url": "https://example.com/icon.svg",
+    "source": "official-site-svg"
+  }
+}
+```
+
+Rules:
+
+- every catalog resource must have exactly one registry entry
+- icon IDs must match stable resource IDs
+- `url` must be an absolute HTTP(S) URL
+- `source` must be lower-case kebab-case and describe provenance
+- use verified official/project assets when available
+- otherwise use an explicit reviewed fallback; do not invent project logos
+
 ## Supplemental links
 
 `data/resource-links.json` keys must match existing resource IDs.
@@ -88,7 +112,7 @@ Rules:
 
 Validators:
 
-- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates, 1:1 icon coverage, and non-blocking icon-source quality metrics
+- `scripts/resource_health.py --validate-only` — catalog IDs/URLs, enums, categories, lower-case tags, dates, icon schema/URL/source structure, 1:1 icon coverage, and non-blocking icon-source quality metrics
 - `scripts/resource_links_validate.py` — supplemental-link structure and resource references
 
 ## Ingestion checklist
