@@ -55,6 +55,12 @@ const stopWords = new Set([
   '我要', '我想', '想要', '幫我', '請', '可以', '一個', '一些', '的', '用', '做', '找', '搜尋', '資源', '工具'
 ]);
 
+const leadingQueryNoise = [
+  '請幫我', '幫我', '我要', '我想', '想要', '有沒有', '請問', '可以', '請', '想找', '想做', '搜尋', '找', '做', '用'
+];
+
+const trailingQueryNoise = ['的工具', '的資源', '工具', '資源', '相關', '推薦'];
+
 const wholeWordSearchTerms = new Set(['sast', 'sca', 'sbom', 'iac']);
 
 const synonymGroups = new Map(Object.entries({
@@ -107,6 +113,19 @@ const synonymGroups = new Map(Object.entries({
   免費: ['免費', 'free', 'freemium', 'open-source']
 }));
 
+const embeddedQueryTerms = [...synonymGroups.keys()]
+  .filter((term) => /[\u3400-\u9fff]/.test(term) && term.length >= 2)
+  .sort((a, b) => b.length - a.length);
+
+const embeddedQueryPattern = new RegExp(
+  embeddedQueryTerms
+    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\}));
+
+let renderFrame = 0;'))
+    .join('|'),
+  'g'
+);
+
 let renderFrame = 0;
 let compactModeActive = null;
 let selectedCategory = '';
@@ -129,14 +148,43 @@ function categoryDisplayName(name) {
   return info?.display_name ?? info?.name ?? name ?? '其他';
 }
 
+function trimQueryNoise(value) {
+  let cleaned = value.trim();
+  let changed = true;
+
+  while (cleaned && changed) {
+    changed = false;
+
+    for (const phrase of leadingQueryNoise) {
+      if (!cleaned.startsWith(phrase)) continue;
+      cleaned = cleaned.slice(phrase.length).trim();
+      changed = true;
+      break;
+    }
+
+    for (const phrase of trailingQueryNoise) {
+      if (!cleaned.endsWith(phrase)) continue;
+      cleaned = cleaned.slice(0, -phrase.length).trim();
+      changed = true;
+      break;
+    }
+  }
+
+  return cleaned;
+}
+
 function tokenizeQuery(query) {
   const raw = normalise(query);
   if (!raw) return [];
-  const tokens = raw
+
+  const cleaned = trimQueryNoise(raw) || raw;
+  const segmented = cleaned.replace(embeddedQueryPattern, (term) => ` ${term} `);
+  const tokens = segmented
     .split(/[\s,，、|/+]+/)
     .map((token) => token.trim())
     .filter((token) => token.length > 0 && !stopWords.has(token));
-  return [...new Set(tokens.length ? tokens : [raw])];
+
+  return [...new Set(tokens.length ? tokens : [cleaned])];
 }
 
 function alternativesFor(token) {
