@@ -9,7 +9,7 @@ Status date: 2026-09-18 (Asia/Taipei)
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
 - Current product baseline: **V0.5 live AI recommendation + Resource Health V0.2 + Resource Detail V1.3 + Discovery V1.4 + Icon Reliability V1 + shared interaction counts + search-side date/click sorting + production Worker monitoring + status consistency CI**
-- Current canonical catalog size: **78 resources**
+- Current canonical catalog size: **81 resources**
 
 Repository `main` and the canonical data files below are authoritative. Historical commit/run details remain available in Git history and GitHub Actions; this file is intentionally maintained as the concise current operating baseline rather than an exhaustive changelog.
 
@@ -29,7 +29,7 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 ### Catalog and discovery
 
-- 78 canonical resources are currently present in `data/resources.json`.
+- 81 canonical resources are currently present in `data/resources.json`.
 - Multi-category classification is enabled.
 - User-facing summaries, use cases, notes and supplemental-link descriptions are Traditional Chinese by default.
 - Unknown pricing/license/status fields remain `unknown` / `null` instead of being guessed.
@@ -103,6 +103,10 @@ Repository `main` and the canonical data files below are authoritative. Historic
 
 ## Recent verified ingestion / refresh baseline
 
+- Open SEO Advisor (`mars-tw/open-seo-advisor-skill`) — Apache-2.0 portable SEO / marketing Agent Skill + CLI with analysis-first defaults, dry-run write paths, optional provider adapters and AI Matrix orchestration.
+- AI Console (`mars-tw/ai-console`) — MIT local-first AI CLI conversation hub and task-dispatch console with skill management, LM Studio continuation, scheduling and Tailscale remote control.
+- Cloudflare Security Audit Skill (`cloudflare/security-audit-skill`) — MIT defensive multi-agent code-audit workflow with coverage ledgers, independent finding verification and strict sandbox requirements.
+- 反詐投資王 (`mars-tw/anti-gambling-trader-tw`) — existing MIT resource re-verified in place; canonical identity preserved, `last_checked` refreshed and official README / user guide / FAQ links added.
 - MiroFish (`666ghj/MiroFish`) — AGPL-3.0 multi-agent swarm-intelligence simulation / prediction sandbox; treat outputs as scenario simulation rather than validated forecasts.
 - TradingAgents (`TauricResearch/TradingAgents`) — Apache-2.0 multi-agent financial research framework with analyst, debate, trader, risk and portfolio-manager roles; research-only, not investment advice.
 - LibreChat (`danny-avila/LibreChat`) — MIT self-hosted multi-model AI chat and agent platform with MCP, Skills, Code Interpreter and multi-user controls.
