@@ -123,6 +123,10 @@ window.addEventListener('error', (event) => {
   const container = image.closest(ICON_CONTAINER_SELECTOR);
   if (!(container instanceof HTMLElement)) return;
   failedPrimaryUrls.set(container, image.currentSrc || image.src || '');
+
+  // The card/detail renderer removes the failed primary image at the target
+  // phase. Retry in a microtask so the container is ready for a derived icon.
+  queueMicrotask(() => tryDerivedFallback(container));
 }, true);
 
 const observer = new MutationObserver((mutations) => {
