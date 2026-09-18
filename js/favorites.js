@@ -239,14 +239,6 @@ function setupSortOptions() {
     scheduleDecorateAndSort();
   });
 
-  document.querySelector('#reset-filters')?.addEventListener('click', () => {
-    dateSortMode = 'newest';
-    clickSortMode = 'clicks-desc';
-    sort.value = 'newest';
-    updateSortButtons(sort);
-    scheduleDecorateAndSort();
-  });
-
   updateSortButtons(sort);
 }
 

@@ -213,65 +213,6 @@ body.compact-mode .compact-search-wrap { display: block; }
   margin: 0 auto;
   padding: 12px 0 72px;
 }
-.catalog-head {
-  display: flex;
-  min-height: 58px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-.catalog-summary {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #888883;
-  font-size: 11px;
-  white-space: nowrap;
-}
-.catalog-summary > strong { color: #4a4a46; font-size: 13px; }
-.summary-separator { color: #c7c7c2; }
-.catalog-filters {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.catalog-filters select {
-  min-height: 34px;
-  border: 1px solid var(--line-strong);
-  border-radius: 9px;
-  background: #fff;
-  color: #555551;
-  padding: 0 9px;
-  outline: 0;
-  font-size: 10px;
-}
-.check {
-  display: inline-flex;
-  min-height: 34px;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--line-strong);
-  border-radius: 9px;
-  background: #fff;
-  padding: 0 9px;
-  color: #666661;
-  font-size: 10px;
-  cursor: pointer;
-}
-.check input { accent-color: var(--accent); }
-.reset {
-  min-height: 34px;
-  border: 0;
-  background: transparent;
-  color: #989893;
-  cursor: pointer;
-  font-size: 10px;
-}
-.reset:hover { color: var(--accent); }
-
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -425,8 +366,6 @@ body.compact-mode .compact-search-wrap { display: block; }
 
 @media (max-width: 1080px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .catalog-head { align-items: flex-start; flex-direction: column; }
-  .catalog-filters { justify-content: flex-start; }
 }
 
 @media (max-width: 720px) {
@@ -449,10 +388,6 @@ body.compact-mode .compact-search-wrap { display: block; }
   .toolbar-inner { padding-top: 8px; }
   .quick-category { min-height: 32px; padding: 0 12px; font-size: 11px; }
   .catalog-shell { padding-top: 10px; }
-  .catalog-summary { width: 100%; }
-  .catalog-filters { gap: 6px; }
-  .catalog-filters select,
-  .check { min-height: 32px; }
   .grid { grid-template-columns: 1fr; gap: 12px; }
   .card { min-height: 238px; padding: 20px; border-radius: 17px; }
   .footer { flex-direction: column; }
@@ -1362,11 +1297,6 @@ main,
 
 .compact-search-wrap input {
   padding-right: 15px !important;
-}
-
-/* Keep the card grid immediately below category navigation. */
-.catalog-head {
-  display: none !important;
 }
 
 .catalog-shell {
