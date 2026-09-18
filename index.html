@@ -92,6 +92,7 @@
         </div>
       </div>
 
+      <p id="resource-search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <section id="resource-grid" class="grid" aria-label="資源列表"></section>
       <section id="empty-state" class="empty" hidden>
         <div class="empty-icon">⌕</div>
@@ -127,14 +128,14 @@
     </article>
   </template>
 
-  <dialog id="resource-detail-dialog" class="resource-detail-dialog" aria-labelledby="resource-detail-title">
+  <dialog id="resource-detail-dialog" class="resource-detail-dialog" aria-labelledby="resource-detail-title" aria-describedby="resource-detail-summary">
     <div class="resource-detail-shell">
       <header class="resource-detail-hero">
         <div class="resource-detail-icon" aria-hidden="true"></div>
         <div class="resource-detail-heading">
           <p class="resource-detail-kicker"></p>
           <h2 id="resource-detail-title" class="resource-detail-title"></h2>
-          <p class="resource-detail-summary"></p>
+          <p id="resource-detail-summary" class="resource-detail-summary"></p>
         </div>
         <button class="resource-detail-close" type="button" data-detail-close aria-label="關閉詳細資訊">×</button>
       </header>
