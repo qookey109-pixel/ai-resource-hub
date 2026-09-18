@@ -271,8 +271,8 @@
       "source": "official-gputw-domain-favicon-128"
     },
     "jarrodwatts-jev-trader": {
-      "url": "https://github.com/jarrodwatts.png?size=256",
-      "source": "github-owner-avatar-256-fallback-no-project-logo"
+      "url": "https://raw.githubusercontent.com/jarrodwatts/jev-trader/main/web/src/app/favicon.ico",
+      "source": "official-project-favicon-repo-ico"
     },
     "kruzovic7-ai-data-extractor": {
       "url": "https://github.com/kruzovic7.png?size=256",
