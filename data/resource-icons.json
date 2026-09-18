@@ -111,8 +111,8 @@
       "source": "official-aihero-domain-favicon-128"
     },
     "oneworks-avatar": {
-      "url": "https://github.com/oneworks-ai.png?size=256",
-      "source": "github-organization-avatar-256-fallback-no-project-logo"
+      "url": "https://raw.githubusercontent.com/oneworks-ai/avatar/main/public/favicon.svg",
+      "source": "official-repository-favicon-svg"
     },
     "legal-skills-open": {
       "url": "https://github.com/ThomasMoreAI.png?size=256",
@@ -135,8 +135,8 @@
       "source": "domain-favicon-128-fallback"
     },
     "builderio-agent-native": {
-      "url": "https://github.com/BuilderIO.png?size=256",
-      "source": "github-organization-avatar-256-fallback-no-project-logo"
+      "url": "https://raw.githubusercontent.com/BuilderIO/agent-native/main/packages/core/src/assets/branding/icon-on-light.svg",
+      "source": "official-repository-brand-mark-svg"
     },
     "sirius-walkthrough-me": {
       "url": "https://github.com/sirius-cc-wu.png?size=256",
