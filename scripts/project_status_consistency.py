@@ -38,7 +38,7 @@ ICON_COVERAGE_RE = re.compile(
     re.MULTILINE,
 )
 ICON_SOURCES_RE = re.compile(
-    r"^- icon sources:\s*\*\*(\d+) official-labelled\*\*,\s*\*\*(\d+) GitHub-avatar\*\*,\s*\*\*(\d+) fallback-labelled\*\*\s*$",
+    r"^- icon sources \(mutually exclusive\):\s*\*\*(\d+) official-labelled\*\*,\s*\*\*(\d+) GitHub-avatar\*\*,\s*\*\*(\d+) fallback-labelled\*\*,\s*\*\*(\d+) domain-favicon\*\*\s*$",
     re.MULTILINE,
 )
 
@@ -175,28 +175,53 @@ def main() -> int:
                 if resource_id in resource_ids and isinstance(icon, dict)
             ]
             official_count = sum(source.startswith("official-") for source in sources)
+            fallback_count = sum("fallback" in source for source in sources)
             avatar_count = sum(
-                source.startswith("github-owner-avatar")
-                or source.startswith("github-organization-avatar")
+                (
+                    source.startswith("github-owner-avatar")
+                    or source.startswith("github-organization-avatar")
+                )
+                and "fallback" not in source
                 for source in sources
             )
-            fallback_count = sum("fallback" in source for source in sources)
+            domain_favicon_count = sum(source.startswith("domain-favicon") for source in sources)
+            classified_count = (
+                official_count
+                + avatar_count
+                + fallback_count
+                + domain_favicon_count
+            )
+            if classified_count != icon_count:
+                errors.append(
+                    "icon source classification drift: "
+                    f"classified={classified_count} but registry coverage is {icon_count}"
+                )
+
             source_markers = ICON_SOURCES_RE.findall(status_text)
             if len(source_markers) != 1:
                 errors.append(
                     f"expected exactly one icon sources marker, found {len(source_markers)}"
                 )
             else:
-                status_official, status_avatar, status_fallback = map(int, source_markers[0])
-                if (status_official, status_avatar, status_fallback) != (
+                status_official, status_avatar, status_fallback, status_domain = map(
+                    int, source_markers[0]
+                )
+                if (
+                    status_official,
+                    status_avatar,
+                    status_fallback,
+                    status_domain,
+                ) != (
                     official_count,
                     avatar_count,
                     fallback_count,
+                    domain_favicon_count,
                 ):
                     errors.append(
                         "icon source count drift: PROJECT_STATUS.md says "
-                        f"{status_official}/{status_avatar}/{status_fallback} but registry is "
-                        f"{official_count}/{avatar_count}/{fallback_count}"
+                        f"{status_official}/{status_avatar}/{status_fallback}/{status_domain} "
+                        "but registry is "
+                        f"{official_count}/{avatar_count}/{fallback_count}/{domain_favicon_count}"
                     )
 
     latest_data_date: date | None = None
