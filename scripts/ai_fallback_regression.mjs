@@ -43,7 +43,7 @@ assert.doesNotMatch(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -58,7 +58,8 @@ const {
   normaliseWorkflowScope,
   fallbackQueryConcepts,
   fallbackIntent,
-  fallbackRecommendations
+  fallbackRecommendations,
+  prefilterResources
 } = context.__test;
 
 assert.deepEqual(
@@ -71,6 +72,33 @@ assert.equal(normaliseWorkflowScope('end to end'), 'end-to-end');
 assert.equal(normaliseWorkflowScope('end_to_end'), 'end-to-end');
 assert.equal(normaliseWorkflowScope('unexpected-value'), 'unknown');
 
+
+const prefilterFixtures = [
+  {
+    query: '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成',
+    expected: 'money-printer-turbo'
+  },
+  {
+    query: '我要在本機做語音複製和配音，不想依賴雲端訂閱服務',
+    expected: 'voice-studio'
+  },
+  {
+    query: '我要從文字快速生成可以拿去做遊戲原型的 3D 模型',
+    expected: 'meshy-ai'
+  }
+];
+
+for (const fixture of prefilterFixtures) {
+  const candidates = prefilterResources(fallbackIntent(fixture.query), catalog);
+  assert.ok(
+    candidates.some((item) => item.id === fixture.expected),
+    `prefilter must preserve ${fixture.expected}: ${JSON.stringify(candidates.map((item) => item.id))}`
+  );
+  assert.ok(
+    candidates.length >= 8 && candidates.length <= 18,
+    `prefilter should bound candidate count to 8-18 for fixture ${fixture.expected}, got ${candidates.length}`
+  );
+}
 
 const recovered = fallbackRecommendations(
   fallbackIntent('我要從文字快速生成可以拿去做遊戲原型的 3D 模型'),
