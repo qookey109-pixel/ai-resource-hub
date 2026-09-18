@@ -63,6 +63,7 @@ if (dialog) {
   let resourceIdByUrl = new Map();
   let lastTrigger = null;
   let shareResetTimer = 0;
+  const defaultDocumentTitle = document.title;
 
   function normaliseUrl(value) {
     try {
@@ -244,6 +245,7 @@ if (dialog) {
     }
 
     renderResource(resource);
+    document.title = `${resource.name || '資源'} — Qookey AI Resource Hub`;
     document.body.classList.add('resource-detail-open');
 
     if (typeof dialog.showModal === 'function') {
@@ -410,6 +412,7 @@ if (dialog) {
   });
 
   dialog.addEventListener('close', () => {
+    document.title = defaultDocumentTitle;
     document.body.classList.remove('resource-detail-open');
     resetShareButton();
     setExpandedTrigger(lastTrigger, false);

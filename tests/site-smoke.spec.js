@@ -100,3 +100,21 @@ test('legacy hidden filters are removed while quick categories still filter', as
   await expect(aiCategory).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('#resource-grid .card')).toHaveCount(resources.length);
 });
+
+
+test('page exposes canonical and social metadata', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://qookey109-pixel.github.io/ai-resource-hub/'
+  );
+  await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+  await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'zh_TW');
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Qookey AI Resource Hub');
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+    'content',
+    'https://qookey109-pixel.github.io/ai-resource-hub/'
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary');
+});
