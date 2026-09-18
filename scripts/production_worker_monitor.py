@@ -20,6 +20,7 @@ SITE_ORIGIN = "https://qookey109-pixel.github.io"
 USER_AGENT = "Qookey-AI-Resource-Hub-Production-Monitor/0.1"
 SEMANTIC_QUERY = "我要從文字快速生成可以拿去做遊戲原型的 3D 模型"
 SEMANTIC_EXPECTED_IDS = {"meshy-ai"}
+AI_SLOW_WARNING_MS = 15_000
 
 
 class MonitorError(RuntimeError):
@@ -158,6 +159,9 @@ def markdown_report(report: dict[str, Any]) -> str:
         "## Runtime summary",
         "",
         f"- AI recommendation mode: `{report.get('ai_mode') or 'unavailable'}`",
+        f"- AI intent mode: `{report.get('ai_intent_mode') or 'unavailable'}`",
+        f"- AI recommendation latency: **{report.get('ai_latency_ms', 0)}ms**",
+        f"- AI diagnostic: `{report.get('ai_diagnostic') or 'none'}`",
         f"- AI recommendation IDs: `{', '.join(report.get('recommendation_ids') or []) or 'none'}`",
         f"- Expected semantic ID(s): `{', '.join(report.get('semantic_expected_ids') or [])}`",
         f"- Click-counter entries observed: **{report.get('click_count_entries', 0)}**",
@@ -187,6 +191,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
     warnings: list[str] = []
     ai_mode: str | None = None
+    ai_intent_mode: str | None = None
+    ai_diagnostic = ""
+    ai_latency_ms = 0
     recommendation_ids: list[str] = []
     click_count_entries = 0
     fast_timeout = min(timeout, 15.0)
@@ -265,6 +272,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
             timeout=timeout,
         )
         ai_mode = str(payload.get("mode") or "")
+        ai_intent_mode = str(payload.get("intent_mode") or "")
+        ai_diagnostic = str(payload.get("diagnostic") or "")[:180]
+        ai_latency_ms = elapsed
         recommendations = payload.get("recommendations")
         recommendations = recommendations if isinstance(recommendations, list) else []
         recommendation_ids = [
@@ -301,9 +311,21 @@ def run_monitor(timeout: float) -> dict[str, Any]:
             "expected semantic match=" + (", ".join(semantic_hits) if semantic_hits else "none"),
         )
 
-        if ai_mode == "fallback" or payload.get("intent_mode") == "fallback":
+        if elapsed >= AI_SLOW_WARNING_MS:
             warnings.append(
-                "AI request completed through fallback/degraded mode; service remained usable but model inference should be watched."
+                f"AI recommendation latency is elevated: {elapsed}ms >= {AI_SLOW_WARNING_MS}ms."
+            )
+
+        if ai_mode == "fallback" or ai_intent_mode == "fallback":
+            degraded_details = (
+                f"mode={ai_mode or 'missing'}, intent_mode={ai_intent_mode or 'missing'}, "
+                f"latency={elapsed}ms"
+            )
+            if ai_diagnostic:
+                degraded_details += f", diagnostic={ai_diagnostic}"
+            warnings.append(
+                "AI request completed through fallback/degraded mode; "
+                f"service remained usable but model inference should be watched ({degraded_details})."
             )
     except MonitorError as exc:
         add_check("ai_recommend_contract", False, str(exc))
@@ -319,6 +341,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "semantic_query": SEMANTIC_QUERY,
         "semantic_expected_ids": sorted(semantic_expected_ids),
         "ai_mode": ai_mode,
+        "ai_intent_mode": ai_intent_mode,
+        "ai_diagnostic": ai_diagnostic,
+        "ai_latency_ms": ai_latency_ms,
         "recommendation_ids": recommendation_ids,
         "click_count_entries": click_count_entries,
         "checks": checks,
