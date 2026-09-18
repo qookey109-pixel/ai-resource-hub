@@ -1479,6 +1479,14 @@
         "url": "https://github.com/tbdavid2019/888-url2md/blob/main/LICENSE",
         "description": "官方 GNU AGPL-3.0 授權全文。"
       }
+    ],
+    "xorxor-hu-codepen": [
+      {
+        "label": "XORXOR #codevember — flow",
+        "kind": "demo",
+        "url": "https://codepen.io/xorxor_hu/pen/WovvpB",
+        "description": "作者 XORXOR / xorxor_hu 的公開 CodePen Demo；Pen 程式碼標示 created by XORXOR，可作為此創作者頁的已驗證作品入口。"
+      }
     ]
   }
 }
