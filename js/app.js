@@ -194,11 +194,14 @@ function buildSearchDoc(resource) {
 }
 
 function matchesAny(text, alternatives) {
-  const words = text.split(/[^a-z0-9]+/);
+  let words = null;
   return alternatives.some((term) => {
     const normalisedTerm = normalise(term);
     if (!normalisedTerm) return false;
-    if (wholeWordSearchTerms.has(normalisedTerm)) return words.includes(normalisedTerm);
+    if (wholeWordSearchTerms.has(normalisedTerm)) {
+      words ??= text.split(/[^a-z0-9]+/);
+      return words.includes(normalisedTerm);
+    }
     return text.includes(normalisedTerm);
   });
 }
