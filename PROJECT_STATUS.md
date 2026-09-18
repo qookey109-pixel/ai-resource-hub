@@ -44,7 +44,7 @@ Data quality snapshot:
 - supplemental official links: **85 / 86 resources (98.8%)**
 - canonical-only exception: `xorxor-hu-codepen` until a second verified official endpoint exists
 - icon registry coverage: **86 / 86 resources**
-- icon sources: **40 official-labelled**, **40 GitHub-avatar**, **26 fallback-labelled**
+- icon sources: **40 official-labelled**, **39 GitHub-avatar**, **26 fallback-labelled**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Current maintenance boundary
