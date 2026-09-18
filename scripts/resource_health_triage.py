@@ -14,6 +14,8 @@ DEFAULT_CATALOG = Path("data/resources.json")
 DEFAULT_POLICY = Path("data/resource-health-expectations.json")
 DEFAULT_RAW_REPORT = Path("reports/resource-health/resource-health.json")
 DEFAULT_OUTPUT_DIR = Path("reports/resource-health")
+FRESHNESS_REVIEW_DAYS = 14
+FRESHNESS_QUEUE_LIMIT = 25
 
 ALLOWED_POLICY_KEYS = {
     "allowed_url_statuses",
@@ -220,6 +222,36 @@ def triage_item(
     }
 
 
+def freshness_queue_items(report: dict[str, Any]) -> list[dict[str, Any]]:
+    queue: list[dict[str, Any]] = []
+    for item in report.get("resources", []):
+        raw = item.get("raw") if isinstance(item, dict) else None
+        if not isinstance(raw, dict):
+            continue
+        age = raw.get("freshness_age_days")
+        catalog = raw.get("catalog") if isinstance(raw.get("catalog"), dict) else {}
+        last_checked = catalog.get("last_checked")
+        if not isinstance(age, int) or age <= FRESHNESS_REVIEW_DAYS:
+            continue
+        queue.append(
+            {
+                "id": item.get("id"),
+                "name": item.get("name"),
+                "last_checked": last_checked,
+                "age_days": age,
+                "review_status": item.get("review_status"),
+            }
+        )
+    queue.sort(
+        key=lambda entry: (
+            -entry["age_days"],
+            str(entry.get("last_checked") or ""),
+            str(entry.get("id") or ""),
+        )
+    )
+    return queue
+
+
 def markdown_cell(value: Any) -> str:
     text = str(value).replace("\n", " ").replace("|", "\\|")
     return text or "—"
@@ -250,11 +282,45 @@ def markdown_report(report: dict[str, Any]) -> str:
         "",
         "Freshness is evidence only and does not change triage state by itself.",
         "",
-        "## Review required",
-        "",
-        "| Resource | Reasons |",
-        "| --- | --- |",
     ]
+
+    freshness_queue = freshness_queue_items(report)
+    lines.extend(
+        [
+            f"## Metadata refresh queue (> {FRESHNESS_REVIEW_DAYS} days)",
+            "",
+            (
+                f"Showing the oldest {min(len(freshness_queue), FRESHNESS_QUEUE_LIMIT)} "
+                f"of {len(freshness_queue)} resources that exceed the freshness review threshold."
+                if freshness_queue
+                else "No resources currently exceed the freshness review threshold."
+            ),
+            "",
+            "| Resource | Last checked | Age (days) | Health triage |",
+            "| --- | --- | ---: | --- |",
+        ]
+    )
+    if freshness_queue:
+        for entry in freshness_queue[:FRESHNESS_QUEUE_LIMIT]:
+            lines.append(
+                f"| `{markdown_cell(entry['id'])}` | "
+                f"{markdown_cell(entry['last_checked'])} | {entry['age_days']} | "
+                f"{markdown_cell(entry['review_status'])} |"
+            )
+    else:
+        lines.append("| _No stale metadata_ | — | — | — |")
+
+    lines.extend(
+        [
+            "",
+            "This queue is prioritization evidence only. Refreshing a row still requires reviewed source verification and a normal PR.",
+            "",
+            "## Review required",
+        "",
+            "| Resource | Reasons |",
+            "| --- | --- |",
+        ]
+    )
 
     review_items = [item for item in report["resources"] if item["review_status"] == "review-required"]
     if review_items:
