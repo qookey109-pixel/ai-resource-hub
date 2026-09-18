@@ -27,7 +27,7 @@ Frontend:
 
 Services:
 
-- AI recommender Worker: runtime version **0.3.4**, model **`@cf/zai-org/glm-4.7-flash`**
+- AI recommender Worker: runtime version **0.3.5**, model **`@cf/zai-org/glm-4.7-flash`**
 - Click Worker: Cloudflare Durable Object counter
 - AI is deployed and monitored but is not required for normal catalog browsing
 

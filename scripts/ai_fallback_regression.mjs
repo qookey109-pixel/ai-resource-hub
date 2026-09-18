@@ -27,7 +27,7 @@ assert.equal(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -37,7 +37,24 @@ vm.runInContext(source, context);
 const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8')).resources;
 assert.ok(Array.isArray(catalog) && catalog.length > 0, 'catalog must contain resources');
 
-const { fallbackQueryConcepts, fallbackIntent, fallbackRecommendations } = context.__test;
+const {
+  parseJsonObject,
+  normaliseWorkflowScope,
+  fallbackQueryConcepts,
+  fallbackIntent,
+  fallbackRecommendations
+} = context.__test;
+
+assert.deepEqual(
+  JSON.parse(JSON.stringify(parseJsonObject('{"ok":true,"nested":{"text":"brace } inside string"}}\ntrailing model text'))),
+  { ok: true, nested: { text: 'brace } inside string' } },
+  'parser must accept the first complete JSON object and ignore trailing model text'
+);
+assert.equal(normaliseWorkflowScope('end-to end'), 'end-to-end');
+assert.equal(normaliseWorkflowScope('end to end'), 'end-to-end');
+assert.equal(normaliseWorkflowScope('end_to_end'), 'end-to-end');
+assert.equal(normaliseWorkflowScope('unexpected-value'), 'unknown');
+
 
 const recovered = fallbackRecommendations(
   fallbackIntent('我要從文字快速生成可以拿去做遊戲原型的 3D 模型'),
