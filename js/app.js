@@ -21,6 +21,8 @@ const els = {
   grid: document.querySelector('#resource-grid'),
   empty: document.querySelector('#empty-state'),
   count: document.querySelector('#result-count'),
+  searchStatus: document.querySelector('#resource-search-status'),
+  detailDialog: document.querySelector('#resource-detail-dialog'),
   totalStat: document.querySelector('#total-stat'),
   categoryStat: document.querySelector('#category-stat'),
   openStat: document.querySelector('#open-stat'),
@@ -344,6 +346,11 @@ function render() {
   els.grid.replaceChildren();
   els.count.textContent = String(resources.length);
   els.empty.hidden = resources.length !== 0;
+  if (els.searchStatus) {
+    els.searchStatus.textContent = resources.length === 0
+      ? '找不到符合目前條件的資源'
+      : `目前顯示 ${resources.length} 個資源`;
+  }
 
   resources.forEach((resource, index) => {
     const fragment = els.template.content.cloneNode(true);
@@ -489,6 +496,8 @@ function bindEvents() {
   document.addEventListener('keydown', (event) => {
     const active = document.activeElement;
     const activeTag = active?.tagName;
+
+    if (els.detailDialog?.open) return;
 
     if (event.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) {
       event.preventDefault();
