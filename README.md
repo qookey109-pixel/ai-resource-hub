@@ -8,7 +8,7 @@
 
 ## 主要功能
 
-- 關鍵字搜尋與快速分類導覽
+- 關鍵字、自然繁中查詢與快速分類導覽
 - 加入日期與共享互動次數排序
 - Browser-local favorites
 - Resource Detail + `?resource=<id>` deep link
