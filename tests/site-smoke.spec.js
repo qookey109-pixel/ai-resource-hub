@@ -223,7 +223,6 @@ test('mobile quick categories keep scroll and compact sizing after cascade clean
 
 
 test('failed primary resource icon recovers through canonical derived fallback', async ({ page }) => {
-  await page.route('**/assets/resource-icons/archify.svg', (route) => route.abort());
   await page.route('https://github.com/tt-a1i.png?size=256', async (route) => {
     await route.fulfill({
       status: 200,
@@ -236,7 +235,12 @@ test('failed primary resource icon recovers through canonical derived fallback',
 
   const archifyCard = page.locator('.card').filter({ hasText: 'Archify' });
   const icon = archifyCard.locator('.resource-icon');
+  const primaryImage = icon.locator('img');
+
   await expect(archifyCard).toHaveCount(1);
+  await expect(primaryImage).toHaveCount(1);
+  await primaryImage.evaluate((image) => image.dispatchEvent(new Event('error')));
+
   await expect(icon).toHaveAttribute('data-icon-reliability', 'derived-fallback');
   await expect(icon.locator('img')).toHaveAttribute('src', 'https://github.com/tt-a1i.png?size=256');
 });
