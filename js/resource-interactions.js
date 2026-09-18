@@ -119,7 +119,6 @@ function toggleFavorite(id, button, card) {
   }
   saveFavorites();
   updateFavoriteButton(button, card, id);
-  scheduleDecorateAndSort();
 }
 
 function ensureFavoriteButton(card, id) {
@@ -155,17 +154,6 @@ function ensureClickBadge(card, id) {
     badge.title = `累積互動點擊：${count.toLocaleString('zh-TW')}`;
     badge.setAttribute('aria-label', `累積互動點擊 ${count.toLocaleString('zh-TW')} 次`);
   }
-}
-
-function bindRecentUse(link, id) {
-  if (link.dataset.favoriteRecentUseBound === 'true') return;
-  link.dataset.favoriteRecentUseBound = 'true';
-  link.addEventListener('click', () => {
-    if (!isFavorite(id)) return;
-    favorites[id] = Date.now();
-    saveFavorites();
-    scheduleDecorateAndSort();
-  });
 }
 
 function updateSortButtons(sort) {
@@ -258,18 +246,6 @@ function compareRatingThenName(a, b) {
 }
 
 function compareEntries(a, b, mode) {
-  if (mode === 'rating') {
-    const aFavorite = a.favoriteAt > 0;
-    const bFavorite = b.favoriteAt > 0;
-    if (aFavorite !== bFavorite) return aFavorite ? -1 : 1;
-    if (aFavorite && bFavorite && a.favoriteAt !== b.favoriteAt) return b.favoriteAt - a.favoriteAt;
-    return a.originalIndex - b.originalIndex;
-  }
-
-  if (mode === 'name') {
-    return String(a.resource?.name || '').localeCompare(String(b.resource?.name || '')) || a.originalIndex - b.originalIndex;
-  }
-
   if (DATE_SORTS.has(mode)) {
     return compareDate(a, b, mode === 'newest') || compareRatingThenName(a, b) || a.originalIndex - b.originalIndex;
   }
@@ -283,10 +259,31 @@ function compareEntries(a, b, mode) {
   return compareDate(a, b, true) || compareRatingThenName(a, b) || a.originalIndex - b.originalIndex;
 }
 
+function currentSearchValue() {
+  const primary = document.querySelector('#search')?.value;
+  const compact = document.querySelector('#compact-search')?.value;
+  return String(primary || compact || '').trim();
+}
+
+function updateSortAvailability(searching) {
+  for (const button of [
+    document.querySelector('#sort-added-button'),
+    document.querySelector('#sort-clicks-button')
+  ]) {
+    if (!(button instanceof HTMLButtonElement)) continue;
+    button.disabled = searching;
+    if (searching) button.setAttribute('title', '搜尋時依相關性排序');
+    else button.removeAttribute('title');
+  }
+}
+
 function decorateAndSort() {
   setupSortOptions();
   const grid = document.querySelector('#resource-grid');
   if (!grid || applying) return;
+
+  const searching = currentSearchValue().length > 0;
+  updateSortAvailability(searching);
 
   const cards = [...grid.querySelectorAll('.card')];
   if (!cards.length) return;
@@ -302,7 +299,6 @@ function decorateAndSort() {
       card.dataset.clickCount = String(clickCount(id));
       ensureFavoriteButton(card, id);
       ensureClickBadge(card, id);
-      bindRecentUse(link, id);
     }
 
     return {
@@ -310,10 +306,11 @@ function decorateAndSort() {
       id,
       resource,
       originalIndex,
-      favoriteAt: id ? favoriteTime(id) : 0,
       clickCount: id ? clickCount(id) : 0
     };
   });
+
+  if (searching) return;
 
   const mode = document.querySelector('#sort-filter')?.value || 'newest';
   entries.sort((a, b) => compareEntries(a, b, mode));
