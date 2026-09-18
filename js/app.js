@@ -52,11 +52,12 @@ const linkKindLabels = {
 };
 
 const stopWords = new Set([
-  '我要', '我想', '想要', '幫我', '請', '可以', '一個', '一些', '的', '用', '做', '找', '搜尋', '資源', '工具'
+  '我要', '我想', '想要', '幫我', '請', '可以', '一個', '一些', '的', '用', '做', '找', '搜尋', '資源', '工具',
+  '想', '畫', '看', '到', '轉'
 ]);
 
 const leadingQueryNoise = [
-  '請幫我', '幫我', '我要', '我想', '想要', '有沒有', '請問', '可以', '請', '想找', '想做', '搜尋', '找', '做', '用'
+  '請幫我', '幫我', '我要', '我想', '想要', '有沒有', '請問', '可以', '請', '想找', '想做', '想看', '搜尋', '找', '做', '用'
 ];
 
 const trailingQueryNoise = ['的工具', '的資源', '工具', '資源', '相關', '推薦'];
@@ -73,42 +74,64 @@ const synonymGroups = new Map(Object.entries({
   skill: ['skill', 'skills', 'agent skills', '技能'],
   mcp: ['mcp', 'agent', 'tool calling'],
   網站: ['網站', 'web', 'website', 'frontend', '前端'],
+  網頁: ['網頁', 'web', 'website', 'web page', 'url'],
   網頁設計: ['網頁設計', '網站設計', 'web design', 'frontend', 'ui', 'design'],
   前端: ['前端', 'frontend', 'ui', 'web'],
   ui: ['ui', 'ux', '設計', '介面', 'frontend'],
   設計: ['設計', 'ui', 'ux', 'design'],
+  簡報: ['簡報', 'presentation', 'slides', 'pptx', 'powerpoint'],
   流程圖: ['流程圖', 'flowchart', 'diagram', 'workflow', '架構圖'],
+  架構圖: ['架構圖', 'architecture', 'system map', 'diagram', 'workflow'],
+  元件: ['元件', 'component', 'components', 'ui-component'],
   影片: ['影片', 'video', '短影片', '剪輯', 'shorts'],
   短影片: ['短影片', 'shorts', 'video', '影片生成', '剪輯'],
   剪輯: ['剪輯', 'editing', 'video', '影片'],
   圖片: ['圖片', 'image', '圖像', '設計'],
+  像素畫: ['像素畫', '像素圖', 'pixel art', 'pixel-art', 'image-to-pixel-art'],
+  轉換: ['轉換', 'converter', 'convert', 'conversion'],
+  素材: ['素材', 'asset', 'assets', 'sample', 'samples', 'sample pack'],
   語音: ['語音', 'voice', 'speech', 'tts', '音訊'],
   音訊: ['音訊', 'audio', 'music', '語音'],
   音樂: ['音樂', 'music', 'audio'],
   '3d': ['3d', 'webgl', 'avatar', '模型'],
-  avatar: ['avatar', '3d', '角色', '虛擬人'],
+  avatar: ['avatar', '3d', '角色', '虛擬人', '虛擬人物'],
+  虛擬人物: ['虛擬人物', '虛擬人', 'avatar', '3d-avatar', '角色'],
   遊戲: ['遊戲', 'game', 'game development'],
   客服: ['客服', 'chatbot', '聊天', 'agent', 'line'],
   line: ['line', '客服', '聊天', 'chatbot'],
   爬蟲: ['爬蟲', 'scraping', '擷取', '資料蒐集'],
   擷取: ['擷取', 'scraping', 'reader', 'markdown', '資料蒐集'],
   研究: ['研究', 'research', 'search', '搜尋'],
+  歷史: ['歷史', 'archive', 'archived', 'backsearch', 'point-in-time'],
+  時間點搜尋: ['時間點搜尋', 'point-in-time search', 'backsearch', 'archive search'],
   搜尋: ['搜尋', 'search', 'research'],
   法律: ['法律', 'legal', '法遵', 'compliance'],
   法遵: ['法遵', 'compliance', 'legal', '法律'],
   交易: ['交易', 'trading', '金融', '投資', 'crypto'],
+  金融市場: ['金融市場', 'financial market', 'market data', 'finance'],
+  終端: ['終端', 'terminal', 'financial-terminal', 'dashboard'],
+  世界: ['世界', 'world', 'global', '全球'],
+  市場監控: ['市場監控', 'market monitoring', 'monitoring', 'dashboard', '金融市場'],
   投資: ['投資', 'trading', '交易', '金融'],
   加密貨幣: ['加密貨幣', 'crypto', 'bitcoin', '交易'],
   虛擬貨幣: ['虛擬貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
   數位貨幣: ['數位貨幣', '加密貨幣', 'crypto', 'bitcoin', '交易', '投資'],
   資安: ['資安', 'security', 'reverse', '逆向'],
+  安全: ['安全', 'security', 'secure'],
+  安全審計: ['安全審計', 'security audit', 'code audit', 'vulnerability research'],
+  供應鏈: ['供應鏈', 'supply chain', 'supply-chain', 'dependency', 'sca'],
   掃描: ['掃描', 'scan', 'scanner', 'security', 'sast', 'sca'],
   逆向: ['逆向', 'reverse engineering', 'security', '資安'],
   部署: ['部署', 'deployment', 'cloud', '雲端'],
   雲端: ['雲端', 'cloud', 'deployment'],
+  主機: ['主機', 'server', 'vm', 'compute', 'hosting'],
   資料庫: ['資料庫', 'database', 'backend', '後端'],
   後端: ['後端', 'backend', 'database', 'api'],
+  整合: ['整合', 'integration', 'integrations', 'oauth', 'sync'],
+  記憶: ['記憶', 'memory', 'persistent-memory', 'session-history', 'state'],
+  特效: ['特效', 'effect', 'effects', 'shader', 'gpu'],
   自動化: ['自動化', 'automation', 'workflow'],
+  自動產生: ['自動產生', '自動生成', 'automation', 'generate', 'generation'],
   文件: ['文件', 'documentation', 'docs', 'learning'],
   開源: ['開源', 'open source', 'open-source', 'github'],
   免費: ['免費', 'free', 'freemium', 'open-source']
