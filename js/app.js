@@ -378,6 +378,7 @@ function createQuickCategory(label, category = '') {
   button.className = 'quick-category';
   button.dataset.category = category;
   button.textContent = label;
+  button.setAttribute('aria-pressed', 'false');
   button.addEventListener('click', () => {
     selectedCategory = category;
     render();
@@ -401,7 +402,9 @@ function renderQuickCategories() {
 
 function syncQuickCategoryState() {
   for (const button of els.quickCategories.querySelectorAll('.quick-category')) {
-    button.classList.toggle('active', button.dataset.category === selectedCategory);
+    const active = button.dataset.category === selectedCategory;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
   }
 }
 
