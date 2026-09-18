@@ -325,6 +325,26 @@
     "cloudflare-security-audit-skill": {
       "url": "https://github.com/cloudflare.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "thomasbek3-hermes-bot-kit": {
+      "url": "https://github.com/thomasbek3.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "nujovich-hermes-telemetry": {
+      "url": "https://github.com/nujovich.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-plugin-backsearch": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-plugin-snyk": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-memory-wiki": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
     }
   }
 }
