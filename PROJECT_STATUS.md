@@ -33,7 +33,7 @@ Services:
 
 Quality gates:
 
-- Playwright browser regression + site smoke tests
+- Playwright browser regression + site smoke tests, including a 43-case real-world Traditional Chinese search QA corpus and negative precision guards
 - Resource Health structural validation, live URL/GitHub observation, metadata-freshness evidence, and reviewed triage
 - Project Status consistency
 - Production Worker monitor
