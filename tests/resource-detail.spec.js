@@ -105,3 +105,23 @@ test('share action exposes a resource-specific URL', async ({ page, context }) =
   const clipboardText = await page.evaluate(() => navigator.clipboard.readText());
   expect(clipboardText).toBe(currentUrl);
 });
+
+
+test('deprecated status is localized in resource detail', async ({ page }) => {
+  const catalog = require('../data/resources.json');
+  const fixture = JSON.parse(JSON.stringify(catalog));
+  const resource = fixture.resources[0];
+  resource.status = 'deprecated';
+
+  await page.route('**/data/resources.json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(fixture)
+    });
+  });
+
+  await page.goto('/?resource=' + encodeURIComponent(resource.id));
+  await expect(page.locator('#resource-detail-dialog')).toBeVisible();
+  await expect(page.locator('.resource-detail-facts')).toContainText('已棄用');
+});
