@@ -1,9 +1,11 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.6';
+const RECOMMENDER_VERSION = '0.3.7';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
+const RANKING_CANDIDATE_LIMIT = 18;
+const RANKING_MIN_CANDIDATES = 8;
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -301,11 +303,108 @@ function hasUsableClarification(intent) {
     && intent.clarification_choices.length >= 2;
 }
 
+function rankingConcepts(intent) {
+  return [...new Set([
+    ...fallbackQueryConcepts(intent.original_query),
+    ...intent.search_concepts,
+    ...intent.must_have,
+    ...intent.preferences,
+    ...intent.implied_needs,
+    intent.primary_goal,
+    intent.desired_output
+  ]
+    .map((value) => String(value || '').toLowerCase().trim())
+    .filter((value) => value.length >= 2))];
+}
+
+function scoreResourcesForRanking(intent, resources) {
+  const concepts = rankingConcepts(intent);
+
+  return resources.map((resource) => {
+    const strongHaystack = [
+      resource.id,
+      resource.name,
+      ...(resource.tags || []),
+      ...(resource.categories || [])
+    ].join(' ').toLowerCase();
+
+    const broadHaystack = [
+      strongHaystack,
+      resource.summary,
+      resource.notes,
+      ...(resource.use_cases || [])
+    ].join(' ').toLowerCase();
+
+    let score = 0;
+    let matches = 0;
+    for (const concept of concepts) {
+      if (strongHaystack.includes(concept)) {
+        score += concept.length >= 4 ? 8 : 4;
+        matches += 1;
+      } else if (broadHaystack.includes(concept)) {
+        score += concept.length >= 4 ? 5 : 2;
+        matches += 1;
+      }
+    }
+
+    return { resource, score, matches };
+  }).sort((a, b) =>
+    b.score - a.score
+    || b.matches - a.matches
+    || String(a.resource.id).localeCompare(String(b.resource.id))
+  );
+}
+
+function prefilterResources(intent, resources) {
+  if (resources.length <= RANKING_CANDIDATE_LIMIT) return resources;
+
+  const scored = scoreResourcesForRanking(intent, resources);
+  const positive = scored.filter((item) => item.score > 0);
+  if (!positive.length) return resources;
+
+  const seedCategories = new Set(
+    positive
+      .slice(0, 4)
+      .flatMap((item) => item.resource.categories || [])
+  );
+
+  const selected = [];
+  const selectedIds = new Set();
+
+  for (const item of positive) {
+    if (selected.length >= RANKING_CANDIDATE_LIMIT) break;
+    selected.push(item.resource);
+    selectedIds.add(item.resource.id);
+  }
+
+  const categoryPeers = resources
+    .filter((resource) => !selectedIds.has(resource.id))
+    .map((resource) => ({
+      resource,
+      overlap: (resource.categories || []).filter((category) => seedCategories.has(category)).length
+    }))
+    .filter((item) => item.overlap > 0)
+    .sort((a, b) =>
+      b.overlap - a.overlap
+      || Number(b.resource.rating || 0) - Number(a.resource.rating || 0)
+      || String(a.resource.id).localeCompare(String(b.resource.id))
+    );
+
+  for (const item of categoryPeers) {
+    if (selected.length >= RANKING_CANDIDATE_LIMIT) break;
+    selected.push(item.resource);
+    selectedIds.add(item.resource.id);
+  }
+
+  if (selected.length < RANKING_MIN_CANDIDATES) return resources;
+  return selected.slice(0, RANKING_CANDIDATE_LIMIT);
+}
+
 function buildRankingPrompt(intent, resources) {
   const catalog = resources.map(compactResource);
   return [
     '你是 Qookey AI Resource Hub 的高精準資源審查員。',
-    '你收到的是「已解析的使用者需求」與完整 catalog。',
+    '你收到的是「已解析的使用者需求」與 deterministic prefilter 篩出的候選 catalog。',
     '請先逐一判斷資源是否符合需求，再推薦；不要用關鍵字看到像就推薦。',
     '最高優先順序：must_have > avoid > desired_output > workflow_scope > preferences > implied_needs。',
     '若某資源違反 must_have 或命中 avoid，除非需求明確允許替代，否則不能推薦。',
@@ -317,7 +416,7 @@ function buildRankingPrompt(intent, resources) {
     '每個推薦都要給 fit_score 0-100；低於 72 分的不要推薦。',
     'reason 必須明確對應使用者要求，例如「符合本機、開源、API」；不要只重述資源介紹。',
     'constraint_match 必須列出它符合哪些明確要求。constraint_miss 則列出仍不符合或未知的要求。',
-    '只能使用 catalog 裡真的存在的 id 與資訊，不得幻想功能。',
+    '只能使用候選 catalog 裡真的存在的 id 與資訊，不得幻想功能。',
     '輸出單一 JSON object，不要 Markdown、不要 code fence、不要額外文字。',
     'JSON schema:',
     '{"intent_summary":"你對需求的簡短理解","no_match":false,"recommendations":[{"id":"catalog id","fit_score":0,"role":"在此任務中的角色","constraint_match":["符合的要求"],"constraint_miss":["未符合或未知"],"reason":"為什麼真的適合","how_to_use":"此任務中怎麼用"}],"missing_capability":"若 no_match=true，說目前資源庫缺什麼；否則空字串"}',
@@ -508,9 +607,10 @@ export default {
       }, 200, cors);
     }
 
+    const rankingCandidates = prefilterResources(intent, resources);
     const rankingStarted = Date.now();
     try {
-      const ranked = await rankResources(intent, resources, env);
+      const ranked = await rankResources(intent, rankingCandidates, env);
       rankingMs = Date.now() - rankingStarted;
       if (ranked.no_match && intentMode === 'fallback') {
         const recommendations = fallbackRecommendations(intent, resources);
@@ -524,6 +624,8 @@ export default {
             intent,
             intent_diagnostic: intentDiagnostic,
             timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
+            catalog_count: resources.length,
+            ranking_candidate_count: rankingCandidates.length,
             intent_summary: ranked.intent_summary || intent.primary_goal,
             no_match: false,
             recommendations,
@@ -542,6 +644,8 @@ export default {
         intent,
         intent_diagnostic: intentDiagnostic,
         timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
+        catalog_count: resources.length,
+        ranking_candidate_count: rankingCandidates.length,
         ...ranked
       }, 200, cors);
     } catch (error) {
@@ -557,6 +661,8 @@ export default {
         intent,
         intent_diagnostic: intentDiagnostic,
         timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
+        catalog_count: resources.length,
+        ranking_candidate_count: rankingCandidates.length,
         intent_summary: intent.primary_goal,
         no_match: recommendations.length === 0,
         recommendations,

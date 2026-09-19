@@ -162,6 +162,7 @@ def markdown_report(report: dict[str, Any]) -> str:
         f"- AI intent mode: `{report.get('ai_intent_mode') or 'unavailable'}`",
         f"- AI recommendation latency: **{report.get('ai_latency_ms', 0)}ms**",
         f"- AI Worker stage timings: `{json.dumps(report.get('ai_stage_timings_ms') or {}, ensure_ascii=False, sort_keys=True)}`",
+        f"- AI ranking candidate set: **{report.get('ai_ranking_candidate_count', 0)} / {report.get('ai_catalog_count', 0)}**",
         f"- AI intent diagnostic: `{report.get('ai_intent_diagnostic') or 'none'}`",
         f"- AI diagnostic: `{report.get('ai_diagnostic') or 'none'}`",
         f"- AI recommendation IDs: `{', '.join(report.get('recommendation_ids') or []) or 'none'}`",
@@ -197,6 +198,8 @@ def run_monitor(timeout: float) -> dict[str, Any]:
     ai_intent_diagnostic = ""
     ai_diagnostic = ""
     ai_stage_timings_ms: dict[str, int] = {}
+    ai_catalog_count = 0
+    ai_ranking_candidate_count = 0
     ai_latency_ms = 0
     recommendation_ids: list[str] = []
     click_count_entries = 0
@@ -289,6 +292,18 @@ def run_monitor(timeout: float) -> dict[str, Any]:
                 and not isinstance(value, bool)
                 and value >= 0
             }
+        ai_catalog_count = (
+            int(payload.get("catalog_count") or 0)
+            if isinstance(payload.get("catalog_count"), int)
+            and not isinstance(payload.get("catalog_count"), bool)
+            else 0
+        )
+        ai_ranking_candidate_count = (
+            int(payload.get("ranking_candidate_count") or 0)
+            if isinstance(payload.get("ranking_candidate_count"), int)
+            and not isinstance(payload.get("ranking_candidate_count"), bool)
+            else 0
+        )
         ai_latency_ms = elapsed
         recommendations = payload.get("recommendations")
         recommendations = recommendations if isinstance(recommendations, list) else []
@@ -364,6 +379,8 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "ai_intent_diagnostic": ai_intent_diagnostic,
         "ai_diagnostic": ai_diagnostic,
         "ai_stage_timings_ms": ai_stage_timings_ms,
+        "ai_catalog_count": ai_catalog_count,
+        "ai_ranking_candidate_count": ai_ranking_candidate_count,
         "ai_latency_ms": ai_latency_ms,
         "recommendation_ids": recommendation_ids,
         "click_count_entries": click_count_entries,
