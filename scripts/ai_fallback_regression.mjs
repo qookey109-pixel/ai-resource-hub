@@ -43,7 +43,7 @@ assert.doesNotMatch(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, isProviderQuotaExhausted, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -58,6 +58,7 @@ const {
   normaliseWorkflowScope,
   normaliseIntent,
   buildIntentPrompt,
+  isProviderQuotaExhausted,
   fallbackQueryConcepts,
   fallbackIntent,
   fallbackRecommendations,
@@ -95,6 +96,22 @@ assert.match(
   source,
   /max_completion_tokens: INTENT_MAX_COMPLETION_TOKENS/,
   'Intent inference must use the bounded intent completion budget.'
+);
+
+assert.equal(
+  isProviderQuotaExhausted(new Error('4006: you have used up your daily free allocation of 10,000 neurons')),
+  true,
+  'Cloudflare Workers AI daily neuron exhaustion must be classified as provider quota exhaustion.'
+);
+assert.equal(
+  isProviderQuotaExhausted(new Error('temporary model JSON parse failure')),
+  false,
+  'Normal model failures must not be misclassified as quota exhaustion.'
+);
+assert.match(
+  source,
+  /if \(intentQuotaExhausted\) \{[\s\S]*ranking_skipped: true[\s\S]*diagnostic: 'provider_quota_exhausted'/,
+  'Quota exhaustion must short-circuit into deterministic fallback before ranking.'
 );
 
 const compactIntent = normaliseIntent({
