@@ -46,6 +46,13 @@ Data quality snapshot:
 - icon sources (mutually exclusive): **45 official-labelled**, **21 GitHub-avatar**, **21 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
+## Product position
+
+- Primary focus: **AI Coding / Agent ecosystem**
+- Core discovery surfaces prioritize **AI Coding**, **Agent Skills**, **MCP / Agent Frameworks**, and **Developer Tools**
+- Broader AI categories remain searchable as supporting resources; sparse categories do not need equal navigation weight
+- v1 is feature-complete and should prefer maintenance over breadth-driven expansion
+
 ## Current maintenance boundary
 
 - Catalog changes must preserve stable resource IDs and canonical URLs.
@@ -60,6 +67,7 @@ Deployment/monitoring: `docs/OPERATIONS.md`
 
 ## Follow-ups
 
+- maintenance mode: add resources selectively, fix production issues, and avoid breadth-driven feature expansion
 - continue replacing avatar/fallback icons only when a better verified official project asset exists
 - maintain full supplemental-link coverage only while every added endpoint remains independently verified; never preserve 100% by adding weak links
 - consider semantic/vector search only when structured search becomes insufficient
