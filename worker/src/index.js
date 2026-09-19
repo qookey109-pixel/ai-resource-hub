@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.11';
+const RECOMMENDER_VERSION = '0.3.12';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
 const INTENT_MAX_COMPLETION_TOKENS = 480;
@@ -180,10 +180,30 @@ const CONSTRAINT_SIGNAL_GROUPS = Object.freeze([
   ['automatic', ['自動', '自動化', 'automation', 'automated']]
 ]);
 
-const CONSTRAINT_LEXICAL_STOP = new Set([
-  '需要', '必須', '支援', '使用', '透過', '避免', '希望', '不要', '不需', '無需',
-  '可以', '軟體', '工具', '服務', '操作', '執行', '功能', '方案'
-]);
+const CONSTRAINT_SIGNAL_CANONICAL = Object.freeze({
+  local: '本機',
+  cloud: '雲端',
+  'open-source': '開源',
+  free: '免費',
+  paid: '付費',
+  windows: 'Windows',
+  macos: 'macOS',
+  linux: 'Linux',
+  api: 'API',
+  cli: 'CLI',
+  'web-ui': 'Web UI',
+  app: 'App',
+  subscription: '訂閱',
+  'single-tool': '單一工具直接完成',
+  automatic: '自動化'
+});
+
+const CONSTRAINT_NEGATION = /(?:不要|不想|不需要|不用|避免|不希望|拒絕|排除|不依賴|無需|不需)/u;
+const CONSTRAINT_LEXICAL_STOP = [
+  '需要', '必須', '支援', '使用', '透過', '避免', '希望', '不要', '不想', '不需要', '不用',
+  '不希望', '拒絕', '排除', '不依賴', '無需', '不需', '可以', '軟體', '工具', '服務',
+  '操作', '執行', '功能', '方案', '結果', '用途'
+];
 
 function normaliseGroundingText(value) {
   return String(value || '')
@@ -207,38 +227,119 @@ function querySupportsSignalGroup(query, groupName) {
   return Boolean(group && group[1].some((term) => text.includes(normaliseGroundingText(term))));
 }
 
-function lexicalConstraintGrounded(value, query) {
+function stripGroundingBoilerplate(value) {
+  let text = normaliseGroundingText(value);
+  for (const [, terms] of CONSTRAINT_SIGNAL_GROUPS) {
+    for (const term of terms) text = text.split(normaliseGroundingText(term)).join(' ');
+  }
+  for (const term of CONSTRAINT_LEXICAL_STOP) {
+    text = text.split(normaliseGroundingText(term)).join(' ');
+  }
+  return text.replace(/[^\p{L}\p{N}+#.]+/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function lexicalEvidenceCoverage(value, query) {
   const item = normaliseGroundingText(value);
   const source = normaliseGroundingText(query);
-  if (!item || !source) return false;
+  if (!item || !source) return 0;
+  if (source.includes(item)) return 1;
 
-  const latinTokens = item.match(/[a-z][a-z0-9.+#-]{1,}/g) || [];
-  if (latinTokens.some((token) => source.includes(token))) return true;
-
+  const evidence = [];
+  for (const token of item.match(/[a-z][a-z0-9.+#-]{1,}/g) || []) {
+    evidence.push(source.includes(token));
+  }
   for (const run of item.match(/\p{Script=Han}{2,}/gu) || []) {
-    if (source.includes(run)) return true;
-    for (const size of [4, 3, 2]) {
-      if (run.length < size) continue;
-      for (let index = 0; index <= run.length - size; index += 1) {
-        const chunk = run.slice(index, index + size);
-        if (CONSTRAINT_LEXICAL_STOP.has(chunk)) continue;
-        if (source.includes(chunk)) return true;
-      }
+    if (source.includes(run)) {
+      evidence.push(true);
+      continue;
+    }
+    for (let index = 0; index < run.length - 1; index += 1) {
+      const pair = run.slice(index, index + 2);
+      evidence.push(source.includes(pair));
     }
   }
-  return false;
+  if (!evidence.length) return 0;
+  return evidence.filter(Boolean).length / evidence.length;
 }
 
-function isGroundedConstraint(value, query) {
-  const groups = signalGroupsFor(value);
-  if (groups.length) {
-    return groups.every((group) => querySupportsSignalGroup(query, group));
+function firstSignalIndex(value, groups) {
+  const text = normaliseGroundingText(value);
+  let best = Number.POSITIVE_INFINITY;
+  for (const groupName of groups) {
+    const group = CONSTRAINT_SIGNAL_GROUPS.find(([name]) => name === groupName);
+    for (const term of group?.[1] || []) {
+      const index = text.indexOf(normaliseGroundingText(term));
+      if (index >= 0) best = Math.min(best, index);
+    }
   }
-  return lexicalConstraintGrounded(value, query);
+  return Number.isFinite(best) ? best : -1;
 }
 
-function groundConstraintList(value, query, limit = 8, itemMax = 120) {
-  return cleanList(value, limit, itemMax).filter((item) => isGroundedConstraint(item, query));
+function constraintIsNegative(value, groups) {
+  const text = normaliseGroundingText(value);
+  const match = CONSTRAINT_NEGATION.exec(text);
+  if (!match) return false;
+  const signalIndex = firstSignalIndex(value, groups);
+  return signalIndex < 0 || match.index <= signalIndex;
+}
+
+function groundConstraintItem(value, query) {
+  const item = cleanString(value, 120);
+  if (!item) return null;
+
+  const groups = signalGroupsFor(item);
+  const supportedGroups = groups.filter((group) => querySupportsSignalGroup(query, group));
+  const unsupportedGroups = groups.filter((group) => !querySupportsSignalGroup(query, group));
+  const residual = stripGroundingBoilerplate(item);
+  const residualGrounded = residual ? lexicalEvidenceCoverage(residual, query) >= 0.6 : false;
+
+  if (!groups.length && lexicalEvidenceCoverage(item, query) < 0.6) return null;
+  if (groups.length && !supportedGroups.length && !residualGrounded) return null;
+
+  const canonicalSignals = supportedGroups.map((group) => CONSTRAINT_SIGNAL_CANONICAL[group]).filter(Boolean);
+  const canonical = canonicalSignals.length
+    ? [...new Set(canonicalSignals)].join(' / ')
+    : item.replace(CONSTRAINT_NEGATION, '').trim();
+
+  return {
+    value: canonical,
+    negative: constraintIsNegative(item, supportedGroups.length ? supportedGroups : groups),
+    had_unsupported_signals: unsupportedGroups.length > 0
+  };
+}
+
+function normaliseConstraintBuckets(raw, query) {
+  const buckets = { must_have: [], preferences: [], avoid: [] };
+  for (const [sourceKey, limit] of [['must_have', 4], ['preferences', 3], ['avoid', 3]]) {
+    for (const item of cleanList(raw?.[sourceKey], limit, 120)) {
+      const grounded = groundConstraintItem(item, query);
+      if (!grounded?.value) continue;
+      const target = sourceKey === 'avoid' || grounded.negative ? 'avoid' : sourceKey;
+      if (!buckets[target].includes(grounded.value)) buckets[target].push(grounded.value);
+    }
+  }
+  return buckets;
+}
+
+function groundSoftList(value, query, limit = 8, itemMax = 120) {
+  return cleanList(value, limit, itemMax).filter((item) => {
+    const groups = signalGroupsFor(item);
+    return groups.every((group) => querySupportsSignalGroup(query, group));
+  });
+}
+
+function groundDescriptiveField(value, query, fallback = '') {
+  const text = cleanString(value, 240);
+  if (!text) return cleanString(fallback, 240);
+  const groups = signalGroupsFor(text);
+  if (groups.some((group) => !querySupportsSignalGroup(query, group))) {
+    return cleanString(fallback, 240);
+  }
+  const residual = stripGroundingBoilerplate(text);
+  if (residual && lexicalEvidenceCoverage(residual, query) < 0.5) {
+    return cleanString(fallback, 240);
+  }
+  return text;
 }
 
 function normaliseWorkflowScope(value) {
@@ -254,13 +355,15 @@ function normaliseWorkflowScope(value) {
 }
 
 function normaliseIntent(raw, query) {
+  const constraints = normaliseConstraintBuckets(raw, query);
+  const primaryGoal = cleanString(raw?.primary_goal || query);
   return {
     original_query: query,
-    primary_goal: cleanString(raw?.primary_goal || query),
-    desired_output: cleanString(raw?.desired_output),
-    must_have: groundConstraintList(raw?.must_have, query),
-    preferences: groundConstraintList(raw?.preferences, query),
-    avoid: groundConstraintList(raw?.avoid, query),
+    primary_goal: primaryGoal,
+    desired_output: groundDescriptiveField(raw?.desired_output, query, primaryGoal),
+    must_have: constraints.must_have,
+    preferences: constraints.preferences,
+    avoid: constraints.avoid,
     platform: cleanList(raw?.platform, 6, 80),
     execution: cleanList(raw?.execution, 6, 80),
     budget: cleanString(raw?.budget, 80),
@@ -268,8 +371,8 @@ function normaliseIntent(raw, query) {
     interface: cleanList(raw?.interface, 6, 80),
     skill_level: cleanString(raw?.skill_level, 80),
     workflow_scope: normaliseWorkflowScope(raw?.workflow_scope),
-    implied_needs: cleanList(raw?.implied_needs),
-    search_concepts: cleanList(raw?.search_concepts, 12, 80),
+    implied_needs: groundSoftList(raw?.implied_needs, query),
+    search_concepts: groundSoftList(raw?.search_concepts, query, 12, 80),
     ambiguities: cleanList(raw?.ambiguities, 6, 120),
     needs_clarification: raw?.needs_clarification === true,
     clarifying_question: cleanString(raw?.clarifying_question, 180),
@@ -284,6 +387,8 @@ function buildIntentPrompt(query) {
     'must_have、preferences、avoid 只能放使用者原話明確表達或直接同義的限制；未提到就留空。',
     '不得自行補本機/雲端、開源/免費、預算、作業系統、API/CLI/Web/App、訂閱等限制。合理推論只能放 implied_needs，不得升格成硬限制。',
     '每個限制只寫一件事，不要把已知條件與推測條件合併在同一項。',
+    '否定需求（不要/避免/不依賴）優先放 avoid；不要把否定句包成正向 must_have。',
+    'desired_output 不得加入使用者沒說的輸出格式、檔案格式、平台或商業條件。',
     'must_have 最多 4 項；preferences 最多 3 項；avoid 最多 3 項；implied_needs 最多 3 項；search_concepts 最多 6 項。',
     'workflow_scope 只能是 end-to-end、component、either 或 unknown。',
     '只有缺少資訊會實質改變工具種類時 needs_clarification=true；否則 false。',
