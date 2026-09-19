@@ -146,7 +146,7 @@ jobs:
               -H 'origin: https://qookey109-pixel.github.io' \
               --data "$(jq -nc --arg q "$query" '{query:$q}')" \
               "$BASE_URL/api/recommend" -o "$output"
-            jq '{mode, version, intent_mode, intent_diagnostic, diagnostic, timings_ms, catalog_count, ranking_candidate_count, intent, recommendations: [.recommendations[]? | {id, fit_score}]}' "$output"
+            jq '{mode, version, intent_mode, intent_diagnostic, diagnostic, timings_ms, catalog_count, ranking_candidate_count, ranking_skipped, intent, recommendations: [.recommendations[]? | {id, fit_score}]}' "$output"
           }
 
           recommend '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成' /tmp/short-video.json
