@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-18",
+  "updated_at": "2026-09-19",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -345,6 +345,26 @@
     "nousresearch-hermes-memory-wiki": {
       "url": "https://github.com/NousResearch.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "mcp-so-directory": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mcp.so",
+      "source": "domain-favicon-128"
+    },
+    "github-mcp-server": {
+      "url": "https://github.com/github.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "microsoft-playwright-mcp": {
+      "url": "https://github.com/microsoft.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "upstash-context7": {
+      "url": "https://github.com/upstash.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "stripe-ai-mcp": {
+      "url": "https://github.com/stripe.png?size=256",
+      "source": "github-organization-avatar-256"
     }
   }
 }
