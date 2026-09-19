@@ -43,7 +43,7 @@ assert.doesNotMatch(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -56,6 +56,8 @@ assert.ok(Array.isArray(catalog) && catalog.length > 0, 'catalog must contain re
 const {
   parseJsonObject,
   normaliseWorkflowScope,
+  normaliseIntent,
+  buildIntentPrompt,
   fallbackQueryConcepts,
   fallbackIntent,
   fallbackRecommendations,
@@ -71,6 +73,60 @@ assert.equal(normaliseWorkflowScope('end-to end'), 'end-to-end');
 assert.equal(normaliseWorkflowScope('end to end'), 'end-to-end');
 assert.equal(normaliseWorkflowScope('end_to_end'), 'end-to-end');
 assert.equal(normaliseWorkflowScope('unexpected-value'), 'unknown');
+
+const intentPrompt = buildIntentPrompt('我要在本機做語音複製和配音，不想依賴雲端訂閱服務');
+assert.ok(
+  intentPrompt.length < 1800,
+  `intent prompt must stay compact; got ${intentPrompt.length} characters`
+);
+for (const legacyKey of ['"platform":', '"execution":', '"budget":', '"openness":', '"interface":', '"skill_level":', '"ambiguities":']) {
+  assert.equal(
+    intentPrompt.includes(legacyKey),
+    false,
+    `compact intent schema must not request legacy field ${legacyKey}`
+  );
+}
+assert.match(
+  source,
+  /const INTENT_MAX_COMPLETION_TOKENS = 480;/,
+  'Intent completion budget must stay bounded at 480 tokens.'
+);
+assert.match(
+  source,
+  /max_completion_tokens: INTENT_MAX_COMPLETION_TOKENS/,
+  'Intent inference must use the bounded intent completion budget.'
+);
+
+const compactIntent = normaliseIntent({
+  primary_goal: '在本機做語音複製與配音',
+  desired_output: '本機語音工作站',
+  must_have: ['本機執行', '語音複製'],
+  avoid: ['雲端訂閱服務'],
+  workflow_scope: 'end-to-end',
+  search_concepts: ['本機語音', 'voice cloning'],
+  needs_clarification: false
+}, '我要在本機做語音複製和配音，不想依賴雲端訂閱服務');
+assert.deepEqual(
+  JSON.parse(JSON.stringify({
+    must_have: compactIntent.must_have,
+    avoid: compactIntent.avoid,
+    workflow_scope: compactIntent.workflow_scope,
+    platform: compactIntent.platform,
+    execution: compactIntent.execution,
+    budget: compactIntent.budget,
+    interface: compactIntent.interface
+  })),
+  {
+    must_have: ['本機執行', '語音複製'],
+    avoid: ['雲端訂閱服務'],
+    workflow_scope: 'end-to-end',
+    platform: [],
+    execution: [],
+    budget: '',
+    interface: []
+  },
+  'Compact model output must preserve legacy normalized API fields with safe empty defaults.'
+);
 
 
 const prefilterFixtures = [
