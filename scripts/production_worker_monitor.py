@@ -20,6 +20,18 @@ SITE_ORIGIN = "https://qookey109-pixel.github.io"
 USER_AGENT = "Qookey-AI-Resource-Hub-Production-Monitor/0.1"
 SEMANTIC_QUERY = "我要從文字快速生成可以拿去做遊戲原型的 3D 模型"
 SEMANTIC_EXPECTED_IDS = {"meshy-ai"}
+UNGROUNDED_HARD_CONSTRAINT_TERMS = (
+    "本機",
+    "本地",
+    "開源",
+    "免費",
+    "預算",
+    "windows",
+    "api",
+    "cli",
+    "雲端",
+    "訂閱",
+)
 AI_SLOW_WARNING_MS = 15_000
 
 
@@ -164,6 +176,7 @@ def markdown_report(report: dict[str, Any]) -> str:
         f"- AI Worker stage timings: `{json.dumps(report.get('ai_stage_timings_ms') or {}, ensure_ascii=False, sort_keys=True)}`",
         f"- AI ranking candidate set: **{report.get('ai_ranking_candidate_count', 0)} / {report.get('ai_catalog_count', 0)}**",
         f"- AI intent diagnostic: `{report.get('ai_intent_diagnostic') or 'none'}`",
+        f"- AI hard constraints: `{', '.join(report.get('ai_intent_hard_constraints') or []) or 'none'}`",
         f"- AI diagnostic: `{report.get('ai_diagnostic') or 'none'}`",
         f"- AI recommendation IDs: `{', '.join(report.get('recommendation_ids') or []) or 'none'}`",
         f"- Expected semantic ID(s): `{', '.join(report.get('semantic_expected_ids') or [])}`",
@@ -196,6 +209,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
     ai_mode: str | None = None
     ai_intent_mode: str | None = None
     ai_intent_diagnostic = ""
+    ai_intent_hard_constraints: list[str] = []
     ai_diagnostic = ""
     ai_stage_timings_ms: dict[str, int] = {}
     ai_catalog_count = 0
@@ -334,6 +348,38 @@ def run_monitor(timeout: float) -> dict[str, Any]:
             else f"unknown/missing IDs: {unknown_ids}",
         )
 
+        intent_payload = payload.get("intent")
+        if isinstance(intent_payload, dict):
+            for field in ("must_have", "preferences", "avoid"):
+                values = intent_payload.get(field)
+                if isinstance(values, list):
+                    ai_intent_hard_constraints.extend(
+                        str(value)
+                        for value in values
+                        if isinstance(value, str) and value.strip()
+                    )
+        unsupported_constraints = sorted(
+            {
+                constraint
+                for constraint in ai_intent_hard_constraints
+                if any(
+                    term in constraint.lower()
+                    for term in UNGROUNDED_HARD_CONSTRAINT_TERMS
+                )
+            }
+        )
+        grounding_ok = (
+            ai_intent_mode == "fallback"
+            or (isinstance(intent_payload, dict) and not unsupported_constraints)
+        )
+        add_check(
+            "ai_intent_grounding",
+            grounding_ok,
+            "no unsupported hard constraints for semantic fixture"
+            if grounding_ok
+            else "unsupported hard constraints: " + ", ".join(unsupported_constraints),
+        )
+
         semantic_hits = sorted(set(recommendation_ids) & semantic_expected_ids)
         add_check(
             "ai_recommend_semantics",
@@ -377,6 +423,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "ai_mode": ai_mode,
         "ai_intent_mode": ai_intent_mode,
         "ai_intent_diagnostic": ai_intent_diagnostic,
+        "ai_intent_hard_constraints": ai_intent_hard_constraints,
         "ai_diagnostic": ai_diagnostic,
         "ai_stage_timings_ms": ai_stage_timings_ms,
         "ai_catalog_count": ai_catalog_count,

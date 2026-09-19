@@ -192,6 +192,26 @@ jobs:
             .ok == true and
             .version == $expected_version and
             (.mode == "ai" or .mode == "fallback") and
+            (
+              .intent_mode == "fallback"
+              or
+              (
+                [
+                  (.intent.must_have[]? // ""),
+                  (.intent.preferences[]? // ""),
+                  (.intent.avoid[]? // "")
+                ]
+                | map(ascii_downcase)
+                | all(
+                    (
+                      contains("本機") or contains("本地") or
+                      contains("開源") or contains("免費") or contains("預算") or
+                      contains("windows") or contains("api") or contains("cli") or
+                      contains("雲端") or contains("訂閱")
+                    ) | not
+                  )
+              )
+            ) and
             any(.recommendations[]?; .id == "meshy-ai")
           ' /tmp/3d.json >/dev/null
 
