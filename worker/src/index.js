@@ -1,10 +1,11 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.9';
+const RECOMMENDER_VERSION = '0.3.10';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
 const INTENT_MAX_COMPLETION_TOKENS = 480;
+const RANKING_MAX_COMPLETION_TOKENS = 420;
 const RANKING_CANDIDATE_LIMIT = 18;
 const RANKING_MIN_CANDIDATES = 8;
 
@@ -49,22 +50,18 @@ function timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs) {
   };
 }
 
-function compactResource(resource) {
+function compactRankingResource(resource) {
   return {
     id: resource.id,
     name: resource.name,
-    type: resource.type,
     categories: resource.categories || [],
     tags: resource.tags || [],
     summary: resource.summary || '',
-    use_cases: resource.use_cases || [],
+    use_cases: (resource.use_cases || []).slice(0, 3),
     pricing: resource.pricing || 'unknown',
     open_source: resource.open_source ?? null,
     difficulty: resource.difficulty || 'unknown',
-    status: resource.status || 'unknown',
-    rating: resource.rating ?? null,
-    notes: resource.notes || '',
-    url: resource.url
+    rating: resource.rating ?? null
   };
 }
 
@@ -399,67 +396,71 @@ function prefilterResources(intent, resources) {
 }
 
 function buildRankingPrompt(intent, resources) {
-  const catalog = resources.map(compactResource);
+  const decisionIntent = {
+    original_query: intent.original_query,
+    primary_goal: intent.primary_goal,
+    desired_output: intent.desired_output,
+    must_have: intent.must_have,
+    preferences: intent.preferences,
+    avoid: intent.avoid,
+    workflow_scope: intent.workflow_scope,
+    implied_needs: intent.implied_needs,
+    search_concepts: intent.search_concepts
+  };
+  const catalog = resources.map(compactRankingResource);
   return [
     '你是 Qookey AI Resource Hub 的高精準資源審查員。',
-    '你收到的是「已解析的使用者需求」與 deterministic prefilter 篩出的候選 catalog。',
-    '請先逐一判斷資源是否符合需求，再推薦；不要用關鍵字看到像就推薦。',
-    '最高優先順序：must_have > avoid > desired_output > workflow_scope > preferences > implied_needs。',
-    '若某資源違反 must_have 或命中 avoid，除非需求明確允許替代，否則不能推薦。',
-    '如果使用者要 end-to-end 完成，優先推薦能直接完成主要產出的工具；泛用 UI、雲端、資料庫、開發工具不可拿來湊數。',
-    '如果使用者要 component，則可推薦專門零件。',
-    '不要因為 rating 高、Star 多、熱門或免費就推薦不相關資源。',
-    '不要湊數。推薦 1 到 4 個即可；真正只有 1 個符合就只推薦 1 個。',
-    '如果沒有符合需求的資源，recommendations 必須是空陣列，no_match=true。',
-    '每個推薦都要給 fit_score 0-100；低於 72 分的不要推薦。',
-    'reason 必須明確對應使用者要求，例如「符合本機、開源、API」；不要只重述資源介紹。',
-    'constraint_match 必須列出它符合哪些明確要求。constraint_miss 則列出仍不符合或未知的要求。',
-    '只能使用候選 catalog 裡真的存在的 id 與資訊，不得幻想功能。',
-    '輸出單一 JSON object，不要 Markdown、不要 code fence、不要額外文字。',
+    '候選已經過 deterministic prefilter；請只做最後相關性判斷，不要重新摘要 catalog。',
+    '優先順序：must_have > avoid > desired_output > workflow_scope > preferences > implied_needs。',
+    '違反 must_have 或命中 avoid 的資源不可推薦；不要因為熱門、免費或 rating 高而湊數。',
+    '最多推薦 3 個；fit_score 低於 72 不得推薦。',
+    '如果沒有符合需求的資源，recommendations 必須是空陣列且 no_match=true。',
+    'reason 只寫一句繁體中文、直接說明它如何符合需求，避免重複資源介紹。',
+    '只能使用候選 catalog 內存在的 id，不得幻想功能。',
+    '輸出單一 JSON object，不要 Markdown、code fence 或額外文字。',
     'JSON schema:',
-    '{"intent_summary":"你對需求的簡短理解","no_match":false,"recommendations":[{"id":"catalog id","fit_score":0,"role":"在此任務中的角色","constraint_match":["符合的要求"],"constraint_miss":["未符合或未知"],"reason":"為什麼真的適合","how_to_use":"此任務中怎麼用"}],"missing_capability":"若 no_match=true，說目前資源庫缺什麼；否則空字串"}',
-    '',
-    `需求規格：${JSON.stringify(intent)}`,
-    '',
+    '{"no_match":false,"recommendations":[{"id":"catalog id","fit_score":0,"reason":"一句原因"}]}',
+    `需求規格：${JSON.stringify(decisionIntent)}`,
     `catalog：${JSON.stringify(catalog)}`
   ].join('\n');
 }
-
-function validateRecommendations(output, resources) {
+function validateRecommendations(output, resources, intent) {
   const known = new Map(resources.map((resource) => [resource.id, resource]));
   const recommendations = Array.isArray(output?.recommendations)
     ? output.recommendations
         .filter((item) => item && known.has(item.id))
-        .map((item) => ({
-          id: item.id,
-          fit_score: Math.max(0, Math.min(100, Number(item.fit_score || 0))),
-          role: cleanString(item.role, 50),
-          constraint_match: cleanList(item.constraint_match, 8, 100),
-          constraint_miss: cleanList(item.constraint_miss, 8, 100),
-          reason: cleanString(item.reason, 260),
-          how_to_use: cleanString(item.how_to_use, 240)
-        }))
+        .map((item) => {
+          const resource = known.get(item.id);
+          return {
+            id: item.id,
+            fit_score: Math.max(0, Math.min(100, Number(item.fit_score || 0))),
+            role: '推薦候選',
+            constraint_match: [],
+            constraint_miss: [],
+            reason: cleanString(item.reason, 180) || cleanString(resource.summary, 180),
+            how_to_use: cleanString(resource.use_cases?.[0], 240)
+          };
+        })
         .filter((item) => item.fit_score >= 72)
         .sort((a, b) => b.fit_score - a.fit_score)
-        .slice(0, 4)
+        .slice(0, 3)
     : [];
 
   return {
-    intent_summary: cleanString(output?.intent_summary, 240),
-    no_match: output?.no_match === true || recommendations.length === 0,
+    intent_summary: cleanString(intent?.primary_goal || intent?.original_query, 240),
+    no_match: recommendations.length === 0,
     recommendations,
-    missing_capability: cleanString(output?.missing_capability, 240)
+    missing_capability: recommendations.length ? '' : '目前候選資源不足以直接符合需求。'
   };
 }
-
 async function rankResources(intent, resources, env) {
   const result = await env.AI.run(env.MODEL || DEFAULT_MODEL, {
     prompt: buildRankingPrompt(intent, resources),
     temperature: 0.05,
     reasoning_effort: AI_REASONING_EFFORT,
-    max_completion_tokens: 900
+    max_completion_tokens: RANKING_MAX_COMPLETION_TOKENS
   }, AI_RUN_OPTIONS);
-  return validateRecommendations(parseJsonObject(extractText(result)), resources);
+  return validateRecommendations(parseJsonObject(extractText(result)), resources, intent);
 }
 
 function fallbackRecommendations(intent, resources) {
@@ -634,7 +635,7 @@ export default {
     try {
       const ranked = await rankResources(intent, rankingCandidates, env);
       rankingMs = Date.now() - rankingStarted;
-      if (ranked.no_match && intentMode === 'fallback') {
+      if (ranked.no_match) {
         const recommendations = fallbackRecommendations(intent, resources);
         if (recommendations.length) {
           return json({
@@ -652,7 +653,7 @@ export default {
             no_match: false,
             recommendations,
             missing_capability: '',
-            diagnostic: 'intent_fallback_no_match_recovered'
+            diagnostic: intentMode === 'fallback' ? 'intent_fallback_no_match_recovered' : 'ai_no_match_recovered'
           }, 200, cors);
         }
       }

@@ -10,8 +10,8 @@ const catalogPath = 'data/resources.json';
 let source = fs.readFileSync(workerPath, 'utf8');
 assert.match(
   source,
-  /ranked\.no_match\s*&&\s*intentMode\s*===\s*['"]fallback['"]/, 
-  'Worker must retain the fallback-intent + no-match recovery guard.'
+  /if \(ranked\.no_match\) \{[\s\S]*fallbackRecommendations\(intent, resources\)[\s\S]*ai_no_match_recovered/,
+  'Any AI no-match must be cross-checked against deterministic full-catalog recovery.'
 );
 
 assert.match(
@@ -43,7 +43,7 @@ assert.doesNotMatch(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, isProviderQuotaExhausted, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, buildRankingPrompt, validateRecommendations, compactRankingResource, isProviderQuotaExhausted, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -58,6 +58,9 @@ const {
   normaliseWorkflowScope,
   normaliseIntent,
   buildIntentPrompt,
+  buildRankingPrompt,
+  validateRecommendations,
+  compactRankingResource,
   isProviderQuotaExhausted,
   fallbackQueryConcepts,
   fallbackIntent,
@@ -96,6 +99,16 @@ assert.match(
   source,
   /max_completion_tokens: INTENT_MAX_COMPLETION_TOKENS/,
   'Intent inference must use the bounded intent completion budget.'
+);
+assert.match(
+  source,
+  /const RANKING_MAX_COMPLETION_TOKENS = 420;/,
+  'Ranking completion budget must stay bounded at 420 tokens.'
+);
+assert.match(
+  source,
+  /max_completion_tokens: RANKING_MAX_COMPLETION_TOKENS/,
+  'Ranking inference must use the bounded ranking completion budget.'
 );
 
 assert.equal(
@@ -172,6 +185,41 @@ for (const fixture of prefilterFixtures) {
     `prefilter should bound candidate count to 8-18 for fixture ${fixture.expected}, got ${candidates.length}`
   );
 }
+
+const rankingIntent = fallbackIntent('我要從文字快速生成可以拿去做遊戲原型的 3D 模型');
+const rankingCandidates = prefilterResources(rankingIntent, catalog);
+const rankingPrompt = buildRankingPrompt(rankingIntent, rankingCandidates);
+assert.ok(
+  rankingPrompt.length < 17000,
+  `ranking prompt must stay compact for the 18-candidate fixture; got ${rankingPrompt.length} characters`
+);
+for (const omittedKey of ['"notes":', '"url":', '"status":', '"constraint_match":', '"constraint_miss":', '"how_to_use":']) {
+  assert.equal(
+    rankingPrompt.includes(omittedKey),
+    false,
+    `compact ranking prompt must omit ${omittedKey}`
+  );
+}
+const meshyCompact = compactRankingResource(catalog.find((item) => item.id === 'meshy-ai'));
+assert.equal(Object.hasOwn(meshyCompact, 'notes'), false);
+assert.equal(Object.hasOwn(meshyCompact, 'url'), false);
+assert.equal(Object.hasOwn(meshyCompact, 'status'), false);
+assert.ok(Array.isArray(meshyCompact.use_cases) && meshyCompact.use_cases.length <= 3);
+
+const minimalRanked = validateRecommendations({
+  no_match: false,
+  recommendations: [{ id: 'meshy-ai', fit_score: 95, reason: '可直接把文字或圖片轉成遊戲原型可用的 3D 模型。' }]
+}, rankingCandidates, rankingIntent);
+assert.equal(minimalRanked.no_match, false);
+assert.equal(minimalRanked.recommendations[0]?.id, 'meshy-ai');
+assert.equal(minimalRanked.recommendations[0]?.role, '推薦候選');
+assert.ok(minimalRanked.recommendations[0]?.how_to_use);
+assert.deepEqual(JSON.parse(JSON.stringify(minimalRanked.recommendations[0]?.constraint_match)), []);
+assert.deepEqual(JSON.parse(JSON.stringify(minimalRanked.recommendations[0]?.constraint_miss)), []);
+
+const trueNoMatch = validateRecommendations({ no_match: true, recommendations: [] }, rankingCandidates, rankingIntent);
+assert.equal(trueNoMatch.no_match, true);
+assert.ok(trueNoMatch.missing_capability);
 
 const recovered = fallbackRecommendations(
   fallbackIntent('我要從文字快速生成可以拿去做遊戲原型的 3D 模型'),
