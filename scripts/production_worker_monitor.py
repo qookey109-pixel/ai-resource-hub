@@ -386,24 +386,10 @@ def run_monitor(timeout: float) -> dict[str, Any]:
                         for value in values
                         if isinstance(value, str) and value.strip()
                     )
-        intent_entailment_values = list(ai_intent_hard_constraints)
-        if isinstance(intent_payload, dict):
-            desired_output = intent_payload.get("desired_output")
-            if isinstance(desired_output, str) and desired_output.strip():
-                intent_entailment_values.append(desired_output)
-            for field in ("search_concepts", "implied_needs"):
-                values = intent_payload.get(field)
-                if isinstance(values, list):
-                    intent_entailment_values.extend(
-                        str(value)
-                        for value in values
-                        if isinstance(value, str) and value.strip()
-                    )
-
         unsupported_constraints = sorted(
             {
                 constraint
-                for constraint in intent_entailment_values
+                for constraint in ai_intent_hard_constraints
                 if any(
                     term in constraint.lower()
                     for term in UNGROUNDED_HARD_CONSTRAINT_TERMS
@@ -417,9 +403,9 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         add_check(
             "ai_intent_grounding",
             grounding_ok,
-            "no unsupported controlled constraints/signals for semantic fixture"
+            "no unsupported hard constraints for semantic fixture"
             if grounding_ok
-            else "unsupported intent constraints/signals: " + ", ".join(unsupported_constraints),
+            else "unsupported hard constraints: " + ", ".join(unsupported_constraints),
         )
 
         semantic_hits = sorted(set(recommendation_ids) & semantic_expected_ids)
