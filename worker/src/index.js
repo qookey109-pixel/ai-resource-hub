@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.8';
+const RECOMMENDER_VERSION = '0.3.9';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
 const INTENT_MAX_COMPLETION_TOKENS = 480;
@@ -138,6 +138,11 @@ function parseJsonObject(text) {
 
 function cleanString(value, max = 240) {
   return String(value || '').trim().slice(0, max);
+}
+
+function isProviderQuotaExhausted(error) {
+  const message = String(error?.message || error || '');
+  return /\b4006\b|daily free allocation|used up.*neurons/i.test(message);
 }
 
 function cleanList(value, limit = 8, itemMax = 120) {
@@ -551,6 +556,7 @@ export default {
     let intentMs = 0;
     let rankingMs = 0;
     let intentDiagnostic = '';
+    let intentQuotaExhausted = false;
 
     let resources;
     const catalogStarted = Date.now();
@@ -578,6 +584,7 @@ export default {
     } catch (error) {
       console.error('intent understanding failed', error);
       intentDiagnostic = cleanString(error?.message || error, 180);
+      intentQuotaExhausted = isProviderQuotaExhausted(error);
       intent = fallbackIntent(query);
       intentMode = 'fallback';
     } finally {
@@ -597,6 +604,28 @@ export default {
         clarifying_question: intent.clarifying_question,
         choices: intent.clarification_choices,
         recommendations: []
+      }, 200, cors);
+    }
+
+    if (intentQuotaExhausted) {
+      const recommendations = fallbackRecommendations(intent, resources);
+      return json({
+        ok: true,
+        mode: recommendations.length ? 'fallback' : 'no_match',
+        version: RECOMMENDER_VERSION,
+        query,
+        intent_mode: intentMode,
+        intent,
+        intent_diagnostic: intentDiagnostic,
+        timings_ms: timingSnapshot(requestStarted, catalogMs, intentMs, rankingMs),
+        catalog_count: resources.length,
+        ranking_candidate_count: 0,
+        ranking_skipped: true,
+        intent_summary: intent.primary_goal,
+        no_match: recommendations.length === 0,
+        recommendations,
+        missing_capability: recommendations.length ? '' : '目前資源庫沒有足夠直接的候選資源。',
+        diagnostic: 'provider_quota_exhausted'
       }, 200, cors);
     }
 
