@@ -47,7 +47,7 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.11`
+- version: `0.3.12`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
@@ -63,6 +63,7 @@ Current runtime:
 - ranking sends a compact decision-only candidate payload (omitting notes/URL/status and limiting use-case text), asks for at most 3 minimal recommendations, and caps ranking completion at 420 tokens
 - a valid AI `no_match` is cross-checked against deterministic full-catalog fallback; only agreement between both paths remains a true no-match
 - model-generated must-have/preferences/avoid constraints are deterministically grounded against the original query; unsupported platform, execution, openness, budget, interface, or subscription qualifiers are discarded before ranking
+- constraint grounding also normalizes polarity, rejects weak partial-overlap entailment, filters unsupported controlled signals from search concepts/implied needs, and grounds desired_output to explicit source evidence
 - AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
 
 The Worker is deployed and monitored, but normal website browsing does not depend on it.
