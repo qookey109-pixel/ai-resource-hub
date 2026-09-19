@@ -479,10 +479,29 @@ function createQuickCategory(label, category = '') {
 function renderQuickCategories() {
   els.quickCategories.replaceChildren();
   els.quickCategories.append(createQuickCategory('全部資源', ''));
-  const usedCategories = new Set(state.resources.flatMap((resource) => resource.categories ?? []));
+  const categoryCounts = new Map();
+  for (const resource of state.resources) {
+    for (const category of (resource.categories ?? [])) {
+      categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+    }
+  }
 
-  for (const info of state.categories) {
-    if (!usedCategories.has(info.name)) continue;
+  const coreCategories = new Set([
+    'AI Coding',
+    'Agent Skills',
+    'MCP / Agent Frameworks',
+    'Developer Tools'
+  ]);
+
+  const visibleCategories = state.categories
+    .filter((info) => (categoryCounts.get(info.name) ?? 0) >= 3 || coreCategories.has(info.name))
+    .sort((a, b) => {
+      const aCore = coreCategories.has(a.name) ? 1 : 0;
+      const bCore = coreCategories.has(b.name) ? 1 : 0;
+      return bCore - aCore || (categoryCounts.get(b.name) ?? 0) - (categoryCounts.get(a.name) ?? 0);
+    });
+
+  for (const info of visibleCategories) {
     const displayName = info.display_name ?? info.name;
     const label = `${info.icon ? `${info.icon} ` : ''}${displayName}`;
     els.quickCategories.append(createQuickCategory(label, info.name));
