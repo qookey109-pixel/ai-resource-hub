@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-18",
+  "updated_at": "2026-09-19",
   "links": {
     "tt-a1i-archify": [
       {
@@ -158,6 +158,12 @@
         "kind": "documentation",
         "url": "https://supabase.com/docs",
         "description": "Supabase 官方文件總入口，涵蓋 Postgres、Auth、Storage、Realtime、Edge Functions 與開發 SDK。"
+      },
+      {
+        "label": "Supabase MCP Server",
+        "kind": "documentation",
+        "url": "https://supabase.com/docs/guides/ai-tools/mcp",
+        "description": "官方 Remote MCP 文件，涵蓋 OAuth、project scope、read-only、feature groups 與可用工具。"
       }
     ],
     "mistral-studio": [
@@ -1486,6 +1492,76 @@
         "kind": "demo",
         "url": "https://codepen.io/xorxor_hu/pen/WovvpB",
         "description": "作者 XORXOR / xorxor_hu 的公開 CodePen Demo；Pen 程式碼標示 created by XORXOR，可作為此創作者頁的已驗證作品入口。"
+      }
+    ],
+    "mcp-so-directory": [
+      {
+        "label": "MCP.so 分類",
+        "kind": "website",
+        "url": "https://mcp.so/zh/categories",
+        "description": "依開發工具、AI、資料庫、雲端、金融、瀏覽器自動化等分類探索 MCP Server 與 Client。"
+      }
+    ],
+    "github-mcp-server": [
+      {
+        "label": "GitHub MCP Server 設定指南",
+        "kind": "documentation",
+        "url": "https://github.com/github/github-mcp-server/blob/main/docs/server-configuration.md",
+        "description": "官方 Remote／Local 設定、toolsets、read-only、tool restriction 與進階選項。"
+      },
+      {
+        "label": "GitHub MCP OAuth Login",
+        "kind": "documentation",
+        "url": "https://github.com/github/github-mcp-server/blob/main/docs/oauth-login.md",
+        "description": "官方本機 MCP OAuth 登入、PKCE、device-code 與 GitHub App 認證說明。"
+      }
+    ],
+    "microsoft-playwright-mcp": [
+      {
+        "label": "Playwright MCP 官方文件",
+        "kind": "documentation",
+        "url": "https://playwright.dev/mcp/introduction",
+        "description": "官方安裝、Accessibility Snapshot、Browser Tools 與 MCP 使用指南。"
+      },
+      {
+        "label": "@playwright/mcp",
+        "kind": "download",
+        "url": "https://www.npmjs.com/package/@playwright/mcp",
+        "description": "Microsoft 發布的 Playwright MCP npm 套件。"
+      }
+    ],
+    "upstash-context7": [
+      {
+        "label": "Context7 官方網站",
+        "kind": "website",
+        "url": "https://context7.com/",
+        "description": "Context7 Library 搜尋、安裝入口與 API Key 管理。"
+      },
+      {
+        "label": "Context7 MCP 文件",
+        "kind": "documentation",
+        "url": "https://context7.com/docs/overview",
+        "description": "官方 Context7 MCP 概覽、安裝與使用最新版本文件的方式。"
+      }
+    ],
+    "stripe-ai-mcp": [
+      {
+        "label": "Stripe Agent / MCP 文件",
+        "kind": "documentation",
+        "url": "https://docs.stripe.com/agents",
+        "description": "Stripe 官方 Agent 與 MCP 整合文件入口。"
+      },
+      {
+        "label": "Stripe MCP README",
+        "kind": "documentation",
+        "url": "https://github.com/stripe/ai/blob/main/tools/modelcontextprotocol/README.md",
+        "description": "官方 Remote MCP、本機 @stripe/mcp、API Key 與 Connected Account 設定說明。"
+      },
+      {
+        "label": "Stripe Remote MCP",
+        "kind": "api",
+        "url": "https://mcp.stripe.com",
+        "description": "Stripe 官方 Remote MCP endpoint；使用時依支援的 MCP Client 進行 OAuth 授權。"
       }
     ]
   }

@@ -225,12 +225,19 @@ test('real-world Traditional Chinese search QA corpus keeps relevant resources d
     ['想做 shader 特效', 'MetalForge'],
     ['找像素畫轉換工具', 'PixelArtBase'],
     ['有沒有產品設計案例', 'Curated'],
-    ['找 UI 動畫元件', 'React Bits — Shape Grid']
+    ['找 UI 動畫元件', 'React Bits — Shape Grid'],
+    ['找 MCP server 目錄', 'MCP.so'],
+    ['找 GitHub MCP', 'GitHub MCP Server'],
+    ['找瀏覽器自動化 MCP', 'Playwright MCP'],
+    ['找最新程式庫文件 MCP', 'Context7'],
+    ['找 Stripe MCP', 'Stripe AI / MCP']
   ];
 
   for (const [query, expectedResource] of cases) {
-    await search.fill(query);
-    await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+    await test.step(`search: ${query} -> ${expectedResource}`, async () => {
+      await search.fill(query);
+      await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+    });
   }
 });
 
