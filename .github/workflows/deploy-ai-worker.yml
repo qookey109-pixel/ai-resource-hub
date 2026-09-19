@@ -199,7 +199,10 @@ jobs:
                 [
                   (.intent.must_have[]? // ""),
                   (.intent.preferences[]? // ""),
-                  (.intent.avoid[]? // "")
+                  (.intent.avoid[]? // ""),
+                  (.intent.desired_output // ""),
+                  (.intent.search_concepts[]? // ""),
+                  (.intent.implied_needs[]? // "")
                 ]
                 | map(ascii_downcase)
                 | all(
