@@ -230,7 +230,11 @@ test('real-world Traditional Chinese search QA corpus keeps relevant resources d
     ['找 GitHub MCP', 'GitHub MCP Server'],
     ['找瀏覽器自動化 MCP', 'Playwright MCP'],
     ['找最新程式庫文件 MCP', 'Context7'],
-    ['找 Stripe MCP', 'Stripe AI / MCP']
+    ['找 Stripe MCP', 'Stripe AI / MCP'],
+    ['找 Cloudflare MCP', 'Cloudflare MCP'],
+    ['找 Render MCP 部署工具', 'Render MCP Server'],
+    ['找 PostgreSQL MCP', 'Postgres MCP Server'],
+    ['找網頁抓取 MCP', 'Firecrawl MCP Server']
   ];
 
   for (const [query, expectedResource] of cases) {

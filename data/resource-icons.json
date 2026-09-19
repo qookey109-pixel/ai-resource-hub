@@ -365,6 +365,22 @@
     "stripe-ai-mcp": {
       "url": "https://github.com/stripe.png?size=256",
       "source": "github-organization-avatar-256"
+    },
+    "cloudflare-mcp": {
+      "url": "https://github.com/cloudflare.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "render-mcp-server": {
+      "url": "https://github.com/render-oss.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "microsoft-postgres-mcp": {
+      "url": "https://github.com/microsoft.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "firecrawl-mcp-server": {
+      "url": "https://github.com/firecrawl.png?size=256",
+      "source": "github-organization-avatar-256"
     }
   }
 }

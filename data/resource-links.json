@@ -1563,6 +1563,74 @@
         "url": "https://mcp.stripe.com",
         "description": "Stripe 官方 Remote MCP endpoint；使用時依支援的 MCP Client 進行 OAuth 授權。"
       }
+    ],
+    "cloudflare-mcp": [
+      {
+        "label": "Cloudflare Remote MCP",
+        "kind": "api",
+        "url": "https://mcp.cloudflare.com/mcp",
+        "description": "Cloudflare 官方 Remote MCP endpoint，支援 OAuth 或 API Token。"
+      },
+      {
+        "label": "Cloudflare Domain MCP Servers",
+        "kind": "github",
+        "url": "https://github.com/cloudflare/mcp-server-cloudflare",
+        "description": "Cloudflare 官方各產品領域 MCP Servers，例如 Documentation、Bindings、Builds、Radar 等。"
+      },
+      {
+        "label": "Code Mode SDK",
+        "kind": "documentation",
+        "url": "https://developers.cloudflare.com/agents/api-reference/codemode/",
+        "description": "Cloudflare 官方 Code Mode 架構與 SDK 文件。"
+      }
+    ],
+    "render-mcp-server": [
+      {
+        "label": "Render MCP 官方文件",
+        "kind": "documentation",
+        "url": "https://render.com/docs/mcp-server",
+        "description": "Render 官方 MCP 安裝、連線、工具與使用指南。"
+      },
+      {
+        "label": "Render MCP Security Policy",
+        "kind": "documentation",
+        "url": "https://github.com/render-oss/render-mcp-server/blob/main/SECURITY.md",
+        "description": "Render MCP 官方安全政策與漏洞回報方式。"
+      }
+    ],
+    "microsoft-postgres-mcp": [
+      {
+        "label": "Postgres MCP Usage Guide",
+        "kind": "documentation",
+        "url": "https://github.com/microsoft/postgres-mcp/blob/main/USAGE.md",
+        "description": "Microsoft 官方連線、認證、TLS、read-only、安全模型與工具指南。"
+      },
+      {
+        "label": "Postgres MCP Changelog",
+        "kind": "documentation",
+        "url": "https://github.com/microsoft/postgres-mcp/blob/main/CHANGELOG.md",
+        "description": "官方版本與 Preview 功能變更紀錄。"
+      }
+    ],
+    "firecrawl-mcp-server": [
+      {
+        "label": "Firecrawl MCP Hosted Setup",
+        "kind": "documentation",
+        "url": "https://docs.firecrawl.dev/mcp-server",
+        "description": "官方 hosted MCP、OAuth、API Key 與各 Client 設定指南。"
+      },
+      {
+        "label": "Firecrawl Hosted MCP",
+        "kind": "api",
+        "url": "https://mcp.firecrawl.dev/v2/mcp",
+        "description": "Firecrawl 官方 hosted MCP endpoint；keyless 模式提供受限工具，完整能力可使用 OAuth 或 API Key。"
+      },
+      {
+        "label": "Firecrawl Core",
+        "kind": "github",
+        "url": "https://github.com/firecrawl/firecrawl",
+        "description": "Firecrawl 官方核心 Web scraping、crawl 與資料擷取專案。"
+      }
     ]
   }
 }
