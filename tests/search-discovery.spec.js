@@ -234,8 +234,10 @@ test('real-world Traditional Chinese search QA corpus keeps relevant resources d
   ];
 
   for (const [query, expectedResource] of cases) {
-    await search.fill(query);
-    await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+    await test.step(`search: ${query} -> ${expectedResource}`, async () => {
+      await search.fill(query);
+      await expect(page.locator('.card', { hasText: expectedResource })).toHaveCount(1);
+    });
   }
 });
 
