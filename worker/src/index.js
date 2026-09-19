@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.10';
+const RECOMMENDER_VERSION = '0.3.11';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
 const INTENT_MAX_COMPLETION_TOKENS = 480;
@@ -162,6 +162,85 @@ function cleanChoices(value, query) {
     .slice(0, 4);
 }
 
+const CONSTRAINT_SIGNAL_GROUPS = Object.freeze([
+  ['local', ['本機', '本地', '離線', 'local', 'offline', 'on-device', 'on device']],
+  ['cloud', ['雲端', 'cloud']],
+  ['open-source', ['開源', 'open source', 'open-source']],
+  ['free', ['免費', 'free', '零成本', '0元', '0 元', '預算0', '預算 0', 'budget 0']],
+  ['paid', ['付費', '收費', 'paid']],
+  ['windows', ['windows']],
+  ['macos', ['macos', 'mac os']],
+  ['linux', ['linux']],
+  ['api', ['api']],
+  ['cli', ['cli', '命令列', 'command line']],
+  ['web-ui', ['web ui', 'web介面', '網頁介面', '瀏覽器介面']],
+  ['app', ['app', '應用程式']],
+  ['subscription', ['訂閱', 'subscription']],
+  ['single-tool', ['一套工具', '單一工具', '一個工具', '直接完成', '端到端', 'end-to-end', 'end to end', '無需額外', '不需額外', '不用額外']],
+  ['automatic', ['自動', '自動化', 'automation', 'automated']]
+]);
+
+const CONSTRAINT_LEXICAL_STOP = new Set([
+  '需要', '必須', '支援', '使用', '透過', '避免', '希望', '不要', '不需', '無需',
+  '可以', '軟體', '工具', '服務', '操作', '執行', '功能', '方案'
+]);
+
+function normaliseGroundingText(value) {
+  return String(value || '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[＿_–—-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function signalGroupsFor(value) {
+  const text = normaliseGroundingText(value);
+  return CONSTRAINT_SIGNAL_GROUPS
+    .filter(([, terms]) => terms.some((term) => text.includes(normaliseGroundingText(term))))
+    .map(([name]) => name);
+}
+
+function querySupportsSignalGroup(query, groupName) {
+  const text = normaliseGroundingText(query);
+  const group = CONSTRAINT_SIGNAL_GROUPS.find(([name]) => name === groupName);
+  return Boolean(group && group[1].some((term) => text.includes(normaliseGroundingText(term))));
+}
+
+function lexicalConstraintGrounded(value, query) {
+  const item = normaliseGroundingText(value);
+  const source = normaliseGroundingText(query);
+  if (!item || !source) return false;
+
+  const latinTokens = item.match(/[a-z][a-z0-9.+#-]{1,}/g) || [];
+  if (latinTokens.some((token) => source.includes(token))) return true;
+
+  for (const run of item.match(/\p{Script=Han}{2,}/gu) || []) {
+    if (source.includes(run)) return true;
+    for (const size of [4, 3, 2]) {
+      if (run.length < size) continue;
+      for (let index = 0; index <= run.length - size; index += 1) {
+        const chunk = run.slice(index, index + size);
+        if (CONSTRAINT_LEXICAL_STOP.has(chunk)) continue;
+        if (source.includes(chunk)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function isGroundedConstraint(value, query) {
+  const groups = signalGroupsFor(value);
+  if (groups.length) {
+    return groups.every((group) => querySupportsSignalGroup(query, group));
+  }
+  return lexicalConstraintGrounded(value, query);
+}
+
+function groundConstraintList(value, query, limit = 8, itemMax = 120) {
+  return cleanList(value, limit, itemMax).filter((item) => isGroundedConstraint(item, query));
+}
+
 function normaliseWorkflowScope(value) {
   let normalized = cleanString(value, 100)
     .toLowerCase()
@@ -179,9 +258,9 @@ function normaliseIntent(raw, query) {
     original_query: query,
     primary_goal: cleanString(raw?.primary_goal || query),
     desired_output: cleanString(raw?.desired_output),
-    must_have: cleanList(raw?.must_have),
-    preferences: cleanList(raw?.preferences),
-    avoid: cleanList(raw?.avoid),
+    must_have: groundConstraintList(raw?.must_have, query),
+    preferences: groundConstraintList(raw?.preferences, query),
+    avoid: groundConstraintList(raw?.avoid, query),
     platform: cleanList(raw?.platform, 6, 80),
     execution: cleanList(raw?.execution, 6, 80),
     budget: cleanString(raw?.budget, 80),
@@ -202,7 +281,9 @@ function buildIntentPrompt(query) {
   return [
     '你是需求分析器。只解析需求，不推薦工具。',
     '輸出精簡繁體中文 JSON；不要 Markdown、code fence 或額外文字。',
-    '保留明確限制：本機/雲端、開源、預算、平台、API/CLI/Web/App 等，統一放入 must_have、preferences 或 avoid，不要另外展開欄位。',
+    'must_have、preferences、avoid 只能放使用者原話明確表達或直接同義的限制；未提到就留空。',
+    '不得自行補本機/雲端、開源/免費、預算、作業系統、API/CLI/Web/App、訂閱等限制。合理推論只能放 implied_needs，不得升格成硬限制。',
+    '每個限制只寫一件事，不要把已知條件與推測條件合併在同一項。',
     'must_have 最多 4 項；preferences 最多 3 項；avoid 最多 3 項；implied_needs 最多 3 項；search_concepts 最多 6 項。',
     'workflow_scope 只能是 end-to-end、component、either 或 unknown。',
     '只有缺少資訊會實質改變工具種類時 needs_clarification=true；否則 false。',
