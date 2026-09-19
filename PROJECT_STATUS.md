@@ -7,7 +7,7 @@ Status date: 2026-09-19 (Asia/Taipei)
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Current canonical catalog size: **91 resources**
+- Current canonical catalog size: **95 resources**
 - Catalog identity authority: `data/resources.json`
 
 ## Production baseline
@@ -33,7 +33,7 @@ Services:
 
 Quality gates:
 
-- Playwright browser regression + site smoke tests, including a 48-case real-world Traditional Chinese search QA corpus and negative precision guards
+- Playwright browser regression + site smoke tests, including a 52-case real-world Traditional Chinese search QA corpus and negative precision guards
 - Resource Health structural validation, live URL/GitHub observation, metadata-freshness evidence, and reviewed triage
 - Project Status consistency
 - Production Worker monitor with degraded-mode latency / diagnostic evidence
@@ -41,9 +41,9 @@ Quality gates:
 
 Data quality snapshot:
 
-- supplemental official links: **91 / 91 resources (100%)**
-- icon registry coverage: **91 / 91 resources**
-- icon sources (mutually exclusive): **45 official-labelled**, **17 GitHub-avatar**, **21 fallback-labelled**, **8 domain-favicon**
+- supplemental official links: **95 / 95 resources (100%)**
+- icon registry coverage: **95 / 95 resources**
+- icon sources (mutually exclusive): **45 official-labelled**, **21 GitHub-avatar**, **21 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Current maintenance boundary
