@@ -325,16 +325,19 @@ function compactConstraintValues(values) {
 }
 
 function normaliseConstraintBuckets(raw, query) {
+  const limits = { must_have: 4, preferences: 3, avoid: 3 };
   const buckets = { must_have: [], preferences: [], avoid: [] };
-  for (const [sourceKey, limit] of [['must_have', 4], ['preferences', 3], ['avoid', 3]]) {
-    for (const item of cleanList(raw?.[sourceKey], limit, 120)) {
+  for (const sourceKey of ['must_have', 'preferences', 'avoid']) {
+    for (const item of cleanList(raw?.[sourceKey], 12, 120)) {
       const grounded = groundConstraintItem(item, query);
       if (!grounded?.value) continue;
       const target = sourceKey === 'avoid' || grounded.negative ? 'avoid' : sourceKey;
       if (!buckets[target].includes(grounded.value)) buckets[target].push(grounded.value);
     }
   }
-  for (const key of Object.keys(buckets)) buckets[key] = compactConstraintValues(buckets[key]);
+  for (const key of Object.keys(buckets)) {
+    buckets[key] = compactConstraintValues(buckets[key]).slice(0, limits[key]);
+  }
   return buckets;
 }
 
