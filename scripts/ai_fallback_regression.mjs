@@ -43,7 +43,7 @@ assert.doesNotMatch(
 
 source = source.replace(
   'export default {',
-  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, buildRankingPrompt, validateRecommendations, compactRankingResource, isGroundedConstraint, groundConstraintList, isProviderQuotaExhausted, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
+  'globalThis.__test = { parseJsonObject, normaliseWorkflowScope, normaliseIntent, buildIntentPrompt, buildRankingPrompt, validateRecommendations, compactRankingResource, lexicalEvidenceCoverage, groundConstraintItem, normaliseConstraintBuckets, isProviderQuotaExhausted, fallbackQueryConcepts, fallbackIntent, fallbackRecommendations, prefilterResources }; globalThis.__worker = {'
 );
 
 const context = { console };
@@ -61,8 +61,9 @@ const {
   buildRankingPrompt,
   validateRecommendations,
   compactRankingResource,
-  isGroundedConstraint,
-  groundConstraintList,
+  lexicalEvidenceCoverage,
+  groundConstraintItem,
+  normaliseConstraintBuckets,
   isProviderQuotaExhausted,
   fallbackQueryConcepts,
   fallbackIntent,
@@ -149,54 +150,70 @@ assert.deepEqual(
     interface: compactIntent.interface
   })),
   {
-    must_have: ['本機執行', '語音複製'],
-    avoid: ['雲端訂閱服務'],
+    must_have: ['本機', '語音複製'],
+    avoid: ['雲端 / 訂閱'],
     workflow_scope: 'end-to-end',
     platform: [],
     execution: [],
     budget: '',
     interface: []
   },
-  'Compact model output must preserve legacy normalized API fields with safe empty defaults.'
+  'Compact model output must preserve only grounded hard constraints with safe legacy defaults.'
 );
 
-assert.equal(isGroundedConstraint('本機執行', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'), true);
-assert.equal(isGroundedConstraint('開源軟體', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'), false);
-assert.equal(isGroundedConstraint('支援 Windows', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'), false);
-assert.equal(isGroundedConstraint('依賴雲端訂閱服務', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'), true);
-assert.equal(isGroundedConstraint('避免付費訂閱', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'), false);
-assert.equal(isGroundedConstraint('單一工具解決', '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成'), true);
-assert.equal(isGroundedConstraint('支援繁體中文', '我只要支援繁體中文的工具'), true);
+assert.ok(lexicalEvidenceCoverage('文字生成', '我要從文字快速生成可以拿去做遊戲原型的 3D 模型') >= 0.6);
+assert.ok(lexicalEvidenceCoverage('多種語音檔案格式', '我要在本機做語音複製和配音，不想依賴雲端訂閱服務') < 0.6);
+
+const negatedCloud = groundConstraintItem(
+  '不依賴雲端訂閱服務',
+  '我要在本機做語音複製和配音，不想依賴雲端訂閱服務'
+);
+assert.equal(negatedCloud?.value, '雲端 / 訂閱');
+assert.equal(negatedCloud?.negative, true);
+
+const shortsSingleTool = groundConstraintItem(
+  '無需額外處理',
+  '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成'
+);
+assert.equal(shortsSingleTool?.value, '單一工具直接完成');
+assert.equal(shortsSingleTool?.negative, false);
 
 const hallucinated3dIntent = normaliseIntent({
   primary_goal: '從文字快速生成 3D 模型以用於遊戲原型',
-  desired_output: '可用的 3D 模型資產',
-  must_have: ['本機運算', '開源免費', '預算 0', '無付費方案'],
+  desired_output: 'MP4 格式的可下載 3D 模型檔案',
+  must_have: ['本機運算', '開源免費', '預算 0', '無付費方案', '文字生成', '3D 模型'],
   preferences: ['API/CLI/Web/App 都可以'],
   avoid: ['雲端運算'],
   workflow_scope: 'component',
-  implied_needs: ['支援文字轉 3D', '適合遊戲開發'],
-  search_concepts: ['text to 3d', 'game asset'],
+  implied_needs: ['支援文字轉 3D', '適合遊戲開發', '免費方案'],
+  search_concepts: ['text to 3d', 'game asset', 'open source', 'cloud api'],
   needs_clarification: false
 }, '我要從文字快速生成可以拿去做遊戲原型的 3D 模型');
-assert.deepEqual(JSON.parse(JSON.stringify(hallucinated3dIntent.must_have)), []);
+assert.deepEqual(JSON.parse(JSON.stringify(hallucinated3dIntent.must_have)), ['文字生成', '3D 模型']);
 assert.deepEqual(JSON.parse(JSON.stringify(hallucinated3dIntent.preferences)), []);
 assert.deepEqual(JSON.parse(JSON.stringify(hallucinated3dIntent.avoid)), []);
+assert.equal(hallucinated3dIntent.desired_output, '從文字快速生成 3D 模型以用於遊戲原型');
+assert.equal(hallucinated3dIntent.search_concepts.includes('open source'), false);
+assert.equal(hallucinated3dIntent.search_concepts.includes('cloud api'), false);
+assert.equal(hallucinated3dIntent.implied_needs.includes('免費方案'), false);
 
 const hallucinatedVoiceIntent = normaliseIntent({
   primary_goal: '在本機執行語音複製與配音任務',
-  desired_output: '本機執行的語音工作站',
-  must_have: ['本機執行', '開源軟體', '支援 Windows', '透過 API 或 CLI 操作'],
+  desired_output: '多種語音檔案格式的處理結果',
+  must_have: ['本機執行', '開源軟體', '支援 Windows', '透過 API 或 CLI 操作', '能處理多種語音檔案格式'],
   preferences: ['避免 Web UI', '避免付費訂閱'],
-  avoid: ['依賴雲端訂閱服務'],
+  avoid: ['不依賴雲端訂閱服務'],
   workflow_scope: 'component',
-  implied_needs: ['需要處理語音檔案'],
-  search_concepts: ['語音複製', '配音'],
+  implied_needs: ['需要處理語音檔案', '離線工具'],
+  search_concepts: ['語音複製', '配音', '免費開源', '離線工具'],
   needs_clarification: false
 }, '我要在本機做語音複製和配音，不想依賴雲端訂閱服務');
-assert.deepEqual(JSON.parse(JSON.stringify(hallucinatedVoiceIntent.must_have)), ['本機執行']);
+assert.deepEqual(JSON.parse(JSON.stringify(hallucinatedVoiceIntent.must_have)), ['本機']);
 assert.deepEqual(JSON.parse(JSON.stringify(hallucinatedVoiceIntent.preferences)), []);
-assert.deepEqual(JSON.parse(JSON.stringify(hallucinatedVoiceIntent.avoid)), ['依賴雲端訂閱服務']);
+assert.deepEqual(JSON.parse(JSON.stringify(hallucinatedVoiceIntent.avoid)), ['雲端 / 訂閱']);
+assert.equal(hallucinatedVoiceIntent.desired_output, '在本機執行語音複製與配音任務');
+assert.equal(hallucinatedVoiceIntent.search_concepts.includes('免費開源'), false);
+assert.equal(hallucinatedVoiceIntent.search_concepts.includes('離線工具'), true);
 
 const groundedShortsIntent = normaliseIntent({
   primary_goal: '自動產生 YouTube Shorts 短影片',
@@ -209,8 +226,9 @@ const groundedShortsIntent = normaliseIntent({
 }, '我要自動產生 YouTube Shorts 短影片，最好是一套工具直接完成');
 assert.deepEqual(
   JSON.parse(JSON.stringify(groundedShortsIntent.must_have)),
-  ['自動化產生', '單一工具解決', '無需額外處理']
+  ['自動化', '單一工具直接完成']
 );
+assert.deepEqual(JSON.parse(JSON.stringify(groundedShortsIntent.avoid)), []);
 
 
 
