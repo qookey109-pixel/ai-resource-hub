@@ -1,1 +1,354 @@
-{"schema_version":"0.2","updated_at":"2026-09-19","icons":{"emil-kowalski-skills":{"url":"https://github.com/emilkowalski.png?size=256","source":"github-owner-avatar-256"},"refero-styles":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design","source":"domain-favicon-128"},"soundshockaudio":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://soundshockaudio.com","source":"domain-favicon-128"},"hallmark":{"url":"https://github.com/Nutlope.png?size=256","source":"github-owner-avatar-256"},"ip-as-logo-skill":{"url":"https://github.com/s1dashu.png?size=256","source":"github-owner-avatar-256"},"react-bits-shape-grid":{"url":"https://raw.githubusercontent.com/DavidHDev/react-bits/main/public/android-chrome-512x512.png","source":"official-repository-android-chrome-512"},"ui-skills":{"url":"https://raw.githubusercontent.com/ibelick/ui-skills/main/public/favicon.svg","source":"official-repository-favicon-svg"},"cloudflare-dashboard":{"url":"https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/public/logo.svg","source":"official-repository-project-logo-svg"},"xorxor-hu-codepen":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io","source":"domain-favicon-128"},"oracle-cloud-free-tier":{"url":"https://github.com/oracle.png?size=256","source":"github-organization-avatar-256"},"supabase-dashboard":{"url":"https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/public/supabase-logo.svg","source":"official-repository-project-logo-svg"},"mistral-studio":{"url":"https://github.com/mistralai.png?size=256","source":"github-organization-avatar-256"},"groqcloud-console":{"url":"https://github.com/groq.png?size=256","source":"official-github-organization-avatar-256"},"capafy-ai":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai","source":"domain-favicon-128"},"anime-js":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com","source":"domain-favicon-128"},"world-monitor":{"url":"https://www.worldmonitor.app/favico/apple-touch-icon.png","source":"official-site-apple-touch-icon"},"pi-agent-harness":{"url":"https://pi.dev/logo-auto.svg","source":"official-site-svg"},"money-printer-turbo":{"url":"https://github.com/harry0703.png?size=256","source":"github-owner-avatar-256"},"reverse-skill":{"url":"https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png","source":"official-repository-project-image"},"mechanical-deployables-threejs":{"url":"https://github.com/trungdq88.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"voice-studio":{"url":"https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png","source":"official-repository-project-logo"},"dsh-desktop":{"url":"https://raw.githubusercontent.com/vibeinging/dsh-desktop/dev/electron/icons/icon.svg","source":"official-repository-app-icon-svg"},"ai-website-cloner-template":{"url":"https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/src/app/favicon.ico","source":"official-project-favicon-repo-ico"},"threeui-community":{"url":"https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg","source":"official-repository-project-mark-svg"},"elevenlabs":{"url":"https://github.com/elevenlabs.png?size=256","source":"github-organization-avatar-256"},"meshy-ai":{"url":"https://github.com/meshy-dev.png?size=256","source":"github-organization-avatar-256"},"mattpocock-skills":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://aihero.dev","source":"official-aihero-domain-favicon-128"},"oneworks-avatar":{"url":"https://raw.githubusercontent.com/oneworks-ai/avatar/main/public/favicon.svg","source":"official-repository-favicon-svg"},"legal-skills-open":{"url":"https://github.com/ThomasMoreAI.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"pixelartbase-free-com-tw":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://www.pixelartbase.com","source":"domain-favicon-128"},"ai-drama-pound":{"url":"https://github.com/POUND0423.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"anti-gambling-trader-tw":{"url":"https://github.com/mars-tw.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"create360-ai":{"url":"https://raw.githubusercontent.com/tbdavid2019/888-url2md/main/public/favicon.svg","source":"official-repository-favicon-svg"},"builderio-agent-native":{"url":"https://raw.githubusercontent.com/BuilderIO/agent-native/main/packages/core/src/assets/branding/icon-on-light.svg","source":"official-repository-brand-mark-svg"},"sirius-walkthrough-me":{"url":"https://github.com/sirius-cc-wu.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"tt-a1i-archify":{"url":"https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/archify.svg","source":"official-homepage-inline-favicon-svg"},"voltagent-awesome-agent-skills":{"url":"https://github.com/VoltAgent.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"phileiny-h3-storyboard-skill":{"url":"https://github.com/phileiny.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"metalforge-shader-editor":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://metalforge.xyz","source":"domain-favicon-128"},"vercel-labs-vgpu":{"url":"https://raw.githubusercontent.com/vercel-labs/vgpu/canary/apps/docs/app/favicon.ico","source":"official-repository-docs-favicon-ico"},"sentelabs-openexecutive":{"url":"https://raw.githubusercontent.com/SenteLabsAI/OpenExecutive/main/docs/assets/chat-avatar.svg","source":"official-repository-brand-avatar-svg"},"openstreetmap":{"url":"https://raw.githubusercontent.com/openstreetmap/openstreetmap-website/master/app/assets/images/osm_logo.svg","source":"official-repository-project-logo-svg"},"token-gremlin-abyssal":{"url":"https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/abyssal.svg","source":"official-homepage-inline-favicon-svg"},"raymondhou0917-speak-human-tw":{"url":"https://github.com/Raymondhou0917.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"lulu930128-github-profile":{"url":"https://github.com/lulu930128.png?size=256","source":"github-owner-avatar-256"},"diegosouzapw-omniroute":{"url":"https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/public/icon-512.png","source":"official-repository-app-icon-512"},"thu-maic-openmaic":{"url":"https://raw.githubusercontent.com/THU-MAIC/OpenMAIC/main/public/openmaic-mark.png","source":"official-repository-project-mark-png"},"miuuyy-codex-chatgpt-web":{"url":"https://raw.githubusercontent.com/miuuyy/codex-chatgpt-web/main/launcher/assets/icon.svg","source":"official-repository-launcher-icon-svg"},"firekou-aitokenking-developerskill":{"url":"https://github.com/firekou.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"yanliudesign-mono-color-skill":{"url":"https://github.com/yanliudesign.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"tashfeenahmed-freellmapi":{"url":"https://raw.githubusercontent.com/tashfeenahmed/freellmapi/main/client/public/favicon.svg","source":"official-repo-brand-favicon-svg"},"slidefirm-nesa-slide":{"url":"https://raw.githubusercontent.com/slidefirm/NESA-SLIDE/main/demos/html/favicon.svg","source":"official-public-demo-favicon-svg"},"2akouwu-reverify":{"url":"https://github.com/2akouwu.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"larashero3-lieflat-charts":{"url":"https://github.com/larashero3-dotcom.png?size=256","source":"github-owner-avatar-256-fallback-no-square-project-logo"},"addyosmani-agent-skills":{"url":"https://github.com/addyosmani.png?size=256","source":"github-owner-avatar-256"},"boundaryml-baml":{"url":"https://github.com/BoundaryML.png?size=256","source":"github-organization-avatar-256"},"getlayers-ai":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://www.getlayers.ai","source":"official-domain-favicon-128"},"curated-design":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://curated.design","source":"official-domain-favicon-128"},"60fps-design":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://60fps.design","source":"official-domain-favicon-128"},"trailhq-graft":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://graft.nanonets.ai","source":"official-site-domain-favicon-128"},"msitarzewski-agency-agents":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://agencyagents.app","source":"official-app-domain-favicon-128"},"deusdata-codebase-memory-mcp":{"url":"https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/codebase-memory-mcp.svg","source":"official-homepage-inline-favicon-svg"},"calesthio-openmontage":{"url":"https://raw.githubusercontent.com/calesthio/OpenMontage/main/assets/monty-light.svg","source":"official-repository-mascot-svg"},"panniantong-agent-reach":{"url":"https://github.com/Panniantong.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"stablyai-orca":{"url":"https://raw.githubusercontent.com/stablyai/orca/main/resources/build/icon.png","source":"official-repository-app-icon"},"bilawalsidhu-gods-eye-view":{"url":"https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/main/public/logo.svg","source":"official-repository-project-logo-svg"},"gputw-ai-gputw-skill":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://gputw.ai","source":"official-gputw-domain-favicon-128"},"jarrodwatts-jev-trader":{"url":"https://raw.githubusercontent.com/jarrodwatts/jev-trader/main/web/src/app/favicon.ico","source":"official-project-favicon-repo-ico"},"kruzovic7-ai-data-extractor":{"url":"https://github.com/kruzovic7.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"666ghj-mirofish":{"url":"https://raw.githubusercontent.com/666ghj/MiroFish/main/static/image/MiroFish_logo_compressed.jpeg","source":"official-repository-project-logo"},"tauricresearch-tradingagents":{"url":"https://github.com/TauricResearch.png?size=256","source":"github-organization-avatar-256"},"danny-avila-librechat":{"url":"https://raw.githubusercontent.com/danny-avila/LibreChat/main/client/public/assets/logo.svg","source":"official-repository-project-logo-svg"},"heygen-com-hyperframes":{"url":"https://raw.githubusercontent.com/heygen-com/hyperframes/main/docs/logo/light.svg","source":"official-repository-project-logo-svg"},"fincept-corporation-finceptterminal":{"url":"https://raw.githubusercontent.com/Fincept-Corporation/FinceptTerminal/main/fincept-qt/resources/in.fincept.FinceptTerminal.png","source":"official-repository-app-icon-png"},"cloudflare-agentic-inbox":{"url":"https://github.com/cloudflare.png?size=256","source":"github-organization-avatar-256"},"openbmb-voxcpm":{"url":"https://raw.githubusercontent.com/OpenBMB/VoxCPM/main/assets/voxcpm_logo.png","source":"official-repository-project-logo"},"reconurge-flowsint":{"url":"https://raw.githubusercontent.com/reconurge/flowsint/main/flowsint-app/public/icon.png","source":"official-repository-app-icon-png"},"nangohq-nango":{"url":"https://raw.githubusercontent.com/NangoHQ/nango/master/assets/nango-logo.png","source":"official-repository-project-logo"},"mars-tw-open-seo-advisor-skill":{"url":"https://github.com/mars-tw.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"mars-tw-ai-console":{"url":"https://raw.githubusercontent.com/mars-tw/ai-console/main/docs/logo.png","source":"official-repository-project-logo"},"cloudflare-security-audit-skill":{"url":"https://github.com/cloudflare.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"thomasbek3-hermes-bot-kit":{"url":"https://github.com/thomasbek3.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"nujovich-hermes-telemetry":{"url":"https://github.com/nujovich.png?size=256","source":"github-owner-avatar-256-fallback-no-project-logo"},"nousresearch-hermes-plugin-backsearch":{"url":"https://github.com/NousResearch.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"nousresearch-hermes-plugin-snyk":{"url":"https://github.com/NousResearch.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"nousresearch-hermes-memory-wiki":{"url":"https://github.com/NousResearch.png?size=256","source":"github-organization-avatar-256-fallback-no-project-logo"},"mcp-so-servers":{"url":"https://www.google.com/s2/favicons?sz=128&domain_url=https://mcp.so","source":"domain-favicon-128"}}}
+{
+  "schema_version": "0.2",
+  "updated_at": "2026-09-19",
+  "icons": {
+    "emil-kowalski-skills": {
+      "url": "https://github.com/emilkowalski.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "refero-styles": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://styles.refero.design",
+      "source": "domain-favicon-128"
+    },
+    "soundshockaudio": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://soundshockaudio.com",
+      "source": "domain-favicon-128"
+    },
+    "hallmark": {
+      "url": "https://github.com/Nutlope.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "ip-as-logo-skill": {
+      "url": "https://github.com/s1dashu.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "react-bits-shape-grid": {
+      "url": "https://raw.githubusercontent.com/DavidHDev/react-bits/main/public/android-chrome-512x512.png",
+      "source": "official-repository-android-chrome-512"
+    },
+    "ui-skills": {
+      "url": "https://raw.githubusercontent.com/ibelick/ui-skills/main/public/favicon.svg",
+      "source": "official-repository-favicon-svg"
+    },
+    "cloudflare-dashboard": {
+      "url": "https://raw.githubusercontent.com/cloudflare/cloudflare-docs/production/public/logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "xorxor-hu-codepen": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://codepen.io",
+      "source": "domain-favicon-128"
+    },
+    "oracle-cloud-free-tier": {
+      "url": "https://github.com/oracle.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "supabase-dashboard": {
+      "url": "https://raw.githubusercontent.com/supabase/supabase/master/apps/studio/public/supabase-logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "mistral-studio": {
+      "url": "https://github.com/mistralai.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "groqcloud-console": {
+      "url": "https://github.com/groq.png?size=256",
+      "source": "official-github-organization-avatar-256"
+    },
+    "capafy-ai": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://capafy.ai",
+      "source": "domain-favicon-128"
+    },
+    "anime-js": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://animejs.com",
+      "source": "domain-favicon-128"
+    },
+    "world-monitor": {
+      "url": "https://www.worldmonitor.app/favico/apple-touch-icon.png",
+      "source": "official-site-apple-touch-icon"
+    },
+    "pi-agent-harness": {
+      "url": "https://pi.dev/logo-auto.svg",
+      "source": "official-site-svg"
+    },
+    "money-printer-turbo": {
+      "url": "https://github.com/harry0703.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "reverse-skill": {
+      "url": "https://raw.githubusercontent.com/zhaoxuya520/reverse-skill/main/reverse-skill.png",
+      "source": "official-repository-project-image"
+    },
+    "mechanical-deployables-threejs": {
+      "url": "https://github.com/trungdq88.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "voice-studio": {
+      "url": "https://raw.githubusercontent.com/debpalash/VoiceStudio/main/docs/logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "dsh-desktop": {
+      "url": "https://raw.githubusercontent.com/vibeinging/dsh-desktop/dev/electron/icons/icon.svg",
+      "source": "official-repository-app-icon-svg"
+    },
+    "ai-website-cloner-template": {
+      "url": "https://raw.githubusercontent.com/JCodesMore/ai-website-cloner-template/master/src/app/favicon.ico",
+      "source": "official-project-favicon-repo-ico"
+    },
+    "threeui-community": {
+      "url": "https://raw.githubusercontent.com/MengTo/threeui/main/public/threeui-mark.svg",
+      "source": "official-repository-project-mark-svg"
+    },
+    "elevenlabs": {
+      "url": "https://github.com/elevenlabs.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "meshy-ai": {
+      "url": "https://github.com/meshy-dev.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "mattpocock-skills": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://aihero.dev",
+      "source": "official-aihero-domain-favicon-128"
+    },
+    "oneworks-avatar": {
+      "url": "https://raw.githubusercontent.com/oneworks-ai/avatar/main/public/favicon.svg",
+      "source": "official-repository-favicon-svg"
+    },
+    "legal-skills-open": {
+      "url": "https://github.com/ThomasMoreAI.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "pixelartbase-free-com-tw": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.pixelartbase.com",
+      "source": "domain-favicon-128"
+    },
+    "ai-drama-pound": {
+      "url": "https://github.com/POUND0423.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "anti-gambling-trader-tw": {
+      "url": "https://github.com/mars-tw.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "create360-ai": {
+      "url": "https://raw.githubusercontent.com/tbdavid2019/888-url2md/main/public/favicon.svg",
+      "source": "official-repository-favicon-svg"
+    },
+    "builderio-agent-native": {
+      "url": "https://raw.githubusercontent.com/BuilderIO/agent-native/main/packages/core/src/assets/branding/icon-on-light.svg",
+      "source": "official-repository-brand-mark-svg"
+    },
+    "sirius-walkthrough-me": {
+      "url": "https://github.com/sirius-cc-wu.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "tt-a1i-archify": {
+      "url": "https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/archify.svg",
+      "source": "official-homepage-inline-favicon-svg"
+    },
+    "voltagent-awesome-agent-skills": {
+      "url": "https://github.com/VoltAgent.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "phileiny-h3-storyboard-skill": {
+      "url": "https://github.com/phileiny.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "metalforge-shader-editor": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://metalforge.xyz",
+      "source": "domain-favicon-128"
+    },
+    "vercel-labs-vgpu": {
+      "url": "https://raw.githubusercontent.com/vercel-labs/vgpu/canary/apps/docs/app/favicon.ico",
+      "source": "official-repository-docs-favicon-ico"
+    },
+    "sentelabs-openexecutive": {
+      "url": "https://raw.githubusercontent.com/SenteLabsAI/OpenExecutive/main/docs/assets/chat-avatar.svg",
+      "source": "official-repository-brand-avatar-svg"
+    },
+    "openstreetmap": {
+      "url": "https://raw.githubusercontent.com/openstreetmap/openstreetmap-website/master/app/assets/images/osm_logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "token-gremlin-abyssal": {
+      "url": "https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/abyssal.svg",
+      "source": "official-homepage-inline-favicon-svg"
+    },
+    "raymondhou0917-speak-human-tw": {
+      "url": "https://github.com/Raymondhou0917.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "lulu930128-github-profile": {
+      "url": "https://github.com/lulu930128.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "diegosouzapw-omniroute": {
+      "url": "https://raw.githubusercontent.com/diegosouzapw/OmniRoute/release/v3.8.51/public/icon-512.png",
+      "source": "official-repository-app-icon-512"
+    },
+    "thu-maic-openmaic": {
+      "url": "https://raw.githubusercontent.com/THU-MAIC/OpenMAIC/main/public/openmaic-mark.png",
+      "source": "official-repository-project-mark-png"
+    },
+    "miuuyy-codex-chatgpt-web": {
+      "url": "https://raw.githubusercontent.com/miuuyy/codex-chatgpt-web/main/launcher/assets/icon.svg",
+      "source": "official-repository-launcher-icon-svg"
+    },
+    "firekou-aitokenking-developerskill": {
+      "url": "https://github.com/firekou.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "yanliudesign-mono-color-skill": {
+      "url": "https://github.com/yanliudesign.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "tashfeenahmed-freellmapi": {
+      "url": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/main/client/public/favicon.svg",
+      "source": "official-repo-brand-favicon-svg"
+    },
+    "slidefirm-nesa-slide": {
+      "url": "https://raw.githubusercontent.com/slidefirm/NESA-SLIDE/main/demos/html/favicon.svg",
+      "source": "official-public-demo-favicon-svg"
+    },
+    "2akouwu-reverify": {
+      "url": "https://github.com/2akouwu.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "larashero3-lieflat-charts": {
+      "url": "https://github.com/larashero3-dotcom.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-square-project-logo"
+    },
+    "addyosmani-agent-skills": {
+      "url": "https://github.com/addyosmani.png?size=256",
+      "source": "github-owner-avatar-256"
+    },
+    "boundaryml-baml": {
+      "url": "https://github.com/BoundaryML.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "getlayers-ai": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://www.getlayers.ai",
+      "source": "official-domain-favicon-128"
+    },
+    "curated-design": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://curated.design",
+      "source": "official-domain-favicon-128"
+    },
+    "60fps-design": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://60fps.design",
+      "source": "official-domain-favicon-128"
+    },
+    "trailhq-graft": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://graft.nanonets.ai",
+      "source": "official-site-domain-favicon-128"
+    },
+    "msitarzewski-agency-agents": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://agencyagents.app",
+      "source": "official-app-domain-favicon-128"
+    },
+    "deusdata-codebase-memory-mcp": {
+      "url": "https://qookey109-pixel.github.io/ai-resource-hub/assets/resource-icons/codebase-memory-mcp.svg",
+      "source": "official-homepage-inline-favicon-svg"
+    },
+    "calesthio-openmontage": {
+      "url": "https://raw.githubusercontent.com/calesthio/OpenMontage/main/assets/monty-light.svg",
+      "source": "official-repository-mascot-svg"
+    },
+    "panniantong-agent-reach": {
+      "url": "https://github.com/Panniantong.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "stablyai-orca": {
+      "url": "https://raw.githubusercontent.com/stablyai/orca/main/resources/build/icon.png",
+      "source": "official-repository-app-icon"
+    },
+    "bilawalsidhu-gods-eye-view": {
+      "url": "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/main/public/logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "gputw-ai-gputw-skill": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://gputw.ai",
+      "source": "official-gputw-domain-favicon-128"
+    },
+    "jarrodwatts-jev-trader": {
+      "url": "https://raw.githubusercontent.com/jarrodwatts/jev-trader/main/web/src/app/favicon.ico",
+      "source": "official-project-favicon-repo-ico"
+    },
+    "kruzovic7-ai-data-extractor": {
+      "url": "https://github.com/kruzovic7.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "666ghj-mirofish": {
+      "url": "https://raw.githubusercontent.com/666ghj/MiroFish/main/static/image/MiroFish_logo_compressed.jpeg",
+      "source": "official-repository-project-logo"
+    },
+    "tauricresearch-tradingagents": {
+      "url": "https://github.com/TauricResearch.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "danny-avila-librechat": {
+      "url": "https://raw.githubusercontent.com/danny-avila/LibreChat/main/client/public/assets/logo.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "heygen-com-hyperframes": {
+      "url": "https://raw.githubusercontent.com/heygen-com/hyperframes/main/docs/logo/light.svg",
+      "source": "official-repository-project-logo-svg"
+    },
+    "fincept-corporation-finceptterminal": {
+      "url": "https://raw.githubusercontent.com/Fincept-Corporation/FinceptTerminal/main/fincept-qt/resources/in.fincept.FinceptTerminal.png",
+      "source": "official-repository-app-icon-png"
+    },
+    "cloudflare-agentic-inbox": {
+      "url": "https://github.com/cloudflare.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "openbmb-voxcpm": {
+      "url": "https://raw.githubusercontent.com/OpenBMB/VoxCPM/main/assets/voxcpm_logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "reconurge-flowsint": {
+      "url": "https://raw.githubusercontent.com/reconurge/flowsint/main/flowsint-app/public/icon.png",
+      "source": "official-repository-app-icon-png"
+    },
+    "nangohq-nango": {
+      "url": "https://raw.githubusercontent.com/NangoHQ/nango/master/assets/nango-logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "mars-tw-open-seo-advisor-skill": {
+      "url": "https://github.com/mars-tw.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "mars-tw-ai-console": {
+      "url": "https://raw.githubusercontent.com/mars-tw/ai-console/main/docs/logo.png",
+      "source": "official-repository-project-logo"
+    },
+    "cloudflare-security-audit-skill": {
+      "url": "https://github.com/cloudflare.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "thomasbek3-hermes-bot-kit": {
+      "url": "https://github.com/thomasbek3.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "nujovich-hermes-telemetry": {
+      "url": "https://github.com/nujovich.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-plugin-backsearch": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-plugin-snyk": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "nousresearch-hermes-memory-wiki": {
+      "url": "https://github.com/NousResearch.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "mcp-so-servers": {
+      "url": "https://www.google.com/s2/favicons?sz=128&domain_url=https://mcp.so",
+      "source": "domain-favicon-128"
+    }
+  }
+}
