@@ -1,9 +1,10 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.7';
+const RECOMMENDER_VERSION = '0.3.8';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
+const INTENT_MAX_COMPLETION_TOKENS = 480;
 const RANKING_CANDIDATE_LIMIT = 18;
 const RANKING_MIN_CANDIDATES = 8;
 
@@ -197,23 +198,15 @@ function normaliseIntent(raw, query) {
 
 function buildIntentPrompt(query) {
   return [
-    '你是需求分析器。你的工作不是推薦工具，而是先精準理解使用者真正要完成的事情。',
-    '請把自然語言需求拆成結構化規格。不要自行增加使用者沒有說過的硬性條件。',
-    '可以推論合理的 implied_needs，但必須和明確要求分開。',
-    '特別注意否定詞、偏好詞、價格限制、本機/雲端、開源/閉源、平台、API/CLI/Web/App、技術程度與是否要求端到端完成。',
-    'workflow_scope 只能填 end-to-end、component、either 或 unknown。',
-    '如果使用者只是說「我要做 X」，desired_output 應該描述最終產出，而不是某個工具名稱。',
-    '只有當缺少的資訊會「實質改變要推薦的工具種類或核心能力」時，needs_clarification 才能設為 true。',
-    '不要為了次要偏好而追問。沒有指定預算、開源與否、部署方式或技術程度，通常不需要先問。',
-    '如果需求本身已明確指出工作類型，例如「AI 短影片」「Three.js 3D 遊戲效果」「LINE AI 客服」，即使實作細節尚未指定，也應 needs_clarification=false，先做合理推薦。',
-    '如果需求過度寬泛而存在明顯不同方向，例如只說「做客服」「做網站」「做 AI 工具」，而不同方向會用到完全不同資源，才應先問一個澄清問題。',
-    'needs_clarification=true 時，clarifying_question 只問一個最關鍵問題；clarification_choices 提供 2 到 4 個互斥且實用的選項。',
-    '每個 clarification_choices.refinement 必須保留使用者原本要求，並只加入該選項代表的澄清內容，形成可直接再次送入分析器的完整需求。',
-    'needs_clarification=false 時，clarifying_question 必須是空字串，clarification_choices 必須是空陣列。',
-    '輸出繁體中文 JSON，不要 Markdown、不要 code fence、不要額外文字。',
+    '你是需求分析器。只解析需求，不推薦工具。',
+    '輸出精簡繁體中文 JSON；不要 Markdown、code fence 或額外文字。',
+    '保留明確限制：本機/雲端、開源、預算、平台、API/CLI/Web/App 等，統一放入 must_have、preferences 或 avoid，不要另外展開欄位。',
+    'must_have 最多 4 項；preferences 最多 3 項；avoid 最多 3 項；implied_needs 最多 3 項；search_concepts 最多 6 項。',
+    'workflow_scope 只能是 end-to-end、component、either 或 unknown。',
+    '只有缺少資訊會實質改變工具種類時 needs_clarification=true；否則 false。',
+    'needs_clarification=true 時才輸出 clarifying_question 與 2-3 個 clarification_choices；refinement 必須保留原需求並只加入該澄清條件。',
     'JSON schema:',
-    '{"primary_goal":"核心目標","desired_output":"最後要得到什麼","must_have":["明確必須條件"],"preferences":["偏好但非必要"],"avoid":["明確不要"],"platform":["macOS/web/mobile/Windows/不限等"],"execution":["local/cloud/self-hosted/不限等"],"budget":"免費/低成本/可付費/未指定","openness":"開源優先/必須開源/不限/未指定","interface":["API/CLI/WebUI/App/MCP 等"],"skill_level":"beginner/intermediate/advanced/未指定","workflow_scope":"end-to-end/component/either/unknown","implied_needs":["合理隱含需求"],"search_concepts":["用來找工具的核心概念，不要放停用詞"],"ambiguities":["真的會影響推薦但使用者沒說清楚的地方"],"needs_clarification":false,"clarifying_question":"","clarification_choices":[{"label":"選項名稱","refinement":"保留原要求後加入此選項的完整需求"}]}',
-    '',
+    '{"primary_goal":"核心目標","desired_output":"最終產出","must_have":["必要條件"],"preferences":["偏好"],"avoid":["不要的條件"],"workflow_scope":"end-to-end/component/either/unknown","implied_needs":["合理隱含需求"],"search_concepts":["核心搜尋概念"],"needs_clarification":false,"clarifying_question":"僅需要時","clarification_choices":[{"label":"選項","refinement":"完整需求"}]}',
     `使用者原話：${query}`
   ].join('\n');
 }
@@ -223,7 +216,7 @@ async function understandIntent(query, env) {
     prompt: buildIntentPrompt(query),
     temperature: 0.05,
     reasoning_effort: AI_REASONING_EFFORT,
-    max_completion_tokens: 700
+    max_completion_tokens: INTENT_MAX_COMPLETION_TOKENS
   }, AI_RUN_OPTIONS);
   return normaliseIntent(parseJsonObject(extractText(result)), query);
 }
