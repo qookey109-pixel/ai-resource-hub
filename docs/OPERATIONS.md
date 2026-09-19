@@ -47,13 +47,14 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.8`
+- version: `0.3.9`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
 - catalog source: public GitHub `main` `data/resources.json`
 - output IDs are validated against the catalog
 - deterministic fallback is retained for model / intent failures
+- when Workers AI reports provider quota exhaustion (Cloudflare error 4006 / daily neuron allocation exhausted), the Worker skips the second AI ranking call and returns deterministic fallback immediately
 - model JSON parsing tolerates trailing text after the first complete JSON object, and workflow-scope enum variants are normalized before ranking
 - Workers AI inference uses `rejectIfBusy` so capacity pressure fails fast into deterministic fallback instead of waiting in the provider queue
 - inference uses low reasoning effort and `max_completion_tokens`; production responses expose bounded per-stage timing evidence for catalog, intent, ranking, and total latency
