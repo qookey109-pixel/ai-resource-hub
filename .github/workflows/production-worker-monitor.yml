@@ -11,6 +11,8 @@ on:
       - "data/ai-config.json"
       - "data/click-config.json"
       - "data/resources.json"
+      - "worker/package.json"
+      - "worker/src/index.js"
       - "scripts/production_worker_monitor.py"
       - ".github/workflows/production-worker-monitor.yml"
   pull_request:

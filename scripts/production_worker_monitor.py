@@ -76,11 +76,16 @@ def validate_local_configuration() -> dict[str, Any]:
     ai_config = load_json(ROOT / "data/ai-config.json")
     click_config = load_json(ROOT / "data/click-config.json")
     catalog = load_json(ROOT / "data/resources.json")
+    worker_package = load_json(ROOT / "worker/package.json")
 
     if ai_config.get("enabled") is not True:
         raise MonitorError("AI recommender is not enabled in data/ai-config.json")
     if click_config.get("enabled") is not True:
         raise MonitorError("click worker is not enabled in data/click-config.json")
+
+    expected_ai_version = str(worker_package.get("version") or "").strip()
+    if not expected_ai_version:
+        raise MonitorError("worker/package.json must declare a non-empty version")
 
     ai_endpoint = validate_endpoint(ai_config.get("endpoint"), "/api/recommend", "AI")
     click_endpoint = validate_endpoint(
@@ -114,6 +119,7 @@ def validate_local_configuration() -> dict[str, Any]:
         "click_endpoint": click_endpoint,
         "resource_by_id": resource_by_id,
         "semantic_expected_ids": set(SEMANTIC_EXPECTED_IDS),
+        "expected_ai_version": expected_ai_version,
     }
 
 
@@ -170,6 +176,7 @@ def markdown_report(report: dict[str, Any]) -> str:
         "",
         "## Runtime summary",
         "",
+        f"- AI Worker version: `{report.get('ai_version') or 'unavailable'}` (expected `{report.get('expected_ai_version') or 'unknown'}`)",
         f"- AI recommendation mode: `{report.get('ai_mode') or 'unavailable'}`",
         f"- AI intent mode: `{report.get('ai_intent_mode') or 'unavailable'}`",
         f"- AI recommendation latency: **{report.get('ai_latency_ms', 0)}ms**",
@@ -206,6 +213,7 @@ def run_monitor(timeout: float) -> dict[str, Any]:
     semantic_expected_ids = context["semantic_expected_ids"]
     checks: list[dict[str, Any]] = []
     warnings: list[str] = []
+    ai_version = ""
     ai_mode: str | None = None
     ai_intent_mode: str | None = None
     ai_intent_diagnostic = ""
@@ -223,18 +231,38 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         checks.append({"name": name, "ok": bool(ok), "details": details})
 
     try:
-        status, payload, elapsed = request_json(
-            health_url(context["ai_endpoint"]), timeout=fast_timeout
-        )
+        expected_version = context["expected_ai_version"]
+        deadline = time.monotonic() + min(max(timeout, 15.0), 60.0)
+        last_status = 0
+        last_payload: dict[str, Any] = {}
+        last_elapsed = 0
+        while True:
+            last_status, last_payload, last_elapsed = request_json(
+                health_url(context["ai_endpoint"]), timeout=fast_timeout
+            )
+            ai_version = str(last_payload.get("version") or "")
+            if (
+                last_status == 200
+                and last_payload.get("ok") is True
+                and last_payload.get("service") == "qookey-ai-resource-recommender"
+                and ai_version == expected_version
+            ):
+                break
+            if time.monotonic() >= deadline:
+                break
+            time.sleep(3)
+
         ok = (
-            status == 200
-            and payload.get("ok") is True
-            and payload.get("service") == "qookey-ai-resource-recommender"
+            last_status == 200
+            and last_payload.get("ok") is True
+            and last_payload.get("service") == "qookey-ai-resource-recommender"
+            and ai_version == expected_version
         )
         add_check(
             "ai_health",
             ok,
-            f"HTTP {status}, {elapsed}ms, service={payload.get('service')}, version={payload.get('version')}",
+            f"HTTP {last_status}, {last_elapsed}ms, service={last_payload.get('service')}, "
+            f"version={ai_version or 'missing'}, expected_version={expected_version}",
         )
     except MonitorError as exc:
         add_check("ai_health", False, str(exc))
@@ -420,6 +448,8 @@ def run_monitor(timeout: float) -> dict[str, Any]:
         "catalog_resources": len(resource_by_id),
         "semantic_query": SEMANTIC_QUERY,
         "semantic_expected_ids": sorted(semantic_expected_ids),
+        "expected_ai_version": context["expected_ai_version"],
+        "ai_version": ai_version,
         "ai_mode": ai_mode,
         "ai_intent_mode": ai_intent_mode,
         "ai_intent_diagnostic": ai_intent_diagnostic,
