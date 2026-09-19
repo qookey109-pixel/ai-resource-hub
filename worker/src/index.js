@@ -279,6 +279,10 @@ function constraintIsNegative(value, groups) {
   const text = normaliseGroundingText(value);
   const match = CONSTRAINT_NEGATION.exec(text);
   if (!match) return false;
+  if (
+    groups.includes('single-tool')
+    && /(?:無需額外|不需額外|不用額外)/u.test(text)
+  ) return false;
   const signalIndex = firstSignalIndex(value, groups);
   return signalIndex < 0 || match.index <= signalIndex;
 }
@@ -308,6 +312,18 @@ function groundConstraintItem(value, query) {
   };
 }
 
+function compactConstraintValues(values) {
+  return values.filter((value, index) => {
+    const parts = new Set(value.split(' / ').map((part) => part.trim()).filter(Boolean));
+    if (!parts.size) return false;
+    return !values.some((other, otherIndex) => {
+      if (otherIndex === index) return false;
+      const otherParts = new Set(other.split(' / ').map((part) => part.trim()).filter(Boolean));
+      return otherParts.size > parts.size && [...parts].every((part) => otherParts.has(part));
+    });
+  });
+}
+
 function normaliseConstraintBuckets(raw, query) {
   const buckets = { must_have: [], preferences: [], avoid: [] };
   for (const [sourceKey, limit] of [['must_have', 4], ['preferences', 3], ['avoid', 3]]) {
@@ -318,6 +334,7 @@ function normaliseConstraintBuckets(raw, query) {
       if (!buckets[target].includes(grounded.value)) buckets[target].push(grounded.value);
     }
   }
+  for (const key of Object.keys(buckets)) buckets[key] = compactConstraintValues(buckets[key]);
   return buckets;
 }
 
