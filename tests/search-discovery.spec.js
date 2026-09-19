@@ -35,13 +35,19 @@ test('exact and prefix name searches stay top-ranked', async ({ page }) => {
 });
 
 
-test('search result changes are announced through a live status', async ({ page }) => {
+test('search result changes are announced through a live status', async ({ page, request }) => {
   await page.goto('/');
 
   const search = page.locator('#search');
   const status = page.locator('#resource-search-status');
 
-  await expect(status).toContainText('目前顯示 86 個資源');
+  const catalogResponse = await request.get('/data/resources.json');
+  expect(catalogResponse.ok()).toBeTruthy();
+  const catalog = await catalogResponse.json();
+  const expectedResourceCount = Array.isArray(catalog.resources) ? catalog.resources.length : 0;
+  expect(expectedResourceCount).toBeGreaterThan(0);
+
+  await expect(status).toContainText(`目前顯示 ${expectedResourceCount} 個資源`);
 
   await search.fill('Proof Lab');
   await expect(status).toHaveText('目前顯示 1 個資源，依相關性排序');
