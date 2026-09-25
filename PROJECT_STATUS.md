@@ -1,13 +1,13 @@
 # Project Status
 
-Status date: 2026-09-19 (Asia/Taipei)
+Status date: 2026-09-25 (Asia/Taipei)
 
 ## Current authority
 
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Current canonical catalog size: **95 resources**
+- Current canonical catalog size: **96 resources**
 - Catalog identity authority: `data/resources.json`
 
 ## Production baseline
@@ -41,9 +41,9 @@ Quality gates:
 
 Data quality snapshot:
 
-- supplemental official links: **95 / 95 resources (100%)**
-- icon registry coverage: **95 / 95 resources**
-- icon sources (mutually exclusive): **45 official-labelled**, **21 GitHub-avatar**, **21 fallback-labelled**, **8 domain-favicon**
+- supplemental official links: **96 / 96 resources (100%)**
+- icon registry coverage: **96 / 96 resources**
+- icon sources (mutually exclusive): **45 official-labelled**, **21 GitHub-avatar**, **22 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Product position
