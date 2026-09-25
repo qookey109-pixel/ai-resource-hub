@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-19",
+  "updated_at": "2026-09-25",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -385,6 +385,10 @@
     "skill-of-skills": {
       "url": "https://github.com/the911fund.png?size=256",
       "source": "github-organization-avatar-256-fallback-no-project-logo"
+    },
+    "laya-decision-engine": {
+      "url": "https://raw.githubusercontent.com/NandhaKishorM/laya/main/assets/logo-mark.svg",
+      "source": "official-project-svg"
     }
   }
 }
