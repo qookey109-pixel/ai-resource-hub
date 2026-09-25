@@ -381,6 +381,10 @@
     "firecrawl-mcp-server": {
       "url": "https://github.com/firecrawl.png?size=256",
       "source": "github-organization-avatar-256"
+    },
+    "skill-of-skills": {
+      "url": "https://github.com/the911fund.png?size=256",
+      "source": "github-organization-avatar-256-fallback-no-project-logo"
     }
   }
 }
