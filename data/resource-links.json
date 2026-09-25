@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-19",
+  "updated_at": "2026-09-25",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1644,6 +1644,32 @@
         "kind": "api",
         "url": "https://skills.911fund.io/api/mcp",
         "description": "官方 MCP endpoint，供支援 MCP 的 Agent 進行品質排序搜尋、profiles、risk assessments 與 demand pulse 查詢。"
+      }
+    ],
+    "laya-decision-engine": [
+      {
+        "label": "Laya Documentation",
+        "kind": "documentation",
+        "url": "https://nandhakishorm.github.io/laya/",
+        "description": "官方文件，包含安裝、typed decisions、Router、hooks、MCP、LangChain／LangGraph、Docker 與 API reference。"
+      },
+      {
+        "label": "Laya on PyPI",
+        "kind": "download",
+        "url": "https://pypi.org/project/laya/",
+        "description": "官方 Python 套件發布頁，可安裝核心套件與 serve、mcp、langchain、onnx 等 optional extras。"
+      },
+      {
+        "label": "Laya Model on Hugging Face",
+        "kind": "download",
+        "url": "https://huggingface.co/convaiinnovations/laya",
+        "description": "官方 Hugging Face checkpoint 頁；另有 multilingual 與 typed-decisions checkpoint。"
+      },
+      {
+        "label": "Laya Demo",
+        "kind": "demo",
+        "url": "https://huggingface.co/spaces/convaiinnovations/laya-demo",
+        "description": "官方 Hugging Face Space，可直接體驗 Laya 的結構化決策流程。"
       }
     ]
   }
