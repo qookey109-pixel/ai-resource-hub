@@ -9,6 +9,7 @@ Rules for AI coding agents and maintainers.
 3. Treat `data/resources.json` as resource identity + canonical URL authority.
 4. Treat `data/resource-links.json` as supplemental only.
 5. Do not recreate completed work or replace verified facts without newer evidence.
+6. The product is in maintenance mode: prefer focused fixes and selective high-value resources over breadth-driven feature expansion.
 
 ## Resource changes
 
@@ -35,6 +36,8 @@ Rules for AI coding agents and maintainers.
 ## Workers and operations
 
 - Keep AI and click Workers separate from catalog identity.
+- Preserve the lightweight System-1 router before model inference for short ambiguous requests; already-specific requests should pass through without unnecessary clarification.
+- Do not embed heavyweight Python / Torch model runtimes into the Cloudflare Worker without an explicit architecture change and deployment-cost review.
 - AI recommendations may rank catalog resources but must not invent catalog IDs or write catalog metadata.
 - Production monitoring must not increment click counts.
 - Worker deploys need bounded health / semantic checks.
