@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - "worker/src/index.js"
+      - "worker/src/router.js"
       - "scripts/ai_fallback_regression.mjs"
+      - "scripts/router_regression.mjs"
       - "data/resources.json"
       - ".github/workflows/ai-fallback-regression.yml"
   push:
@@ -12,7 +14,9 @@ on:
       - main
     paths:
       - "worker/src/index.js"
+      - "worker/src/router.js"
       - "scripts/ai_fallback_regression.mjs"
+      - "scripts/router_regression.mjs"
       - "data/resources.json"
       - ".github/workflows/ai-fallback-regression.yml"
   workflow_dispatch:
@@ -35,3 +39,6 @@ jobs:
 
       - name: Run deterministic fallback regression
         run: node scripts/ai_fallback_regression.mjs
+
+      - name: Run typed System-1 router regression
+        run: node scripts/router_regression.mjs

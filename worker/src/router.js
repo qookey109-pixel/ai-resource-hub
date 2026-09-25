@@ -7,6 +7,42 @@ const JSON_HEADERS = {
 
 const RULES = [
   {
+    domain: 'mcp',
+    match: /(?:\bmcp\b|model\s+context\s+protocol|模型上下文協定)/i,
+    qualifiers: /github|gitlab|\bgit\b|瀏覽器|browser|playwright|搜尋|search|research|研究|scrap|crawl|資料庫|database|postgres|sql|supabase|雲端|cloud|部署|deploy|render|cloudflare|記憶|memory|文件|docs?|context7|stripe|支付|finance|金融/i,
+    question: '你想讓 MCP 連接哪一類能力？',
+    choices: [
+      { label: '程式碼／Repository', refinement: '我要找連接程式碼與 Repository 的 MCP，重點是 Git、GitHub、程式碼理解或開發工作流。' },
+      { label: '瀏覽器／搜尋研究', refinement: '我要找瀏覽器、自動化、網頁抓取或搜尋研究用途的 MCP。' },
+      { label: '資料庫／Backend', refinement: '我要找資料庫或 Backend MCP，需要操作 SQL、PostgreSQL、Supabase 或後端服務。' },
+      { label: '雲端／部署服務', refinement: '我要找雲端與部署 MCP，需要操作 Cloudflare、Render 或其他基礎設施服務。' }
+    ]
+  },
+  {
+    domain: 'ai-coding',
+    match: /(?:ai\s*[-/]?\s*coding|coding\s*agent|ai\s*(?:程式|編程|寫程式)|(?:程式|編程|寫程式).{0,3}ai)/i,
+    qualifiers: /codex|claude|cursor|windsurf|cline|copilot|前端|frontend|\bui\b|後端|backend|測試|test|\bqa\b|資安|安全|security|審查|review|memory|記憶|context|\bmcp\b|agent\s*skills?|技能/i,
+    question: '你想用 AI Coding 工具處理哪一類工作？',
+    choices: [
+      { label: 'Coding Agent／自動改碼', refinement: '我要找 AI Coding Agent，重點是讀程式碼、修改檔案、執行工具與完成開發任務。' },
+      { label: 'Codebase Context／Memory', refinement: '我要改善 Coding Agent 對 codebase 的理解、記憶、索引與長期 context。' },
+      { label: '前端／UI 品質', refinement: '我要找協助 AI Coding 做前端、UI、設計系統與互動品質的工具或 skills。' },
+      { label: '測試／安全／Code Review', refinement: '我要找 AI Coding 的測試、程式碼審查、安全掃描或品質檢查工具。' }
+    ]
+  },
+  {
+    domain: 'agent-ecosystem',
+    match: /(?:ai\s*agent|agent\s*(?:工具|框架|生態|skills?)|智能體|代理人)/i,
+    qualifiers: /skill|技能|\bmcp\b|framework|框架|runtime|memory|記憶|context|telemetry|observability|監控|coding|程式|research|研究|automation|自動化|workflow|工作流/i,
+    question: '你在找 Agent 生態的哪一層？',
+    choices: [
+      { label: 'Agent Skills', refinement: '我要找可直接加入 Agent 的 Skills、規則或專門能力。' },
+      { label: 'Agent Framework／Runtime', refinement: '我要找建立或執行 AI Agent 的 framework、runtime 或 orchestration 工具。' },
+      { label: 'Memory／Context', refinement: '我要找 Agent memory、context、codebase memory 或長期狀態管理工具。' },
+      { label: '監控／自動化工作流', refinement: '我要找 Agent telemetry、observability、automation 或工作流整合工具。' }
+    ]
+  },
+  {
     domain: 'game',
     match: /(?:做|開發|製作|想要|我要|我想)?.{0,4}(?:遊戲|game)/i,
     qualifiers: /手機|mobile|web|網頁|瀏覽器|browser|3d|2d|unity|unreal|godot|npc|ai|多人|單機|賽車|射擊|rpg|卡牌|益智|平台|模擬|vr|ar|steam|ios|android/i,
@@ -85,7 +121,7 @@ function compact(value) {
   return String(value || '').replace(/[\s，。！？、,.!?]/g, '');
 }
 
-function clarificationFor(query) {
+export function clarificationFor(query) {
   const shortQuery = compact(query);
   if (shortQuery.length > 18) return null;
 
@@ -121,6 +157,8 @@ export default {
           mode: 'clarify',
           query,
           domain: rule.domain,
+          decision_mode: 'system1',
+          decision_type: 'choice',
           clarifying_question: rule.question,
           choices: rule.choices
         }, 200, request, env);

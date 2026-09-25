@@ -47,11 +47,13 @@ Deploy workflow: `.github/workflows/deploy-ai-worker.yml`
 
 Current runtime:
 
-- version: `0.3.11`
+- version: `0.3.12`
 - model: `@cf/zai-org/glm-4.7-flash`
 - endpoint: `POST /api/recommend`
 - health: `GET /health`
 - catalog source: public GitHub `main` `data/resources.json`
+- a lightweight deterministic System-1 router handles short ambiguous requests before model inference; it now covers the product's core MCP, AI Coding and Agent ecosystem domains plus the existing game / website / app / video / 3D routes
+- System-1 clarification returns typed `choice` metadata (`decision_mode=system1`, `decision_type=choice`) and adds no model-cost dependency to normal browsing
 - output IDs are validated against the catalog
 - deterministic fallback is retained for model / intent failures
 - when Workers AI reports provider quota exhaustion (Cloudflare error 4006 / daily neuron allocation exhausted), the Worker skips the second AI ranking call and returns deterministic fallback immediately
@@ -63,7 +65,7 @@ Current runtime:
 - ranking sends a compact decision-only candidate payload (omitting notes/URL/status and limiting use-case text), asks for at most 3 minimal recommendations, and caps ranking completion at 420 tokens
 - a valid AI `no_match` is cross-checked against deterministic full-catalog fallback; only agreement between both paths remains a true no-match
 - model-generated must-have/preferences/avoid constraints are deterministically grounded against the original query; unsupported platform, execution, openness, budget, interface, or subscription qualifiers are discarded before ranking
-- AI fallback regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures on relevant PRs and main pushes
+- AI fallback + typed-router regression: `.github/workflows/ai-fallback-regression.yml` runs deterministic fallback fixtures and System-1 route/qualification guards on relevant PRs and main pushes
 
 The Worker is deployed and monitored, but normal website browsing does not depend on it.
 

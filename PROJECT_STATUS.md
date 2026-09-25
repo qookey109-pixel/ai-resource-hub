@@ -7,7 +7,7 @@ Status date: 2026-09-25 (Asia/Taipei)
 - Repository: `qookey109-pixel/ai-resource-hub`
 - Authority: GitHub `main`
 - Website: `https://qookey109-pixel.github.io/ai-resource-hub/`
-- Current canonical catalog size: **96 resources**
+- Current canonical catalog size: **97 resources**
 - Catalog identity authority: `data/resources.json`
 
 ## Production baseline
@@ -27,9 +27,10 @@ Frontend:
 
 Services:
 
-- AI recommender Worker: runtime version **0.3.11**, model **`@cf/zai-org/glm-4.7-flash`**
+- AI recommender Worker: runtime version **0.3.12**, model **`@cf/zai-org/glm-4.7-flash`**
 - Click Worker: Cloudflare Durable Object counter
 - AI is deployed and monitored but is not required for normal catalog browsing
+- short ambiguous MCP / AI Coding / Agent requests are routed through a deterministic typed-choice System-1 clarification layer before model inference
 
 Quality gates:
 
@@ -38,12 +39,13 @@ Quality gates:
 - Project Status consistency
 - Production Worker monitor with degraded-mode latency / diagnostic evidence
 - bounded Worker deployment health / semantic checks
+- deterministic fallback + typed System-1 router regression
 
 Data quality snapshot:
 
-- supplemental official links: **96 / 96 resources (100%)**
-- icon registry coverage: **96 / 96 resources**
-- icon sources (mutually exclusive): **45 official-labelled**, **21 GitHub-avatar**, **22 fallback-labelled**, **8 domain-favicon**
+- supplemental official links: **97 / 97 resources (100%)**
+- icon registry coverage: **97 / 97 resources**
+- icon sources (mutually exclusive): **46 official-labelled**, **21 GitHub-avatar**, **22 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Product position

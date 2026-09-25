@@ -1,7 +1,7 @@
 const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/qookey109-pixel/ai-resource-hub/main/data/resources.json';
 const DEFAULT_MODEL = '@cf/zai-org/glm-4.7-flash';
 const SITE_ORIGIN = 'https://qookey109-pixel.github.io';
-const RECOMMENDER_VERSION = '0.3.11';
+const RECOMMENDER_VERSION = '0.3.12';
 const AI_RUN_OPTIONS = Object.freeze({ rejectIfBusy: true });
 const AI_REASONING_EFFORT = 'low';
 const INTENT_MAX_COMPLETION_TOKENS = 480;
