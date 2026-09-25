@@ -1631,6 +1631,20 @@
         "url": "https://github.com/firecrawl/firecrawl",
         "description": "Firecrawl 官方核心 Web scraping、crawl 與資料擷取專案。"
       }
+    ],
+    "skill-of-skills": [
+      {
+        "label": "Skill of Skills Directory",
+        "kind": "website",
+        "url": "https://skills.911fund.io/",
+        "description": "官方可瀏覽目錄，提供 Skills、MCP、Agents 與整合工具的品質排序與探索介面。"
+      },
+      {
+        "label": "Agent-native MCP",
+        "kind": "api",
+        "url": "https://skills.911fund.io/api/mcp",
+        "description": "官方 MCP endpoint，供支援 MCP 的 Agent 進行品質排序搜尋、profiles、risk assessments 與 demand pulse 查詢。"
+      }
     ]
   }
 }
