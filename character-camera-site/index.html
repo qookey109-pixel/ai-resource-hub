@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#000">
+<title>Character Camera</title>
+<style>
+:root{color-scheme:dark;--safeT:env(safe-area-inset-top,0px);--safeB:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+button,label,a{font:inherit;color:inherit}.app{position:relative;width:100%;height:100dvh;overflow:hidden;background:#050505;touch-action:none}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#111}.mirror{transform:scaleX(-1)}
+.top{position:absolute;z-index:20;top:0;left:0;right:0;padding:calc(var(--safeT) + 12px) 14px 18px;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;background:linear-gradient(#000a,transparent)}
+.logo{text-align:center}.logo b{display:block;font-size:15px}.logo span{font-size:10px;opacity:.65}.icon{width:44px;height:44px;border-radius:50%;border:1px solid #ffffff22;background:#151515aa;backdrop-filter:blur(14px);font-size:21px}
+#character{position:absolute;z-index:10;left:50%;top:45%;width:min(48vw,220px);transform-origin:center;touch-action:none;user-select:none;filter:drop-shadow(0 10px 20px #0007)}
+#character.hidden{display:none}#character img{display:block;width:100%;height:auto;pointer-events:none;border-radius:14px}.ring{position:absolute;inset:-9px;border:1.5px dashed #fff;border-radius:18px;pointer-events:none}
+.hint{position:absolute;z-index:18;left:50%;bottom:calc(var(--safeB) + 178px);transform:translateX(-50%);padding:7px 11px;border-radius:999px;background:#0009;border:1px solid #ffffff22;font-size:11px;white-space:nowrap}.hidden{display:none!important}
+.bottom{position:absolute;z-index:30;left:0;right:0;bottom:0;padding:14px 18px calc(var(--safeB) + 16px);background:linear-gradient(transparent,#000 30%)}
+.row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;max-width:370px;margin:auto}.small{width:60px;height:60px;border-radius:50%;border:1px solid #ffffff22;background:#1b1b1bcc;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:700}.small input{display:none}.small em{font-style:normal;font-size:10px;opacity:.75}.small.purple{background:linear-gradient(145deg,#765fff,#c347ff)}
+.shutter{width:78px;height:78px;border-radius:50%;border:3px solid #fff;padding:5px;background:#ffffff22}.shutter i{display:block;width:100%;height:100%;border-radius:50%;background:#fff}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:550px;margin:auto}.tool{min-height:44px;border:1px solid #ffffff22;border-radius:14px;background:#1b1b1bd9}.tool.primary{background:#fff;color:#000;font-weight:700}.tool.danger{color:#ff8b8b}
+#toast{position:absolute;z-index:60;top:calc(var(--safeT) + 72px);left:50%;transform:translateX(-50%);background:#111d;border:1px solid #ffffff22;padding:9px 12px;border-radius:12px;font-size:12px;max-width:calc(100% - 30px);text-align:center}
+dialog{padding:0;border:0;width:100vw;max-width:none;height:100dvh;background:#000}dialog::backdrop{background:#000}.preview{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}.preview img{max-width:100%;max-height:100%;object-fit:contain}.actions{position:absolute;left:14px;right:14px;bottom:calc(var(--safeB) + 14px);display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions>*{min-height:46px;border:1px solid #ffffff22;border-radius:14px;background:#1b1b1b;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center}.actions .save{background:#fff;color:#000;font-weight:700}
+.start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;background:radial-gradient(circle at 50% 35%,#745cff22,transparent 32%),#050505}.start h1{font-size:28px;margin:0 0 8px}.start p{margin:0;opacity:.65;line-height:1.5}
+@media(min-width:700px){.app{max-width:520px;margin:auto;border-left:1px solid #222;border-right:1px solid #222}body{background:#111}}
+</style>
+</head>
+<body>
+<main class="app" id="stage">
+<video id="video" autoplay playsinline muted></video>
+<div class="start" id="start"><div><h1>Character Camera</h1><p>拍一張圖，把角色放回即時相機。<br>可拖曳、縮放、旋轉，再一起拍照。</p></div></div>
+<div id="character" class="hidden"><img id="charImg" draggable="false"><div class="ring"></div></div>
+<div class="top"><span></span><div class="logo"><b>Character Camera</b><span>Mobile Camera Prototype</span></div><button class="icon" id="flip">↺</button></div>
+<div class="hint hidden" id="hint">拖曳移動 · 雙指縮放 / 旋轉</div>
+<div id="toast" class="hidden"></div>
+<section class="bottom">
+<div class="row" id="cameraTools">
+<label class="small"><input id="picker" type="file" accept="image/*"><span>＋</span><em>相簿</em></label>
+<button class="shutter" id="photo"><i></i></button>
+<button class="small purple" id="make"><span>✦</span><em>角色</em></button>
+</div>
+<div class="tools hidden" id="charTools">
+<button class="tool" id="reset">重設</button>
+<button class="tool" id="left">↶ 旋轉</button>
+<button class="tool danger" id="remove">刪除</button>
+<button class="tool primary" id="compose">合成拍照</button>
+</div>
+</section>
+<dialog id="dialog"><div class="preview"><img id="result"><div class="actions"><button id="close">返回</button><a class="save" id="save" download="character-camera.png">儲存照片</a></div></div></dialog>
+</main>
+<script>
+const $=s=>document.querySelector(s),video=$('#video'),stage=$('#stage'),start=$('#start'),character=$('#character'),charImg=$('#charImg'),hint=$('#hint'),cameraTools=$('#cameraTools'),charTools=$('#charTools'),toast=$('#toast'),dialog=$('#dialog'),result=$('#result'),save=$('#save');
+let stream=null,facing='environment',state={x:0,y:0,scale:1,rot:0},pts=new Map(),gesture={},timer;
+function msg(t){clearTimeout(timer);toast.textContent=t;toast.classList.remove('hidden');timer=setTimeout(()=>toast.classList.add('hidden'),2200)}
+async function camera(){try{if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=stream;video.classList.toggle('mirror',facing==='user');start.classList.add('hidden')}catch(e){msg('請允許相機權限，並使用 Safari / Chrome 開啟 HTTPS 網站')}}
+function frame(){if(!video.videoWidth)return null;const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;const x=c.getContext('2d');if(facing==='user'){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(video,0,0,c.width,c.height);return c}
+function apply(){character.style.transform=`translate(calc(-50% + ${state.x}px),calc(-50% + ${state.y}px)) scale(${state.scale}) rotate(${state.rot}deg)`}
+function reset(){state={x:0,y:0,scale:1,rot:0};apply()}
+function showChar(url){charImg.src=url;character.classList.remove('hidden');hint.classList.remove('hidden');cameraTools.classList.add('hidden');charTools.classList.remove('hidden');reset()}
+$('#flip').onclick=async()=>{facing=facing==='environment'?'user':'environment';await camera()}
+$('#make').onclick=()=>{const c=frame();if(!c)return msg('相機尚未就緒');showChar(c.toDataURL('image/png'))}
+$('#photo').onclick=()=>{const c=frame();if(!c)return msg('相機尚未就緒');preview(c.toDataURL('image/png'))}
+$('#picker').onchange=e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>showChar(r.result);r.readAsDataURL(f);e.target.value=''}
+$('#reset').onclick=reset;$('#left').onclick=()=>{state.rot-=15;apply()}
+$('#remove').onclick=()=>{character.classList.add('hidden');hint.classList.add('hidden');charTools.classList.add('hidden');cameraTools.classList.remove('hidden');charImg.removeAttribute('src')}
+function p(e){const r=stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+const dist=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y),ang=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI,mid=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+character.onpointerdown=e=>{character.setPointerCapture(e.pointerId);pts.set(e.pointerId,p(e));if(pts.size===1){gesture={x:state.x,y:state.y,start:p(e)}}else if(pts.size===2){const[a,b]=[...pts.values()];gesture={x:state.x,y:state.y,scale:state.scale,rot:state.rot,d:dist(a,b),a:ang(a,b),m:mid(a,b)}}}
+character.onpointermove=e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,p(e));if(pts.size===1){const q=[...pts.values()][0];state.x=gesture.x+q.x-gesture.start.x;state.y=gesture.y+q.y-gesture.start.y}else if(pts.size>=2){const[a,b]=[...pts.values()],m=mid(a,b);state.scale=Math.max(.18,Math.min(4,gesture.scale*dist(a,b)/Math.max(1,gesture.d)));state.rot=gesture.rot+ang(a,b)-gesture.a;state.x=gesture.x+m.x-gesture.m.x;state.y=gesture.y+m.y-gesture.m.y}apply()}
+function up(e){pts.delete(e.pointerId);if(pts.size===1){const q=[...pts.values()][0];gesture={x:state.x,y:state.y,start:q}}}character.onpointerup=up;character.onpointercancel=up;
+function cover(ctx,img,W,H,mirror=false){const iw=img.videoWidth||img.naturalWidth,ih=img.videoHeight||img.naturalHeight,s=Math.max(W/iw,H/ih),dw=iw*s,dh=ih*s,dx=(W-dw)/2,dy=(H-dh)/2;ctx.save();if(mirror){ctx.translate(W,0);ctx.scale(-1,1);ctx.drawImage(img,W-dx-dw,dy,dw,dh)}else ctx.drawImage(img,dx,dy,dw,dh);ctx.restore()}
+$('#compose').onclick=()=>{if(!video.videoWidth||!charImg.complete)return msg('相機或角色尚未就緒');const r=stage.getBoundingClientRect(),c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;const x=c.getContext('2d');cover(x,video,c.width,c.height,facing==='user');const sx=c.width/r.width,cx=(r.width/2+state.x)*sx,cy=(r.height*.45+state.y)*(c.height/r.height),bw=character.offsetWidth*sx,ratio=charImg.naturalHeight/charImg.naturalWidth||1,bh=bw*ratio;x.save();x.translate(cx,cy);x.rotate(state.rot*Math.PI/180);x.scale(state.scale,state.scale);x.drawImage(charImg,-bw/2,-bh/2,bw,bh);x.restore();preview(c.toDataURL('image/png'))}
+function preview(url){result.src=url;save.href=url;dialog.showModal?dialog.showModal():dialog.setAttribute('open','')}
+$('#close').onclick=()=>dialog.close?dialog.close():dialog.removeAttribute('open');
+if(!navigator.mediaDevices?.getUserMedia)msg('此瀏覽器不支援相機');else camera();
+</script>
+</body>
+</html>
