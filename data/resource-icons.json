@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-26",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -388,6 +388,34 @@
     },
     "laya-decision-engine": {
       "url": "https://raw.githubusercontent.com/NandhaKishorM/laya/main/assets/logo-mark.svg",
+      "source": "official-project-svg"
+    },
+    "awesome-list": {
+      "url": "https://raw.githubusercontent.com/sindresorhus/awesome/main/media/logo.svg",
+      "source": "official-project-svg"
+    },
+    "public-apis": {
+      "url": "https://github.com/public-apis.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "scrapling": {
+      "url": "https://github.com/D4Vinci.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "free-for-dev": {
+      "url": "https://github.com/ripienaar.png?size=256",
+      "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "ollama": {
+      "url": "https://github.com/ollama.png?size=256",
+      "source": "github-organization-avatar-256"
+    },
+    "open-webui": {
+      "url": "https://openwebui.com/favicon.png",
+      "source": "official-site-favicon"
+    },
+    "dify": {
+      "url": "https://raw.githubusercontent.com/langgenius/dify/main/web/public/logo/logo.svg",
       "source": "official-project-svg"
     }
   }
