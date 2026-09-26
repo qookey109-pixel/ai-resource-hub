@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-26",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1670,6 +1670,140 @@
         "kind": "demo",
         "url": "https://huggingface.co/spaces/convaiinnovations/laya-demo",
         "description": "官方 Hugging Face Space，可直接體驗 Laya 的結構化決策流程。"
+      }
+    ],
+    "awesome-list": [
+      {
+        "label": "Awesome 官方入口",
+        "kind": "website",
+        "url": "https://awesome.re/",
+        "description": "官方短網址與 Awesome Lists 入口。"
+      },
+      {
+        "label": "Creating an Awesome List",
+        "kind": "documentation",
+        "url": "https://github.com/sindresorhus/awesome/blob/main/create-list.md",
+        "description": "官方建立 Awesome List 的品質與格式指南。"
+      }
+    ],
+    "public-apis": [
+      {
+        "label": "Public APIs Contribution Guide",
+        "kind": "documentation",
+        "url": "https://github.com/public-apis/public-apis/blob/master/CONTRIBUTING.md",
+        "description": "官方收錄與維護規則，可用來理解此目錄的審核方式與貢獻流程。"
+      }
+    ],
+    "scrapling": [
+      {
+        "label": "Scrapling Documentation",
+        "kind": "documentation",
+        "url": "https://scrapling.readthedocs.io/en/latest/",
+        "description": "官方完整文件，涵蓋 parsing、fetchers、spiders、CLI、AI 與部署。"
+      },
+      {
+        "label": "Scrapling MCP Server",
+        "kind": "documentation",
+        "url": "https://scrapling.readthedocs.io/en/latest/ai/mcp-server.html",
+        "description": "官方 MCP Server 文件，說明如何把 Scrapling 的擷取能力提供給 Agent。"
+      },
+      {
+        "label": "Scrapling Agent Skill",
+        "kind": "documentation",
+        "url": "https://scrapling.readthedocs.io/en/latest/ai/agent-skill.html",
+        "description": "官方 Agent Skill 文件與安裝方式。"
+      },
+      {
+        "label": "Scrapling on PyPI",
+        "kind": "download",
+        "url": "https://pypi.org/project/scrapling/",
+        "description": "官方 Python 套件發布與安裝入口。"
+      }
+    ],
+    "free-for-dev": [
+      {
+        "label": "free-for.dev Website",
+        "kind": "website",
+        "url": "https://free-for.dev/",
+        "description": "官方網站版免費開發者服務目錄。"
+      }
+    ],
+    "ollama": [
+      {
+        "label": "Ollama Website",
+        "kind": "website",
+        "url": "https://ollama.com/",
+        "description": "官方產品入口與下載。"
+      },
+      {
+        "label": "Ollama Documentation",
+        "kind": "documentation",
+        "url": "https://docs.ollama.com/",
+        "description": "官方安裝、CLI、整合與模型文件。"
+      },
+      {
+        "label": "Ollama Model Library",
+        "kind": "gallery",
+        "url": "https://ollama.com/library",
+        "description": "官方模型 Library，可瀏覽與選擇可執行模型。"
+      },
+      {
+        "label": "Ollama REST API",
+        "kind": "api",
+        "url": "https://docs.ollama.com/api",
+        "description": "官方 REST API reference。"
+      }
+    ],
+    "open-webui": [
+      {
+        "label": "Open WebUI Website",
+        "kind": "website",
+        "url": "https://openwebui.com/",
+        "description": "官方產品與社群入口。"
+      },
+      {
+        "label": "Open WebUI Documentation",
+        "kind": "documentation",
+        "url": "https://docs.openwebui.com/",
+        "description": "官方部署、功能、RAG、Tools、MCP、Enterprise 與管理文件。"
+      },
+      {
+        "label": "Open WebUI Features",
+        "kind": "documentation",
+        "url": "https://docs.openwebui.com/features/",
+        "description": "官方功能總覽，包含 extensibility、models、knowledge、tools 與其他工作空間能力。"
+      },
+      {
+        "label": "Open WebUI License",
+        "kind": "documentation",
+        "url": "https://docs.openwebui.com/license/",
+        "description": "官方授權說明；部署、品牌修改或商業使用前應核對最新條款。"
+      }
+    ],
+    "dify": [
+      {
+        "label": "Dify Website",
+        "kind": "website",
+        "url": "https://dify.ai/",
+        "description": "官方產品入口與 Cloud／Enterprise 資訊。"
+      },
+      {
+        "label": "Dify Documentation",
+        "kind": "documentation",
+        "url": "https://docs.dify.ai/",
+        "description": "官方 Workflow、RAG、Agent、模型、部署與 API 文件。"
+      },
+      {
+        "label": "Dify Marketplace",
+        "kind": "gallery",
+        "url": "https://marketplace.dify.ai/",
+        "description": "官方 Marketplace，可探索 Tools、Plugins 與 Agent 擴充能力。"
+      },
+      {
+        "label": "Dify Cloud",
+        "kind": "website",
+        "url": "https://cloud.dify.ai/",
+        "description": "官方雲端版 Dify 入口。"
       }
     ]
   }
