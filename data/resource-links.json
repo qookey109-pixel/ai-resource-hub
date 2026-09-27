@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-28",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1804,6 +1804,20 @@
         "kind": "website",
         "url": "https://cloud.dify.ai/",
         "description": "官方雲端版 Dify 入口。"
+      }
+    ],
+    "paperclip": [
+      {
+        "label": "Paperclip 官方網站",
+        "kind": "website",
+        "url": "https://paperclip.ing/",
+        "description": "Paperclip 官方產品入口、Quickstart 與專案介紹。"
+      },
+      {
+        "label": "Paperclip Documentation",
+        "kind": "documentation",
+        "url": "https://docs.paperclip.ing/",
+        "description": "官方安裝、Agent、CLI、組織管理與操作文件。"
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-28",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -417,6 +417,10 @@
     "dify": {
       "url": "https://raw.githubusercontent.com/langgenius/dify/main/web/public/logo/logo.svg",
       "source": "official-project-svg"
+    },
+    "paperclip": {
+      "url": "https://avatars.githubusercontent.com/u/252296684",
+      "source": "github-avatar"
     }
   }
 }
