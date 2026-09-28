@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-28",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1804,6 +1804,26 @@
         "kind": "website",
         "url": "https://cloud.dify.ai/",
         "description": "官方雲端版 Dify 入口。"
+      }
+    ],
+    "hindsight-agent-memory": [
+      {
+        "label": "Hindsight Documentation",
+        "kind": "documentation",
+        "url": "https://hindsight.vectorize.io/",
+        "description": "官方文件，涵蓋安裝、核心記憶概念、SDK、MCP、Coding Agent 與部署。"
+      },
+      {
+        "label": "Hindsight Integrations",
+        "kind": "documentation",
+        "url": "https://hindsight.vectorize.io/integrations",
+        "description": "官方整合目錄，可查看 Coding Agents、Agent Frameworks 與其他平台的接入方式。"
+      },
+      {
+        "label": "Hindsight Benchmarks",
+        "kind": "website",
+        "url": "https://benchmarks.hindsight.vectorize.io/",
+        "description": "官方持續更新的長期記憶 benchmark 結果與比較頁。"
       }
     ]
   }
