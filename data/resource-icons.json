@@ -420,7 +420,7 @@
     },
     "hindsight-agent-memory": {
       "url": "https://avatars.githubusercontent.com/u/81837244",
-      "source": "github-avatar"
+      "source": "fallback-github-avatar"
     }
   }
 }
