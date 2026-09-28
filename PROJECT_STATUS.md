@@ -45,7 +45,7 @@ Data quality snapshot:
 
 - supplemental official links: **105 / 105 resources (100%)**
 - icon registry coverage: **105 / 105 resources**
-- icon sources (mutually exclusive): **49 official-labelled**, **24 GitHub-avatar**, **24 fallback-labelled**, **8 domain-favicon**
+- icon sources (mutually exclusive): **49 official-labelled**, **23 GitHub-avatar**, **25 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Product position
