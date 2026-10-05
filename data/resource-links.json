@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-10-05",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1824,6 +1824,32 @@
         "kind": "website",
         "url": "https://benchmarks.hindsight.vectorize.io/",
         "description": "官方持續更新的長期記憶 benchmark 結果與比較頁。"
+      }
+    ],
+    "morluto-rea": [
+      {
+        "label": "REA 中文 README",
+        "kind": "documentation",
+        "url": "https://github.com/morluto/rea/blob/main/README_zh.md",
+        "description": "官方簡體中文說明，涵蓋 Agent 整合、MCP、逆向分析能力、平台需求與限制。"
+      },
+      {
+        "label": "REA Installation",
+        "kind": "documentation",
+        "url": "https://github.com/morluto/rea/blob/main/docs/installation.md",
+        "description": "官方安裝與設定文件，說明 Agent Integration、Hopper、Ghidra、Node.js 與平台需求。"
+      },
+      {
+        "label": "rea-agents on npm",
+        "kind": "download",
+        "url": "https://www.npmjs.com/package/rea-agents",
+        "description": "官方 npm 套件，可透過 npx 或全域安裝使用 REA CLI 與 MCP Server。"
+      },
+      {
+        "label": "REA Latest Release",
+        "kind": "download",
+        "url": "https://github.com/morluto/rea/releases/latest",
+        "description": "官方最新版本與發行紀錄。"
       }
     ]
   }
