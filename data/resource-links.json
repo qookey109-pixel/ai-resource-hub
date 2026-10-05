@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-10-05",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1824,6 +1824,26 @@
         "kind": "website",
         "url": "https://benchmarks.hindsight.vectorize.io/",
         "description": "官方持續更新的長期記憶 benchmark 結果與比較頁。"
+      }
+    ],
+    "edwardxlai-easyread": [
+      {
+        "label": "EasyRead 官方網站",
+        "kind": "website",
+        "url": "https://edwardxlai.github.io/easyread/",
+        "description": "官方產品首頁，包含功能介紹、安裝入口與使用說明。"
+      },
+      {
+        "label": "EasyRead 線上試讀",
+        "kind": "demo",
+        "url": "https://edwardxlai.github.io/easyread/demo/",
+        "description": "官方線上示範，可直接體驗論文排版、雙語對照與閱讀介面。"
+      },
+      {
+        "label": "EasyRead Releases",
+        "kind": "download",
+        "url": "https://github.com/Edwardxlai/easyread/releases/latest",
+        "description": "官方最新版本下載頁，提供 Windows、macOS 與 Linux 安裝包。"
       }
     ]
   }

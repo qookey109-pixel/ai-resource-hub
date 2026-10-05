@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-10-05",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -421,6 +421,10 @@
     "hindsight-agent-memory": {
       "url": "https://avatars.githubusercontent.com/u/81837244",
       "source": "fallback-github-avatar"
+    },
+    "edwardxlai-easyread": {
+      "url": "https://raw.githubusercontent.com/Edwardxlai/easyread/main/docs/images/logo.svg",
+      "source": "official-repository-project-logo-svg"
     }
   }
 }
