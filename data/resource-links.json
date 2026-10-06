@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-07",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1850,6 +1850,32 @@
         "kind": "download",
         "url": "https://github.com/morluto/rea/releases/latest",
         "description": "官方最新版本與發行紀錄。"
+      }
+    ],
+    "arielshad-3d-asset-server": [
+      {
+        "label": "3D Asset Server",
+        "kind": "website",
+        "url": "https://3d.shep.bot",
+        "description": "官方公開 Web UI，可搜尋多個 3D 素材來源並查看來源、授權、格式與下載資訊。"
+      },
+      {
+        "label": "MCP 文件",
+        "kind": "documentation",
+        "url": "https://3d.shep.bot/docs/mcp",
+        "description": "官方 MCP 設定文件，涵蓋 Claude Code、Cursor、Codex CLI、Gemini CLI 等 Client。"
+      },
+      {
+        "label": "REST API 文件",
+        "kind": "documentation",
+        "url": "https://3d.shep.bot/docs/api",
+        "description": "官方 REST API 使用指南與搜尋、素材詳情、下載等整合方式。"
+      },
+      {
+        "label": "OpenAPI 3.1",
+        "kind": "api",
+        "url": "https://3d.shep.bot/openapi.json",
+        "description": "官方 OpenAPI 3.1 規格，可供 Agent、應用程式與 API 工具直接整合。"
       }
     ]
   }
