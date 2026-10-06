@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-07",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1850,6 +1850,32 @@
         "kind": "download",
         "url": "https://github.com/morluto/rea/releases/latest",
         "description": "官方最新版本與發行紀錄。"
+      }
+    ],
+    "hkuds-vibe-trading": [
+      {
+        "label": "Vibe-Trading 官方網站",
+        "kind": "website",
+        "url": "https://vibetrading.wiki/",
+        "description": "官方網站入口，整理功能、安裝方式與專案導覽。"
+      },
+      {
+        "label": "Vibe-Trading Documentation",
+        "kind": "documentation",
+        "url": "https://vibetrading.wiki/docs/",
+        "description": "官方文件，涵蓋研究、回測、MCP、Agent、Broker 與使用方式。"
+      },
+      {
+        "label": "vibe-trading-ai on PyPI",
+        "kind": "download",
+        "url": "https://pypi.org/project/vibe-trading-ai/",
+        "description": "官方 Python 套件，可安裝 CLI、Web Server 與 vibe-trading-mcp。"
+      },
+      {
+        "label": "Vibe-Trading Security Policy",
+        "kind": "documentation",
+        "url": "https://github.com/HKUDS/Vibe-Trading/blob/main/SECURITY.md",
+        "description": "官方安全政策，包含生成策略執行風險、漏洞回報與冒充／假代幣警告。"
       }
     ]
   }
