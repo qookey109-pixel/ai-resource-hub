@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-07",
   "icons": {
     "emil-kowalski-skills": {
       "url": "https://github.com/emilkowalski.png?size=256",
@@ -425,6 +425,10 @@
     "morluto-rea": {
       "url": "https://github.com/morluto.png?size=256",
       "source": "github-owner-avatar-256-fallback-no-project-logo"
+    },
+    "hkuds-vibe-trading": {
+      "url": "https://raw.githubusercontent.com/HKUDS/Vibe-Trading/main/assets/icon.png",
+      "source": "official-repository-project-logo"
     }
   }
 }
