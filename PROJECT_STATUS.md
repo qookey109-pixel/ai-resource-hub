@@ -1,6 +1,6 @@
 # Project Status
 
-Status date: 2026-10-05 (Asia/Taipei)
+Status date: 2026-10-09 (Asia/Taipei)
 
 ## Current authority
 
@@ -45,7 +45,7 @@ Data quality snapshot:
 
 - supplemental official links: **106 / 106 resources (100%)**
 - icon registry coverage: **106 / 106 resources**
-- icon sources (mutually exclusive): **49 official-labelled**, **23 GitHub-avatar**, **26 fallback-labelled**, **8 domain-favicon**
+- icon sources (mutually exclusive): **50 official-labelled**, **23 GitHub-avatar**, **25 fallback-labelled**, **8 domain-favicon**
 - metadata freshness: Resource Health emits `last_checked` age buckets as evidence only; freshness never rewrites catalog metadata or changes triage state by itself
 
 ## Product position
