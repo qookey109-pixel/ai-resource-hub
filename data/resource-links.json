@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-09",
   "links": {
     "tt-a1i-archify": [
       {
@@ -1828,22 +1828,22 @@
     ],
     "morluto-rea": [
       {
-        "label": "REA 中文 README",
-        "kind": "documentation",
-        "url": "https://github.com/morluto/rea/blob/main/README_zh.md",
-        "description": "官方簡體中文說明，涵蓋 Agent 整合、MCP、逆向分析能力、平台需求與限制。"
+        "label": "REA 官方網站",
+        "kind": "website",
+        "url": "https://rea.tools/",
+        "description": "官方網站，提供安裝入口、功能總覽、教學與實際逆向案例。"
       },
       {
-        "label": "REA Installation",
+        "label": "REA 繁體中文 README",
         "kind": "documentation",
-        "url": "https://github.com/morluto/rea/blob/main/docs/installation.md",
-        "description": "官方安裝與設定文件，說明 Agent Integration、Hopper、Ghidra、Node.js 與平台需求。"
+        "url": "https://github.com/morluto/rea/blob/main/README_zh-TW.md",
+        "description": "官方繁體中文說明，涵蓋 MCP、Agent 整合、支援目標、安裝方式與分析限制。"
       },
       {
-        "label": "rea-agents on npm",
-        "kind": "download",
-        "url": "https://www.npmjs.com/package/rea-agents",
-        "description": "官方 npm 套件，可透過 npx 或全域安裝使用 REA CLI 與 MCP Server。"
+        "label": "REA Guides",
+        "kind": "documentation",
+        "url": "https://rea.tools/guides/",
+        "description": "官方實作指南，涵蓋 Native、JavaScript／Electron、Browser 等分析工作流。"
       },
       {
         "label": "REA Latest Release",
